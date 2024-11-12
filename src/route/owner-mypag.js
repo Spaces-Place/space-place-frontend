@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../css/OwnerMypage.css';
 import FacilityRegistrationModal from './FacilityRegistrationModal';
 
 export default function OwnerMypage() {
-    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('all');
     const [date, setDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
