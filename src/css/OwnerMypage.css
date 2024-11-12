@@ -1,0 +1,127 @@
+/* OwnerMypage.css */
+
+.owner-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .owner-header {
+    margin-bottom: 20px;
+  }
+  
+  .owner-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  /* 정보 섹션 */
+  .owner-info {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .owner-info-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .owner-label {
+    font-weight: 600;
+    color: #666;
+  }
+  
+  /* 시설 관리 섹션 */
+  .owner-fac-mgmt {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .owner-add-btn {
+    background: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .owner-fac-list {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .owner-fac-item {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .owner-fac-content {
+    margin-bottom: 15px;
+  }
+  
+  .owner-fac-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .owner-fac-actions button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f8f8f8;
+    cursor: pointer;
+  }
+  
+  /* 예약 관리 섹션 */
+  .owner-book-mgmt {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .owner-book-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+  }
+  
+  .owner-tab-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .owner-tab {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f8f8f8;
+    cursor: pointer;
+  }
+  
+  .owner-tab.active {
+    background: #1976D2;
+    color: white;
+    border-color: #1976D2;
+  }
+  
+  .owner-book-list {
+    display: grid;
+    gap: 15;
+  }

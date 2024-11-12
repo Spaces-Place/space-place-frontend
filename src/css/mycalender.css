@@ -1,0 +1,119 @@
+/* Calendar Wrapper */
+.calendar-wrapper {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: 10px auto;
+  }
+  
+  /* Calendar Base Styles */
+  .react-calendar {
+    width: 100%;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 4px 2px 10px 0px rgba(0, 0, 0, 0.13);
+    padding: 3% 5%;
+    background-color: white;
+  }
+  
+  /* Navigation Styling */
+  .react-calendar__navigation {
+    justify-content: center;
+  }
+  
+  .react-calendar__navigation button {
+    font-weight: 800;
+    font-size: 1rem;
+  }
+  
+  .react-calendar__navigation button:focus {
+    background-color: white;
+  }
+  
+  .react-calendar__navigation button:disabled {
+    background-color: white;
+    color: #333;
+  }
+  
+  .react-calendar__navigation__label {
+    flex-grow: 0 !important;
+  }
+  
+  /* Month View Styling */
+  .react-calendar__month-view abbr {
+    color: #333;
+  }
+  
+  .react-calendar__month-view__weekdays abbr {
+    text-decoration: none;
+    font-weight: 800;
+  }
+  
+  .react-calendar__month-view__weekdays__weekday--weekend abbr[title="일요일"] {
+    color: #ff0000;
+  }
+  
+  /* Date Tile Styling */
+  .react-calendar__tile {
+    padding: 5px 0px 18px;
+    position: relative;
+  }
+  
+  .react-calendar__tile--now {
+    background: none;
+  }
+  
+  .react-calendar__tile--now abbr {
+    color: #4CAF50;
+  }
+  
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus,
+  .react-calendar__tile--active {
+    background-color: #FFF9C4;
+    border-radius: 0.3rem;
+  }
+  
+  /* Today Button */
+  .today-button {
+    position: absolute;
+    right: 7%;
+    top: 6%;
+    background-color: #4CAF50;
+    color: #FFF9C4;
+    width: 18%;
+    min-width: fit-content;
+    height: 1.5rem;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 1.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Today Label */
+  .today-label {
+    font-size: x-small;
+    color: #795548;
+    font-weight: 600;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Attendance Dot */
+  .attendance-dot {
+    background-color: #795548;
+    border-radius: 50%;
+    width: 0.3rem;
+    height: 0.3rem;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+  }

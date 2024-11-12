@@ -1,0 +1,242 @@
+/* mypage.css */
+
+.Mypagebox {
+    padding: 2rem;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+.mypage-header{
+    height: 50px;
+}
+
+.Mypage-Container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 사용자 정보 */
+.userInfo {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.user-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.mypage-info-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.userID-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.userID-value {
+    color: #333;
+}
+
+/* 예약 목록 섹션 */
+.myplant {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.myplant h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.mypage-content {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+
+.mypage-booking-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+
+/* 캘린더 섹션 */
+.mypage-calendar {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    height: fit-content;
+}
+
+.mypage-calendar-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.calendar {
+    width: 100%;
+    border: none !important;
+}
+
+.calendar-dot {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-top: 4px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.dot.camping {
+    background-color: #4CAF50;
+}
+
+.dot.playing {
+    background-color: #2196F3;
+}
+
+/* 탭 네비게이션 */
+.mypage-tab-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+}
+
+.tab.active {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+/* 예약 목록 */
+.mypage-booking-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.mypage-booking-item {
+    padding: 1.25rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.mypage-booking-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mypage-booking-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.mypage-booking-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+}
+
+
+.mypage-booking-date {
+    color: #333;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.booking-info-label {
+    color: #666;
+    font-weight: 500;
+    display: inline-block;
+    width: 70px;
+}
+
+.mypage-booking-price {
+    color: #333;
+    font-weight: 500;
+}
+
+.mypage-booking-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+/* 상태 표시 */
+.status {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+}
+
+.status-upcoming {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-ongoing {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-completed {
+    background-color: #f5f5f5;
+    color: #616161;
+}
+
+.status-cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.cancel-btn {
+    border: none;
+    background: none;
+    color: #c62828;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.cancel-btn:hover {
+    color: #b71c1c;
+}

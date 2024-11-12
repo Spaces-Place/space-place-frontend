@@ -1,0 +1,141 @@
+.intro-header1{
+    height: 50px;
+}
+.intro-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+    padding: 4rem 1rem;
+  }
+  
+  .content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* 헤더 스타일 */
+  .intro-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  
+  .intro-header h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #3496fe, #cc33cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .intro-header .subtitle {
+    font-size: 1.5rem;
+    color: #4a5568;
+  }
+  
+  /* 메인 소개 섹션 */
+  .main-intro {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+  }
+  
+  .intro-text {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #4a5568;
+    margin-bottom: 2rem;
+  }
+  
+  /* 목적 그리드 */
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .purpose-card {
+    background: linear-gradient(135deg, #e2e8ff 0%, #ffffff 100%);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .purpose-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .purpose-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+  }
+  
+  .purpose-card p {
+    color: #4a5568;
+  }
+  
+  /* 하단 정보 섹션 */
+  .bottom-info {
+    text-align: center;
+    background: linear-gradient(135deg, #dbeafe 0%, #ffffff 100%);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 3rem;
+  }
+  
+  .bottom-info p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+  }
+  
+  .bottom-info p:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* CTA 섹션 */
+  .cta-section {
+    text-align: center;
+  }
+  
+  .cta-button {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding: 1rem 2.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* 반응형 스타일 */
+  @media (max-width: 768px) {
+    .intro-header h1 {
+      font-size: 2.5rem;
+    }
+  
+    .intro-header .subtitle {
+      font-size: 1.25rem;
+    }
+  
+    .main-intro {
+      padding: 1.5rem;
+    }
+  
+    .purpose-grid {
+      grid-template-columns: 1fr;
+    }
+  }
