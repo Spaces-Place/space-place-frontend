@@ -51,8 +51,8 @@ function App() {
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
-                  <Nav.Link href="/intro">공간소개</Nav.Link>
-                  <Nav.Link href="/mappage">지도로보자</Nav.Link>
+                  <Nav.Link as={Link} to="/intro">공간소개</Nav.Link>
+                  <Nav.Link as={Link} to="/mappage">지도로보자</Nav.Link>
                   <NavDropdown title="공간목록" id="collapsible-nav-dropdown" className="no-dropdown-arrow" >
                     <NavDropdown.Item as={Link} to="/playing">악기연주</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/">파티룸</NavDropdown.Item>
@@ -66,11 +66,11 @@ function App() {
                     <NavDropdown.Item as={Link} to="/">공용주방</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/">스터디룸</NavDropdown.Item>
                   </NavDropdown>
-                  <Nav.Link href="/">뭐할까</Nav.Link>
+                  <Nav.Link as={Link} to="/">뭐할까</Nav.Link>
                 </Nav>
                 <Nav>
-                  <Nav.Link href="/ownerpage">임대인마이페이지</Nav.Link>
-                  <Nav.Link href="/Mypage">임차인마이페이지</Nav.Link>
+                  <Nav.Link  as={Link} to="/ownerpage">임대인마이페이지</Nav.Link>
+                  <Nav.Link  as={Link} to="/Mypage">임차인마이페이지</Nav.Link>
                   <div className="user-btn">
                     {isAuthenticated ? (
                       <div className="login-btn">
