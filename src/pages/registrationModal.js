@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import '../css/registration.css'
-import ItemType from "../type/ItemType"
+import '../styles/registration.css'
+import ItemType from "../components/type/ItemType"
 
 export default function RegistrationModal({ isOpen, onClose }) {
     const [formData, setFormData] = useState({

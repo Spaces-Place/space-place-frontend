@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import '../css/OwnerMypage.css';
+import '../styles/OwnerMypage.css';
 import RegistrationModal from './registrationModal';
 
 export default function OwnerMypage() {

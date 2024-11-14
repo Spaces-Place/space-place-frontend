@@ -5,7 +5,7 @@ import { GiBandana, GiPartyPopper, GiGuitar  } from "react-icons/gi";
 import { FaDumbbell } from "react-icons/fa6";
 import { PiOfficeChairDuotone, PiCookingPotDuotone  } from "react-icons/pi";
 import { MdHotel } from "react-icons/md";
-import '../css/category.css'
+import '../../styles/category.css'
 import { FaBookOpenReader } from "react-icons/fa6";
 
 
