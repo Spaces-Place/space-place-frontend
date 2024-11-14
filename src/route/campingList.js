@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import "../css/campingList.css";
 import { Pagination } from 'react-bootstrap';
 
 export default function CampingList() {
     const navigate = useNavigate();
+    const {type} = useParams();
     
     const campingData = [
         { 
             id: 1, 
             title: '숲속 글램핑 파크', 
+            space_type: {type},
             author: '캠핑러버',
             image: '/camping1.jpg',
             description: '울창한 숲속에서 즐기는 프리미엄 글램핑 경험',
@@ -18,6 +20,7 @@ export default function CampingList() {
         { 
             id: 2, 
             title: '강변 오토캠핑장', 
+            space_type: {type},
             author: '캠핑마스터',
             image: '/camping2.jpg', 
             description: '시원한 강가에서 즐기는 오토캠핑의 진수'
@@ -25,6 +28,7 @@ export default function CampingList() {
         { 
             id: 3, 
             title: '산마루 캠핑장', 
+            space_type: {type},
             author: '산린이',
             image: '/camping3.jpg',
             description: '높은 고도에서 즐기는 색다른 캠핑'

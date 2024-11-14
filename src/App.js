@@ -5,18 +5,16 @@ import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-rou
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginModal from './route/login';
-import CampingList from './route/campingList';
 import RenterMypage from './route/renter-mypage';
 import LesseeMypage from './route/lessee-mypage';
-import CampingDetail from './route/campingDetail';
 import CategorySection from './route/category';
 import MyMapPage from './route/mapPage';
 import ImageCarousel from './route/mainpage'
-import PlayingList from './route/playingList';
-import PlayingDetail from './route/playingDetail';
 import Booking from './route/booking';
 import IntroPage from './route/intropage';
 import OwnerMypage from './route/owner-mypag';
+import SpaceList from './route/spaceList';
+import SpaceDetail from './route/spaceDetail';
 
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,6 +39,22 @@ function App() {
   };
 
 
+  const typeToComponent  =
+    {rehearsal: "rehearsal",
+    party: 'party',
+    dance: "dance",
+    karaoke: "karaoke",
+    studio: "studio",
+    camping : "camping",
+    gym : "gym",
+    office : "office",
+    accommodation : "accommodation",
+    kitchen : "kitchen",
+    studyroom : "studyroom"
+    }
+
+
+
   return (
     
       <div className="App">
@@ -54,17 +68,17 @@ function App() {
                   <Nav.Link as={Link} to="/intro">공간소개</Nav.Link>
                   <Nav.Link as={Link} to="/mappage">지도로보자</Nav.Link>
                   <NavDropdown title="공간목록" id="collapsible-nav-dropdown" className="no-dropdown-arrow" >
-                    <NavDropdown.Item as={Link} to="/playing">악기연주</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">파티룸</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">댄스연습실</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">노래방</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">스튜디오</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/camping">캠핑장</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">헬스장</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">사무실</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">숙박</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">공용주방</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/">스터디룸</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/rehearsal" type="rehearsal">악기연주</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/party">파티룸</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/dance">댄스연습실</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/karaoke">노래방</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/studio">스튜디오</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/camping" type="camping">캠핑장</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/gym">헬스장</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/office">사무실</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/accommodation">숙박</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/kitchen">공용주방</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/studyroom">스터디룸</NavDropdown.Item>
                   </NavDropdown>
                   <Nav.Link as={Link} to="/">뭐할까</Nav.Link>
                 </Nav>
@@ -111,13 +125,18 @@ function App() {
       </>
     } 
   />
-  <Route path='/camping' element={<CampingList />} />
-  <Route path='/camping/:id' element={<CampingDetail />} />
+
+  {Object.entries(typeToComponent).map(([type]) => (
+    <Route key={type} path={`/${type}`} element={<SpaceList type={type}/>} />
+  ))}
+
+  {Object.entries(typeToComponent).map(([type]) => (
+    <Route key={`${type}-detail`} path={`/${type}/:id`} element={<SpaceDetail type={type}/>} />
+  ))}
+
   <Route path='/mypage' element={<RenterMypage />} />
   <Route path='/LesseeMypage' element={<LesseeMypage />} />
   <Route path='/mappage' element={<MyMapPage /> } />
-  <Route path='/playing' element={<PlayingList />} />
-  <Route path='/playing/:id' element={<PlayingDetail /> } />
   <Route path='/booking' element={<Booking /> } />
   <Route path='/intro' element={<IntroPage /> } />
   <Route path='/ownerpage' element={<OwnerMypage />} />
