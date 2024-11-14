@@ -25,21 +25,16 @@ export default function SpaceDetail({type: propType}) {
             space_type: "camping",
             location: "강원도 춘천시",
             price: "월 500,000원",
-            size: "500평",
-            description: "울창한 숲속에서 즐기는 프리미엄 글램핑 경험",
-            facilities: ["주차장", "화장실", "샤워실", "취사장", "매점"],
+            space_size: "500평",
+            contents: "울창한 숲속에서 즐기는 프리미엄 글램핑 경험, 누구나 즐길수있는 쉬운캠핑! 숲속 글램핑 파크에서 체험하세요",
             address: "강원 춘천시 동산면 종자리로 224-104",
+            amenities: ["주차장", "화장실", "샤워실", "취사장", "매점"],
             images: [
                 "/camping1.jpg",
                 "/camping3.jpg",
                 "/camping5.jpg",
                 "/camping6.jpg",
             ],
-            contact: {
-                name: "김글램",
-                phone: "010-1234-5678",
-                email: "glamping@example.com"
-            }
         },
         {
             id: 2,
@@ -47,22 +42,16 @@ export default function SpaceDetail({type: propType}) {
             space_type: "rehearsal",
             location: "서울시 마포구",
             price: "월 800,000원",
-            size: "50평",
-            description: "최신 음향장비가 구비된 프리미엄 합주실",
-            facilities: ["주차장", "휴게실", "녹음실", "물품보관함", "음료 자판기"],
+            space_size: "50평",
+            contents: "넓은 주차장과 최신 음향장비가 구비된 프리미엄 합주실입니다.",
             address: "서울 마포구 월드컵북로1길 18 지하",
-            instruments: ["드럼(DW)", "기타앰프(Marshall)", "베이스앰프(Ampeg)", "키보드(Nord)", "마이크(Shure)"],
+            amenities: ["주차장", "화장실", "드럼(DW)", "기타앰프(Marshall)", "베이스앰프(Ampeg)", "키보드(Nord)", "마이크(Shure)"],
             images: [
                 "/playing1.jpg",
                 "/playing2.jpg",
                 "/playing3.jpg",
                 "/playing4.jpg",
             ],
-            contact: {
-                name: "김뮤직",
-                phone: "010-1234-5678",
-                email: "soundwave@example.com"
-            }
         },
      ];
 
@@ -189,7 +178,7 @@ export default function SpaceDetail({type: propType}) {
                                 </tr>
                                 <tr>
                                     <th>면적</th>
-                                    <td>{spaceData.size}</td>
+                                    <td>{spaceData.space_size}</td>
                                 </tr>
                                 <tr>
                                     <th>위치</th>
@@ -201,14 +190,14 @@ export default function SpaceDetail({type: propType}) {
 
                     <div className="detail-info-section">
                         <h2>{spaceData.name} 소개</h2>
-                        <p>{spaceData.description}</p>
+                        <p>{spaceData.contents}</p>
                     </div>
-                    {spaceData.instruments && (
+                    {spaceData.amenities && (
                         <div className="detail-info-section">
                             <h2>편의 사항</h2>
-                            <ul className="detail-instruments-list">
-                                {spaceData.instruments.map((instrument, index) => (
-                                    <li key={index}>{instrument}</li>
+                            <ul className="detail-amenities-list">
+                                {spaceData.amenities.map((amenitie, index) => (
+                                    <li key={index}>{amenitie}</li>
                                 ))}
                             </ul>
                         </div>
@@ -230,32 +219,8 @@ export default function SpaceDetail({type: propType}) {
                         )}
                         <p className="detail-address">{spaceData.address}</p>
                     </div>
-
-                    <div className="detail-info-section">
-                        <h2>편의시설</h2>
-                        <ul className="facilities-list">
-                            {spaceData.facilities.map((facility, index) => (
-                                <li key={index}>{facility}</li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="detail-info-section">
-                        <h2>문의하기</h2>
-                        <div className="contact-info">
-                            <p>담당자: {spaceData.contact.name}</p>
-                            <p>연락처: {spaceData.contact.phone}</p>
-                            <p>이메일: {spaceData.contact.email}</p>
-                        </div>
-                        <button 
-                            className="detail-contact-button"
-                            onClick={() => setShowContact(!showContact)}
-                        >
-                            문의하기
-                        </button>
-                    </div>
                     <button className="detail-contact-button" onClick={handleBooking}>
-                        임대하기
+                        예약하기
                     </button>
                 </div>
             </div>
