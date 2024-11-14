@@ -49,7 +49,7 @@
 /* 카테고리 그리드 스타일 */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1.5rem;
     padding: 0 2rem;
     /* width: 80%; */

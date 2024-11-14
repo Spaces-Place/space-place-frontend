@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import "../css/playinglist.css";
 import { Pagination } from 'react-bootstrap';
 
 export default function PlayingList() {
     const navigate = useNavigate();
-    
+    const {type} = useParams();
+
     const playingData = [
         { 
             id: 1, 
-            title: '사운드웨이브 스튜디오', 
-            author: '음악천재',
+            name: '사운드웨이브 스튜디오', 
+            space_type: {type},
+            vendor_id: '음악천재',
             image: '/playing1.jpg',
             description: '최신 음향장비가 구비된 프리미엄 합주실',
             price: '10,000',
@@ -18,7 +20,8 @@ export default function PlayingList() {
         },
         { 
             id: 2, 
-            title: '멜로디 팩토리', 
+            name: '멜로디 팩토리', 
+            space_type: {type},
             author: '기타마스터',
             image: '/playing2.jpg', 
             description: '밴드 연습에 최적화된 넓은 공간',
@@ -26,7 +29,8 @@ export default function PlayingList() {
         },
         { 
             id: 3, 
-            title: '리듬 스페이스', 
+            name: '리듬 스페이스', 
+            space_type: {type},
             author: '드러머킹',
             image: '/playing3.jpg',
             description: '방음 시설이 완벽한 실용적인 합주실',
@@ -34,7 +38,8 @@ export default function PlayingList() {
         },
         { 
             id: 4, 
-            title: '뮤직 플레이그라운드', 
+            name: '뮤직 플레이그라운드', 
+            space_type: {type},
             author: '밴드리더',
             image: '/playing4.jpg',
             description: '24시간 이용 가능한 편리한 합주실',
@@ -42,7 +47,8 @@ export default function PlayingList() {
         },
         { 
             id: 5, 
-            title: '하모니 스튜디오', 
+            name: '하모니 스튜디오', 
+            space_type: {type},
             author: '보컬트레이너',
             image: '/playing5.jpg',
             description: '보컬 녹음이 가능한 멀티룸 스튜디오',
@@ -50,7 +56,8 @@ export default function PlayingList() {
         },
         { 
             id: 6, 
-            title: '그루브 스테이션', 
+            name: '그루브 스테이션', 
+            space_type: {type},
             author: '베이시스트',
             image: '/playing6.jpg',
             description: '최고급 앰프와 스피커 구비된 합주실',
@@ -58,7 +65,8 @@ export default function PlayingList() {
         },
         { 
             id: 7, 
-            title: '소울 뮤직룸', 
+            name: '소울 뮤직룸', 
+            space_type: {type},
             author: '재즈피아노',
             image: '/playing7.jpg',
             description: '그랜드 피아노가 있는 프리미엄 연습실',
@@ -66,7 +74,8 @@ export default function PlayingList() {
         },
         { 
             id: 8, 
-            title: '어반 스튜디오', 
+            name: '어반 스튜디오', 
+            space_type: {type},
             author: '도심뮤지션',
             image: '/playing8.jpg',
             description: '접근성 좋은 도심 속 합주실',
@@ -74,7 +83,8 @@ export default function PlayingList() {
         },
         { 
             id: 9, 
-            title: '사운드 팩토리', 
+            name: '사운드 팩토리', 
+            space_type: {type},
             author: '프로듀서',
             image: '/playing9.jpg',
             description: '녹음과 합주가 모두 가능한 종합 스튜디오',
@@ -82,7 +92,8 @@ export default function PlayingList() {
         },
         { 
             id: 10, 
-            title: '뮤직 박스', 
+            name: '뮤직 박스', 
+            space_type: {type},
             author: '인디뮤지션',
             image: '/playing10.jpg',
             description: '아늑한 분위기의 소규모 합주실',
@@ -90,7 +101,8 @@ export default function PlayingList() {
         },
         { 
             id: 11, 
-            title: '프로 스튜디오', 
+            name: '프로 스튜디오', 
+            space_type: {type},
             author: '뮤직프로',
             image: '/playing11.jpg',
             description: '전문 장비가 구비된 고급 합주실',
@@ -98,7 +110,8 @@ export default function PlayingList() {
         },
         { 
             id: 12, 
-            title: '뮤직 랩', 
+            name: '뮤직 랩', 
+            space_type: {type},
             author: '사운드엔지니어',
             image: '/playing12.jpg',
             description: '최신식 음향 시설을 갖춘 실험실급 스튜디오',
@@ -107,7 +120,7 @@ export default function PlayingList() {
     ];
 
     // 제목 클릭 시 상세 페이지로 이동하는 함수
-    const handleTitleClick = (id) => {
+    const handlenameClick = (id) => {
         navigate(`/playing/${id}`);
     };
 
@@ -136,11 +149,11 @@ for (let i = 1; i <= totalPages; i++) {
                 <div>
                {currentItems.map((row) => (
                 <div className='playing_box' key={row.id}
-                     onClick={() => handleTitleClick(row.id)}>
+                     onClick={() => handlenameClick(row.id)}>
                     <div className='with-box'>
-                        <div className="play-title">{row.title}</div>
+                        <div className="play-name">{row.name}</div>
                         <div className='imagebox'>
-                            <img src={row.image} alt={row.title} />
+                            <img src={row.image} alt={row.name} />
                         </div>
                         <div className="play-description">
                             {row.description}

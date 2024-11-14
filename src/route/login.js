@@ -4,8 +4,8 @@ import authService from './AuthContext/authService';
 import { AuthContext } from './AuthContext/AuthContext';
 
 const USER_TYPE_LABELS = {
-  'landlord': '사업자',
-  'tenant': '일반회원'
+  'consumer': '일반',
+  'vendor': '파트너사'  
 };
 
 const LoginModal = ({ isOpen, onClose, onLogin }) => {
@@ -17,7 +17,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     password: '',
     email: '',
     phone: '',
-    type: 'landlord'
+    type: 'consumer'
   });
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');

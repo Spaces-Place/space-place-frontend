@@ -1,0 +1,179 @@
+/* 전체 컨테이너 스타일 */
+.spaceList-header {
+  height: 60px;
+  background: linear-gradient(to right, #f6f8ff, #f0f4ff);
+}
+
+.list-tablebox {
+  margin: 30px auto;
+  width: 90%;
+  background-color: #f8faff;
+  padding: 40px;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.list-tablebox > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  width: 100%;
+}
+
+/* 공간 카드 스타일 */
+.space-box {
+  width: calc(33.33% - 40px);
+  height: 420px;
+  border-radius: 20px;
+  margin: 10px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.space-box:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* 캠핑 타입 스타일 */
+.space-box.camping-box {
+  background: linear-gradient(135deg, #ffd6e7, #c8e7ff);
+}
+
+.space-box.camping-box .list-with-box {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.space-box.camping-box .list-space-name {
+  color: #4a6baf;
+  font-weight: 600;
+}
+
+/* 합주실 타입 스타일 */
+.space-box.rehearsal-box {
+  background: linear-gradient(135deg, #ffe6d5, #d4f0ff);
+}
+
+.space-box.rehearsal-box .list-with-box {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.space-box.rehearsal-box .list-space-name {
+  color: #e85a5a;
+  font-weight: 600;
+}
+
+/* 카드 내부 콘텐츠 스타일 */
+.list-with-box {
+  width: 92%;
+  height: 92%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4% auto;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.list-space-name {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.list-space-imagebox {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.list-space-imagebox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.space-box:hover .list-space-imagebox img {
+  transform: scale(1.05);
+}
+
+.list-space-description {
+  font-size: 0.95em;
+  color: #666;
+  margin: 12px 0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.list-space-location {
+  font-size: 0.9em;
+  color: #888;
+  margin: 8px 0;
+}
+
+.list-space-price {
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 8px 0;
+}
+
+.space-amenities {
+  font-size: 0.85em;
+  color: #777;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 20px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+  margin-top: 40px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border: none;
+  background: white;
+  border-radius: 20px;
+  color: #666;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pagination button:hover {
+  background: #f0f4ff;
+  color: #4a6baf;
+}
+
+.pagination button.active {
+  background: #4a6baf;
+  color: white;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.prebutton, .pluspage {
+  font-size: 1.2em;
+  padding: 8px 20px !important;
+}
