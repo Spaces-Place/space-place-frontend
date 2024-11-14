@@ -2,7 +2,7 @@ import { useState } from "react";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../css/OwnerMypage.css';
-import FacilityRegistrationModal from './FacilityRegistrationModal';
+import RegistrationModal from './registrationModal';
 
 export default function OwnerMypage() {
     const [activeTab, setActiveTab] = useState('all');
@@ -286,7 +286,7 @@ export default function OwnerMypage() {
                 </div>
             </div>
             
-            <FacilityRegistrationModal 
+            <RegistrationModal 
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 vendorId="vendor1"

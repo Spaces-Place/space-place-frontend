@@ -134,7 +134,7 @@ td {
 }
 
 /* 편의시설 리스트 */
-.detail-facilities-list, .detail-instruments-list {
+.detail-contents-list, .detail-amenities-list {
     list-style: none;
     padding: 0;
     display: grid;
@@ -142,7 +142,7 @@ td {
     gap: 15px;
 }
 
-.detail-facilities-list li, .detail-instruments-list li {
+.detail-contents-list li, .detail-amenities-list li {
     background: #f8faff;
     padding: 12px 20px;
     border-radius: 15px;
@@ -153,7 +153,7 @@ td {
     border: 1px solid rgba(74, 107, 175, 0.1);
 }
 
-.detail-facilities-list li:hover, .detail-instruments-list li:hover {
+.detail-contents-list li:hover, .detail-amenities-list li:hover {
     background: #4a6baf;
     color: white;
     transform: translateY(-3px);
@@ -219,7 +219,7 @@ td {
         height: 300px;
     }
 
-    .facilities-list, .instruments-list {
+    .contents-list, .amenities-list {
         grid-template-columns: 1fr 1fr;
     }
 
