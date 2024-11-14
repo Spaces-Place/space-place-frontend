@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Pause } from 'lucide-react';
-import '../css/mainpage.css'
+import '../styles/mainpage.css'
 
 const slides = [
   {
