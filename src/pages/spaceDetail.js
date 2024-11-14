@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation, Pagination} from "swiper/modules";
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
-import "../css/spaceDetail.css"
+import "../styles/spaceDetail.css"
 
 import 'swiper/css';
 import 'swiper/css/navigation'; 

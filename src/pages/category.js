@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/category.css'
-import ItemType from '../type/ItemType';
+import '../styles/category.css'
+import ItemType from '../components/type/ItemType';
 
 
 const categoryItems = {

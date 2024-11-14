@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
-import "../css/spaceList.css"
+import "../styles/spaceList.css"
 
 
 export default function SpaceList({type:propType}) {

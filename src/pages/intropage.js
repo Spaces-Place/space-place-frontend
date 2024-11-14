@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/intropage.css';
+import '../styles/intropage.css';
 
 const IntroPage = () => {
   return (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from 'react-router-dom';
-import "../css/booking.css"
+import "../styles/booking.css"
 
 // 상수 정의
 const CONSTANTS = {
