@@ -4,17 +4,17 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router-dom';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LoginModal from './route/login';
-import RenterMypage from './route/renter-mypage';
-import CategorySection from './route/category';
-import MyMapPage from './route/mapPage';
-import ImageCarousel from './route/mainpage'
-import Booking from './route/booking';
-import IntroPage from './route/intropage';
-import OwnerMypage from './route/owner-mypag';
-import SpaceList from './route/spaceList';
-import SpaceDetail from './route/spaceDetail';
-import ItemType from './type/ItemType';
+import LoginModal from './pages/login';
+import RenterMypage from './pages/renter-mypage';
+import CategorySection from './pages/category';
+import MyMapPage from './pages/mapPage';
+import ImageCarousel from './pages/mainpage'
+import Booking from './pages/booking';
+import IntroPage from './pages/intropage';
+import OwnerMypage from './pages/owner-mypag';
+import SpaceList from './pages/spaceList';
+import SpaceDetail from './pages/spaceDetail';
+import ItemType from './constants/type/ItemType';
 
 
 
