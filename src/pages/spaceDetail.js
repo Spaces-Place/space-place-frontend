@@ -22,7 +22,7 @@ export default function SpaceDetail({type: propType}) {
         {
             id: 1,
             name: "숲속 글램핑 파크",
-            space_type: "camping",
+            space_type: "CAMPING",
             location: "강원도 춘천시",
             price: "월 500,000원",
             space_size: "500평",
@@ -39,7 +39,7 @@ export default function SpaceDetail({type: propType}) {
         {
             id: 2,
             name: "사운드웨이브 스튜디오",
-            space_type: "rehearsal",
+            space_type: "PLAYING",
             location: "서울시 마포구",
             price: "월 800,000원",
             space_size: "50평",
