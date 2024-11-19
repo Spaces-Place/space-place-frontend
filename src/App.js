@@ -123,6 +123,7 @@ function App() {
   <Route path='/booking' element={<Booking /> } />
   <Route path='/intro' element={<IntroPage /> } />
   <Route path='/ownerpage' element={<OwnerMypage />} />
+
 </Routes>
 </div>
 

@@ -13,7 +13,7 @@ export default function SpaceList({type:propType}) {
     const spacesData = [
         {
             id: 1,
-            space_type: 'camping',
+            space_type: 'CAMPING',
             vendor_id: 'camping_lover',
             name: '숲속 글램핑 파크',
             open_time: '09:00',
@@ -49,7 +49,7 @@ export default function SpaceList({type:propType}) {
         },
         {
             id: 2,
-            space_type: 'rehearsal',
+            space_type: 'PLAYING',
             vendor_id: 'music_master',
             name: '사운드웨이브 스튜디오',
             open_time: '10:00',
