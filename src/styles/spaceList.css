@@ -39,31 +39,10 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
-/* 캠핑 타입 스타일 */
-.space-box.camping-box {
-  background: linear-gradient(135deg, #ffd6e7, #c8e7ff);
-}
-
-.space-box.camping-box .list-with-box {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.space-box.camping-box .list-space-name {
-  color: #4a6baf;
-  font-weight: 600;
-}
-
-/* 합주실 타입 스타일 */
 .space-box {
-  background: linear-gradient(135deg, #ffe6d5, #d4f0ff);
-}
-
-.space-box.rehearsal-box .list-with-box {
+  background: linear-gradient(135deg, #ffd6e7, #c8e7ff);
   border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.space-box.rehearsal-box .list-space-name {
-  color: #e85a5a;
+  color: #4a6baf;
   font-weight: 600;
 }
 

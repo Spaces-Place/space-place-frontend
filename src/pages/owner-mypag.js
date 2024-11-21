@@ -1,14 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/OwnerMypage.css';
 import RegistrationModal from './registrationModal';
+import { AuthContext } from "../utils/AuthContext";
+import authService from '../utils/authService';
+import UserInfomation from "../components/UserInfo";
 
 export default function OwnerMypage() {
+    const {user, isAuthenticated} = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('all');
     const [date, setDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
     
+    const [userInfo, setUserInfo] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                setLoading(true);
+                console.log(user.userid);
+                const info = await authService.getUserInfo(user.userid);
+                setUserInfo(info);
+                setError(null);
+                console.log(info);
+                console.log(userInfo);
+            } catch (err) {
+                setError('사용자 정보를 불러오는데 실패했습니다.');
+                console.error('Error fetching user info:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (user?.userid) {
+            fetchUserInfo();
+        }
+    }, [user?.userid]);
+
     // 시설 데이터 예시 (스키마 기반)
     const facilityData = [
         {
@@ -157,22 +189,11 @@ export default function OwnerMypage() {
             <div className="owner-container">
                 <div className="owner-info">
                     <h2 className="owner-title">관리자 페이지</h2>
-                    <div className="owner-info-grid">
-                        <div className="owner-label">사업자번호</div>
-                        <div className="owner-value">123-45-67890</div>
-                    </div>
-                    <div className="owner-info-grid">
-                        <div className="owner-label">상호명</div>
-                        <div className="owner-value">행복한 캠핑</div>
-                    </div>
-                    <div className="owner-info-grid">
-                        <div className="owner-label">대표자명</div>
-                        <div className="owner-value">김대표</div>
-                    </div>
-                    <div className="owner-info-grid">
-                        <div className="owner-label">연락처</div>
-                        <div className="owner-value">02-123-4567</div>
-                    </div>
+                    <UserInfomation 
+                        userInfo={userInfo}
+                        loading={loading}
+                        error={error}
+            />
                 </div>
 
                 {/* 시설 관리 섹션 */}
