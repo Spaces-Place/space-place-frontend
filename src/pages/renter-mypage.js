@@ -1,14 +1,45 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/mypage.css';
+import { AuthContext } from "../utils/AuthContext";
+import authService from '../utils/authService';
+import UserInfomation from "../components/UserInfo";
 
 export default function RenterMypage() {
     const navigate = useNavigate();
+    const {user, isAuthenticated} = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('all');
     const [date, setDate] = useState(new Date());
+    const [userInfo, setUserInfo] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                setLoading(true);
+                console.log(user.userid);
+                const info = await authService.getUserInfo(user.userid);
+                setUserInfo(info);
+                setError(null);
+                console.log(info);
+                console.log(userInfo);
+            } catch (err) {
+                setError('사용자 정보를 불러오는데 실패했습니다.');
+                console.error('Error fetching user info:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (user?.userid) {
+            fetchUserInfo();
+        }
+    }, [user?.userid]);
+    
     const bookingData = [
         {
             id: 1,
@@ -112,25 +143,11 @@ export default function RenterMypage() {
         <div className="Mypagebox">
             <div className="mypage-header"></div>
             <div className="Mypage-Container">
-            <div className="userInfo">
-                <h2 className="user-title">마이페이지</h2>
-                <div className="mypage-info-grid">
-                    <div className="userID-label">ID</div>
-                    <div className="userID-value">dusqo</div>
-                </div>
-                <div className="mypage-info-grid">
-                    <div className="userID-label">이름</div>
-                    <div className="userID-value">새싹</div>
-                </div>
-                <div className="mypage-info-grid">
-                    <div className="userID-label">이메일</div>
-                    <div className="userID-value">dusqo@dusqo.com</div>
-                </div>
-                <div className="mypage-info-grid">
-                    <div className="userID-label">연락처</div>
-                    <div className="userID-value">000-000-0000</div>
-                </div>
-            </div>
+            <UserInfomation 
+                        userInfo={userInfo}
+                        loading={loading}
+                        error={error}
+            />
             </div>
             <div className="myplant">
     <h2>내 예약 목록</h2>

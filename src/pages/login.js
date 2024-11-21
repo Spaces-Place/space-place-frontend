@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import '../styles/login.css';
-import authService from '../utils/AuthContext/authService';
-import { AuthContext } from '../utils/AuthContext/AuthContext';
+import authService from '../utils/authService';
+import { AuthContext } from '../utils/AuthContext';
 
 const USER_TYPE_LABELS = {
   'consumer': '일반',
