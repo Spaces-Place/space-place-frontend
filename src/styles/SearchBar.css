@@ -1,0 +1,33 @@
+/* SearchBar.css */
+form.searchbar-form {
+    display: flex !important;
+    width: 60% !important;
+    margin: 0 auto;
+    gap: 10px;
+    flex-direction: row !important;
+}
+
+.searchbar-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 1px solid #7371FC;
+    border-radius:1rem;
+}
+
+.searchbar-button {
+    width: 100px;
+    padding: 10px;
+    height: 60px;
+    border: 1px solid  #7371FC;
+    border-radius: 1rem;
+    background: transparent;
+    color:  #7371FC;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.searchbar-button:hover {
+    background:  #7371FC;
+    color: white;
+    transition: all 0.3s ease;
+}

@@ -1,55 +1,122 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
+:root {
+  --primary: #7371FC;
+  --secondary: #A594F9;
+  --accent: #7371FC;
+  --background: #F5F7FF;
+  --surface: #FFFFFF;
+  --text-primary: #2D3436;
+  --text-secondary: #636E72;
+  --gradient-primary: linear-gradient(135deg, #7371FC 0%, #A594F9 100%);
+  --gradient-surface: linear-gradient(135deg, #FFFFFF 0%, #F5F7FF 100%);
+  --shadow-sm: 0 2px 4px rgba(115, 113, 252, 0.1);
+  --shadow-md: 0 4px 6px rgba(115, 113, 252, 0.1);
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+
+:root[data-theme='dark'] {
+  --primary: #A594F9;
+  --secondary: #7371FC;
+  --background: #1a1a1a;
+  --surface: #2d2d2d;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CCCCCC;
+  --gradient-primary: linear-gradient(135deg, #A594F9 0%, #7371FC 100%);
+  --gradient-surface: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+}
+
+/* 부드러운 테마 전환을 위한 트랜지션 */
+body, .App {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 다크모드에서의 네비게이션 스타일 오버라이드 */
+[data-theme='dark'] .navbar {
+  background: rgba(45, 45, 45, 0.8) !important;
+}
+
+[data-theme='dark'] .navbar.scrolled {
+  background: rgba(45, 45, 45, 0.95) !important;
+}
+
+[data-theme='dark'] .dropdown-menu {
+  background: rgba(45, 45, 45, 0.95);
+}
+
+[data-theme='dark'] .dropdown-item:hover {
+  background: rgba(165, 148, 249, 0.1);
+}
+
+[data-theme='dark'] .user-btn button {
+  box-shadow: 0 4px 6px rgba(165, 148, 249, 0.2);
+}
+
+
 html, body {
   height: 100%;
-  overflow: auto; /* 스크롤을 가능하게 설정 */
   margin: 0;
   padding: 0;
-  font-family: "Noto Sans KR", sans-serif;
-}
-
-
-body {
+  font-family: var(--font-sans);
   overflow-x: hidden;
-  position: relative;
+  background-color: var(--background);
+  color: var(--text-primary);
 }
-
 
 .App-header {
-  position: fixed;  /* 또는 absolute */
+  position: sticky;
   width: 100%;
   top: 0;
   left: 0;
   z-index: 1000;
 }
-
-
+.p-4{
+  background-color: var(--surface);
+}
+/* 네비게이션 스타일 */
 .navbar {
-  background: transparent !important; /* 수정된 부분 */
+  background: rgba(255, 255, 255, 0.8) !important;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(115, 113, 252, 0.1);
+  padding: 0.5rem 0;
   transition: all 0.3s ease;
 }
 
-
 .navbar.scrolled {
-  background: rgba(33, 37, 41, 0.95) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: var(--shadow-md);
 }
 
 .navbar-brand {
-  font-weight: 700;
-  font-size: 1.5rem;
+  font-weight: 800;
+  font-size: 1.75rem;
   background: linear-gradient(45deg, #3496fe, #cc33cc);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05);
 }
 
 .nav-link {
-  position: relative;
-  padding: 0.5rem 1rem !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem !important;
   margin: 0 0.2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  border-radius: var(--radius-sm);
+}
+
+.nav-link:hover {
+  color: var(--primary) !important;
+  background: rgba(115, 113, 252, 0.05);
 }
 
 .nav-link::after {
@@ -59,30 +126,27 @@ body {
   left: 50%;
   width: 0;
   height: 2px;
-  background: #3496fe;
+  background: var(--gradient-primary);
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
 
 .nav-link:hover::after {
-  width: 100%;
+  width: 80%;
 }
 
-
-/* 네비게이션 드롭다운 메뉴 스타일 */
+/* 드롭다운 메뉴 스타일 */
 .navbar .dropdown-menu {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding: 0.5rem 0;
+  border: 1px solid rgba(115, 113, 252, 0.1);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
   transition: all 0.3s ease;
   transform: translateY(10px);
   opacity: 0;
   visibility: hidden;
-  z-index: 1001;
-  position: absolute;
 }
 
 .navbar .dropdown-menu.show {
@@ -92,92 +156,86 @@ body {
 }
 
 .navbar .dropdown-item {
-  color: #333 !important;
-  padding: 0.5rem 1.5rem;
+  color: var(--text-secondary) !important;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
   transition: all 0.2s ease;
 }
 
-.carousel-container {  /* ImageCarousel의 최상위 div 클래스명 */
-  margin-top: 0;
-  position: relative;
-  z-index: 1;
+.navbar .dropdown-item:hover {
+  background: rgba(115, 113, 252, 0.05);
+  color: var(--primary) !important;
+  transform: translateX(5px);
 }
 
-.navbar .no-dropdown-arrow.dropdown-toggle::after,
-.navbar .no-dropdown-arrow .dropdown-toggle::after {
-  border: none !important;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes intro-p {
-  from { transform: translateX(-20px); }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-
-.page-number {
-  color: #333;
-  font-size: 1.2rem;
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.nav-buttons button {
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #333;
-  padding: 5px 10px;
-}
-
-.nav-buttons button:hover {
-  color: #000;
-}
-
-
-
-/* login btn & hover */
+/* 로그인 버튼 스타일 */
 .login-btn {
-  color: #555;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
   transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -10px;
 }
 
 .user-btn button {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 16px;
-  border-radius: 20px;
+  background: var(--gradient-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .user-btn button:hover {
-  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .dropdown-content {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding: 0.5rem 0;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(115, 113, 252, 0.1);
+  padding: 0.5rem;
+  position: absolute;
+  right: 0;
+  min-width: 200px;
+  z-index: 1000;
 }
 
+.dropdown-content .nav-link {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
 
+.dropdown-content .nav-link:hover {
+  background: rgba(115, 113, 252, 0.05);
+  color: var(--primary);
+}
 
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+  
+  .nav-link {
+    padding: 0.5rem 1rem !important;
+  }
+  
+  .user-btn button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0.75rem 0;
+  }
+  
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+}

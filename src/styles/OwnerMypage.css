@@ -1,127 +1,240 @@
-/* OwnerMypage.css */
-
 .owner-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .owner-header {
-    margin-bottom: 20px;
-  }
-  
-  .owner-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-  
-  /* 정보 섹션 */
-  .owner-info {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .title {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .owner-info-grid {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .owner-label {
-    font-weight: 600;
-    color: #666;
-  }
-  
-  /* 시설 관리 섹션 */
-  .owner-fac-mgmt {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .owner-add-btn {
-    background: #4CAF50;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-  
-  .owner-fac-list {
-    display: grid;
-    gap: 20px;
-  }
-  
-  .owner-fac-item {
-    border: 1px solid #eee;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .owner-fac-content {
-    margin-bottom: 15px;
-  }
-  
-  .owner-fac-actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .owner-fac-actions button {
-    padding: 6px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #f8f8f8;
-    cursor: pointer;
-  }
-  
-  /* 예약 관리 섹션 */
-  .owner-book-mgmt {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
+  min-height: 100vh;
+  background: var(--background);
+  padding: 6rem 2rem 2rem;
+}
+
+.owner-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 정보 섹션 */
+.owner-info {
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(115, 113, 252, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.owner-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+.owner-title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem;
+}
+
+/* 시설 관리 섹션 */
+.owner-fac-mgmt {
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(115, 113, 252, 0.1);
+}
+
+.owner-add-btn {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.owner-add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.owner-fac-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.owner-fac-item {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(115, 113, 252, 0.1);
+  transition: all 0.3s ease;
+}
+
+.owner-fac-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.owner-fac-content h3 {
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.owner-fac-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.owner-fac-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.owner-fac-actions button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* 예약 관리 섹션 */
+.owner-book-mgmt {
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(115, 113, 252, 0.1);
+}
+
+.owner-book-content {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+}
+
+.owner-tab-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: var(--background);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 상태 표시 스타일 */
+.status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.s-confirm { background: #00B894; color: white; }
+.s-pending { background: #74B9FF; color: white; }
+.s-complete { background: #7371FC; color: white; }
+.s-cancel { background: #FF7675; color: white; }
+.s-active { background: #00B894; color: white; }
+.s-maint { background: #FDCB6E; color: white; }
+
+/* 캘린더 스타일 */
+.owner-calendar {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.owner-cal {
+  border: none !important;
+  width: 100% !important;
+}
+
+.cal-dot {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
   .owner-book-content {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 20px;
+    grid-template-columns: 1fr;
+  }
+  
+  .owner-calendar {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .owner-wrap {
+    padding: 5rem 1rem 1rem;
+  }
+  
+  .owner-info, .owner-fac-mgmt, .owner-book-mgmt {
+    padding: 1.5rem;
+  }
+  
+  .owner-title {
+    font-size: 1.75rem;
   }
   
   .owner-tab-nav {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
   }
   
-  .owner-tab {
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #f8f8f8;
-    cursor: pointer;
+  .tab {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .owner-fac-actions {
+    flex-direction: column;
   }
   
-  .owner-tab.active {
-    background: #1976D2;
-    color: white;
-    border-color: #1976D2;
+  .owner-fac-actions button {
+    width: 100%;
   }
-  
-  .owner-book-list {
-    display: grid;
-    gap: 15;
-  }
+}

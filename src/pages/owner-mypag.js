@@ -2,10 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/OwnerMypage.css';
-import RegistrationModal from './registrationModal';
 import { AuthContext } from "../utils/AuthContext";
 import authService from '../utils/authService';
 import UserInfomation from "../components/UserInfo";
+import RegistrationModal from "./registrationModal";
 
 export default function OwnerMypage() {
     const {user, isAuthenticated} = useContext(AuthContext);
@@ -40,6 +40,7 @@ export default function OwnerMypage() {
             fetchUserInfo();
         }
     }, [user?.userid]);
+
 
     // 시설 데이터 예시 (스키마 기반)
     const facilityData = [
@@ -100,6 +101,8 @@ export default function OwnerMypage() {
             status: 'pending'
         }
     ];
+
+
 
     const getStatusStyle = (status) => {
         const styles = {
@@ -310,7 +313,6 @@ export default function OwnerMypage() {
             <RegistrationModal 
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                vendorId="vendor1"
             />
         </div>
     );
