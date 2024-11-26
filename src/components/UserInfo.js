@@ -3,6 +3,9 @@ import React from "react";
 
 
 const UserInfomation = ({userInfo, loading, error}) => {
+  
+
+  console.log(userInfo);
 
     if(loading) return <div>...로딩중</div>
     if (error) return <div className="error-message">{error}</div>;

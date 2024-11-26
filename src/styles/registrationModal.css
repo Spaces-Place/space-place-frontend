@@ -1,0 +1,67 @@
+.registration-modal-overlay{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.registration-modal-overlay{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    max-width: 600px;
+    height: 800px;
+    background: rgba(225, 225, 225, 0.5) !important;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    animation: fadeIn 0.2s forwards;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+}
+
+.registration-modal-wrap{
+    height: 700px;
+}
+
+.registration-modal-title h3{
+    margin: -10px auto 10px;
+}
+.registration-close-button{
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}
+.registration-form-group{
+    margin: 5px 0;
+}
+.registration-form-group input {
+    height: 30px;
+    margin: 5px 5px;
+    width: 200px;
+}
+.registration-form-group-image input{
+    height: 50px;
+}
+
+.registration-modal-actions{
+    margin: 0 auto;
+}
+.registration-modal-actions button{
+    display: inline-block;
+    width: 150px;
+    margin: 10px 20px;
+    font-weight: bold;
+}   
+

@@ -1,12 +1,11 @@
-/* mypage.css */
-
+/* Mypage.css */
 .Mypagebox {
-    padding: 2rem;
-    background: #f5f5f5;
+    padding: 6rem 2rem 2rem;
+    background: linear-gradient(135deg, #f6f8ff 0%, #ffffff 100%);
     min-height: 100vh;
 }
 
-.mypage-header{
+.mypage-header {
     height: 50px;
 }
 
@@ -15,91 +14,97 @@
     margin: 0 auto;
 }
 
-/* 사용자 정보 */
+/* 사용자 정보 스타일 */
 .userInfo {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     margin-bottom: 2rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.userInfo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-primary);
 }
 
 .user-title {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.75rem;
+    font-weight: 800;
     margin-bottom: 1.5rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .mypage-info-grid {
     display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    grid-template-columns: 120px 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
 .userID-label {
-    color: #666;
-    font-weight: 500;
+    color: var(--text-secondary);
+    font-weight: 600;
 }
 
 .userID-value {
-    color: #333;
+    color: var(--text-primary);
 }
 
-/* 예약 목록 섹션 */
-.myplant {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.myplant h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
+/* 예약 섹션 스타일 */
 .mypage-content {
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 1fr 320px;
     gap: 2rem;
-    margin-top: 1rem;
 }
-
 
 .mypage-booking-section {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(115, 113, 252, 0.1);
 }
-
 
 /* 캘린더 섹션 */
 .mypage-calendar {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(115, 113, 252, 0.1);
     height: fit-content;
 }
 
 .mypage-calendar-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
 }
 
 .calendar {
     width: 100%;
     border: none !important;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
 }
 
 .calendar-dot {
     display: flex;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
     margin-top: 4px;
 }
 
@@ -109,55 +114,53 @@
     border-radius: 50%;
 }
 
-.dot.camping {
-    background-color: #4CAF50;
-}
-
-.dot.playing {
-    background-color: #2196F3;
-}
+.dot.camping { background-color: #4CAF50; }
+.dot.playing { background-color: #7371FC; }
 
 /* 탭 네비게이션 */
 .mypage-tab-nav {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    background: var(--background);
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
 }
 
 .tab {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 4px;
-    background: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
     cursor: pointer;
-    font-weight: 500;
-    color: #666;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
 }
 
 .tab.active {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background: var(--surface);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
 }
 
 /* 예약 목록 */
 .mypage-booking-list {
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
 .mypage-booking-item {
-    padding: 1.25rem;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: white;
+    padding: 1.5rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    transition: all 0.3s ease;
 }
 
 .mypage-booking-item:hover {
-    background-color: #f8f9fa;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
 }
 
 .mypage-booking-content {
@@ -167,36 +170,30 @@
 }
 
 .mypage-booking-title {
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-weight: 700;
+    font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: #1a1a1a;
+    color: var(--text-primary);
 }
 
-
 .mypage-booking-date {
-    color: #333;
-    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
     line-height: 1.6;
 }
 
 .booking-info-label {
-    color: #666;
-    font-weight: 500;
+    color: var(--text-secondary);
+    font-weight: 600;
     display: inline-block;
-    width: 70px;
-}
-
-.mypage-booking-price {
-    color: #333;
-    font-weight: 500;
+    width: 80px;
 }
 
 .mypage-booking-status {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
 /* 상태 표시 */
@@ -204,39 +201,72 @@
     padding: 0.5rem 1rem;
     border-radius: 999px;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     display: inline-block;
-    text-align: center;
 }
 
 .status-upcoming {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: rgba(115, 113, 252, 0.1);
+    color: var(--primary);
 }
 
 .status-ongoing {
-    background-color: #e8f5e9;
+    background-color: rgba(76, 175, 80, 0.1);
     color: #2e7d32;
 }
 
 .status-completed {
-    background-color: #f5f5f5;
+    background-color: rgba(158, 158, 158, 0.1);
     color: #616161;
 }
 
 .status-cancelled {
-    background-color: #ffebee;
+    background-color: rgba(244, 67, 54, 0.1);
     color: #c62828;
 }
 
 .cancel-btn {
-    border: none;
-    background: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #c62828;
+    background: transparent;
     color: #c62828;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
     cursor: pointer;
-    font-size: 0.875rem;
+    transition: all 0.3s ease;
 }
 
 .cancel-btn:hover {
-    color: #b71c1c;
+    background: #c62828;
+    color: white;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .mypage-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .mypage-calendar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .Mypagebox {
+        padding: 5rem 1rem 1rem;
+    }
+    
+    .userInfo, .mypage-booking-section, .mypage-calendar {
+        padding: 1.5rem;
+    }
+    
+    .mypage-tab-nav {
+        flex-wrap: wrap;
+    }
+    
+    .tab {
+        flex: 1 1 auto;
+        text-align: center;
+    }
 }

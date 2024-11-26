@@ -1,48 +1,114 @@
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import '../styles/registration.css'
-import ItemType from "../constants/type/ItemType"
+import React, { useState, useEffect, useContext } from 'react';
+import 'react-calendar/dist/Calendar.css';
+import ItemType from '../constants/type/ItemType';
+import { AuthContext } from '../utils/AuthContext';
+import { Cookies } from 'react-cookie';
+import authService from '../utils/authService';
+import "../styles/registrationModal.css"
+
 
 export default function RegistrationModal({ isOpen, onClose }) {
-    const [formData, setFormData] = useState({
-        space_id: '',
-        vendor_id: '',
-        space_type: '',
-        name: '',
-        capacity: '',
-        space_size: '',
-        usage_unit: '',
-        unit_price: '',
-        location: {
-            sido: '',
-            address: '',
-            type: 'Point',
-            coordinates: {
-                latitude: '',
-                longitude: ''
+    const url = process.env.REACT_APP_SPACE_API;
+    const cookies = new Cookies();
+    const { user, isAuthenticated } = useContext(AuthContext);
+
+    // 토큰 가져오기
+    const getToken = () => {
+        const token = cookies.get('access_token');
+        if (!token) throw new Error('인증 토큰이 없습니다.');
+        return token;
+    };
+
+
+
+    // 토큰 갱신 및 검증
+    const validateAndRefreshToken = async () => {
+        try {
+            const token = cookies.get('access_token');
+            if (!token) {
+                throw new Error('토큰이 없습니다.');
             }
+
+
+            // TODO: 구현 안된 기능임.
+            // 토큰 만료 확인
+            if (authService.isTokenExpired(token)) {
+                console.log('토큰 만료, 갱신 시도');
+                const newToken = await authService.refreshToken();
+                if (!newToken) {
+                    throw new Error('토큰 갱신 실패');
+                }
+                return newToken;
+            }
+
+            return token;
+        } catch (error) {
+            console.error('Token validation error:', error);
+            throw error;
+        }
+    };
+
+    // 초기 formData 설정
+    const [formData, setFormData] = useState({
+        user_id: user?.userid || '',
+        space_type: 'CAMPING',
+        space_name: '캠핑장',
+        capacity: '22',
+        space_size: '2',
+        usage_unit: 'DAY',
+        unit_price: '10000',
+        amenities: ['wifi'],
+        description: '오십쇼',
+        content: '내용',
+        location: {
+            sido: '서울특별시',
+            address: '서울특별시 독산동',
+            type: 'Point',
+            coordinates: [127.123456, 34.123456],
         },
-        images: [],
-        amenities: [],
-        description: {
-            overview: '',
-            content: ''
-        },
-        operating_hours: [],
-        created_at: new Date().toISOString(),
-        is_operate: true
+        operating_hour: [{
+            day: 'MONDAY',
+            open: '09:00',
+            close: '18:00'
+        }],
+        images: []
     });
 
-   const handleInputChange = (e) => {
+    useEffect(() => {
+        try {
+            // 컴포넌트 마운트 시 토큰 확인
+            const token = getToken();
+            if (!token) {
+                alert('로그인이 필요한 서비스입니다.');
+                // window.location.href = '/';
+                return;
+            }
+        } catch (error) {
+            alert('로그인이 필요한 서비스입니다.');
+            // window.location.href = '/';
+            return;
+        }
+
+        if (!isAuthenticated) {
+            alert('로그인이 필요한 서비스입니다.');
+            // window.location.href = '/';
+            return;
+        }
+
+        if (user?.type !== 'vendor') {
+            alert('공간 등록은 공간 제공자만 가능합니다.');
+            onClose();
+            return;
+        }
+    }, [isAuthenticated, user, onClose]);
+
+
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name.includes('.')) {
-            const [parent, child] = name.split('.');
+        if (name === 'unit_price' || name === 'capacity' || name === 'space_size' || name === 'user_id') {
             setFormData(prev => ({
                 ...prev,
-                [parent]: {
-                    ...prev[parent],
-                    [child]: value
-                }
+                [name]: Number(value)
             }));
         } else {
             setFormData(prev => ({
@@ -52,226 +118,347 @@ export default function RegistrationModal({ isOpen, onClose }) {
         }
     };
 
-    const handleOperatingHours = (index, field, value) => {
+    const handleLocationChange = (e) => {
+        const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            operating_hours: prev.operating_hours.map((hour, i) => 
-                i === index ? { ...hour, [field]: value } : hour
-            )
+            location: {
+                ...prev.location,
+                [name]: value
+            }
         }));
     };
 
-    const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        const newImages = files.map((file, index) => ({
-            url: URL.createObjectURL(file),
-            order: formData.images.length + index + 1
-        }));
-        
+    const handleOperatingHourChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
-            images: [...prev.images, ...newImages]
+            operating_hour: [{
+                ...prev.operating_hour[0],
+                [field]: value
+            }]
         }));
     };
 
-    const handleSubmit = (e) => {
+
+    const handleImageChange = (e) => {
+        if (e.target.files) {
+            setFormData(prev => ({
+                ...prev,
+                images: Array.from(e.target.files)
+            }));
+        }
+    };
+
+
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('제출된 데이터:', formData);
-        onClose();
+
+        try {
+            // 토큰 검증 및 갱신
+            const validToken = await validateAndRefreshToken();
+
+            const formDataToSend = new FormData();
+
+            // 기본 데이터 준비
+            const basicData = {
+                ...formData,
+                user_id: user.userid,
+                unit_price: Number(formData.unit_price),
+                capacity: Number(formData.capacity),
+                space_size: Number(formData.space_size),
+                amenities: formData.amenities.length ? formData.amenities : [],
+                location: {
+                    ...formData.location,
+                    coordinates: [0, 0]
+                },
+                operating_hour: formData.operating_hour.map(hour => ({
+                    ...hour,
+                    open: hour.open || '09:00',
+                    close: hour.close || '18:00'
+                }))
+            };
+
+            // FormData에 데이터 추가
+            Object.keys(basicData).forEach(key => {
+                if (key !== 'images') {
+                    if (typeof basicData[key] === 'object') {
+                        formDataToSend.append(key, JSON.stringify(basicData[key]));
+                    } else {
+                        formDataToSend.append(key, basicData[key]);
+                    }
+                }
+            });
+
+            // 이미지 처리
+            if (formData.images && formData.images.length > 0) {
+                formData.images.forEach((image, index) => {
+                    formDataToSend.append(`images`, image);
+                });
+            }
+
+            // 요청 전 데이터 확인
+            console.log('Sending request with token:', validToken);
+            
+            debugger;
+
+            const response = await fetch(`${url}/spaces/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${validToken}`,
+                },
+                // credentials: 'include',
+                body: formDataToSend
+            });
+
+            console.log(response);
+
+            const contentType = response.headers.get('content-type');
+            let errorData;
+
+            if (contentType && contentType.includes('application/json')) {
+                errorData = await response.json();
+            } else {
+                errorData = await response.text();
+            }
+
+            if (response.status === 403) {
+                console.error('Authorization error:', errorData);
+
+                if (typeof errorData === 'object' && errorData.detail) {
+                    // 토큰 관련 오류
+                    cookies.remove('access_token');
+                    cookies.remove('user_id');
+                    cookies.remove('user_type');
+
+                    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                    debugger;
+
+                    window.location.href = '/';
+                    return;
+                }
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    typeof errorData === 'object' ? errorData.detail : errorData
+                );
+            }
+
+            alert('시설이 성공적으로 등록되었습니다.');
+            onClose();
+            window.location.reload();
+
+        } catch (error) {
+            console.error('시설 등록 에러:', error);
+
+            if (error.message.includes('토큰') ||
+                error.message.includes('로그인') ||
+                error.message.includes('인증')) {
+                // 인증 관련 에러 처리
+                cookies.remove('access_token');
+                cookies.remove('user_id');
+                cookies.remove('user_type');
+
+                alert('다시 로그인해주세요.');
+                window.location.href = '/';
+            } else {
+                alert(error.message || '시설 등록에 실패했습니다.');
+            }
+        }
     };
+
+
 
     if (!isOpen) return null;
 
-
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
-                <div className="modal-header">
-                    <h2>새로운 공간 등록</h2>
-                    <button onClick={onClose} className="close-btn">
-                        <X size={24} />
-                    </button>
+        <div className="registration-modal-overlay">
+            <div className="registration-modal-wrap">
+            <button onClick={onClose} className="registration-close-button">×</button>
+                <div className="registration-modal-title">
+                    <h3>새 시설 등록</h3>
                 </div>
-
-                <form onSubmit={handleSubmit} className="form-container">
-                    <div className="input-group">
-                        <div>
-                            <label className="form-label">시설 유형</label>
-                            <select 
-                                name="space_type" 
-                                value={formData.space_type} 
-                                onChange={handleInputChange} 
-                                className="form-input"
+                <div className="modal-content">
+                    <form onSubmit={handleSubmit}>
+                        <div className="registration-form-group">
+                            <label>등록자</label>
+                            <input
+                                type="text"
+                                name="user_id"
+                                value={formData.user_id}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="registration-form-group">
+                            <label>시설 유형</label>
+                            <select
+                                name="space_type"
+                                value={formData.space_type}
+                                onChange={handleInputChange}
+                                required
                             >
-                                <option value="">선택하세요</option>
                                 {ItemType.map(({ type, title }) => (
-                                    <option key={type} value={type}>
-                                        {title}
-                                    </option>
+                                    <option key={type} value={type}>{title}</option>
                                 ))}
                             </select>
                         </div>
 
-                        <div>
-                            <label className="form-label">시설명</label>
+                        <div className="registration-form-group">
+                            <label>시설명</label>
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name}
+                                name="space_name"
+                                value={formData.space_name}
                                 onChange={handleInputChange}
-                                className="form-input"
+                                required
                             />
                         </div>
 
-                        <div className="grid-2">
-                            <div>
-                                <label className="form-label">시/도</label>
-                                <input
-                                    type="text"
-                                    name="location.sido"
-                                    value={formData.location.sido}
-                                    onChange={handleInputChange}
-                                    className="form-input"
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">상세주소</label>
-                                <input
-                                    type="text"
-                                    name="location.address"
-                                    value={formData.location.address}
-                                    onChange={handleInputChange}
-                                    className="form-input"
-                                />
-                            </div>
+                        {/* Location fields */}
+                        <div className="registration-form-group">
+                            <label>주소</label>
+                            <input
+                                type="text"
+                                name="sido"
+                                placeholder="시/도"
+                                value={formData.location.sido}
+                                onChange={handleLocationChange}
+                                required
+                                className='address'
+                            />
+                            <input
+                                type="text"
+                                name="address"
+                                placeholder="상세주소"
+                                value={formData.location.address}
+                                onChange={handleLocationChange}
+                                required
+                                className='address'
+                            />
                         </div>
 
-                        <div className="grid-2">
-                            <div>
-                                <label className="form-label">수용 인원</label>
-                                <input
-                                    type="number"
-                                    name="capacity"
-                                    value={formData.capacity}
-                                    onChange={handleInputChange}
-                                    className="form-input"
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">공간 크기</label>
-                                <input
-                                    type="text"
-                                    name="space_size"
-                                    value={formData.space_size}
-                                    onChange={handleInputChange}
-                                    className="form-input"
-                                />
-                            </div>
+                        <div className="registration-form-group">
+                            <label>수용 인원</label>
+                            <input
+                                type="number"
+                                name="capacity"
+                                value={formData.capacity}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
 
-                        <div className="grid-2">
-                            <div>
-                                <label className="form-label">이용 단위</label>
+                        <div className="registration-form-group">
+                            <label>공간 크기(m²)</label>
+                            <input
+                                type="number"
+                                name="space_size"
+                                value={formData.space_size}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="registration-form-group">
+                            <label>운영시간</label>
+                            <div className="time-inputs">
                                 <select
-                                    name="usage_unit"
-                                    value={formData.usage_unit}
-                                    onChange={handleInputChange}
-                                    className="form-input"
+                                    value={formData.operating_hour[0].day}
+                                    onChange={(e) => handleOperatingHourChange('day', e.target.value)}
+                                    required
                                 >
-                                    <option value="">선택</option>
-                                    <option value="hour">시간</option>
-                                    <option value="day">일</option>
-                                    <option value="week">주</option>
-                                    <option value="month">월</option>
+                                    <option value="MONDAY">월요일</option>
+                                    <option value="TUESDAY">화요일</option>
+                                    <option value="WEDNESDAY">수요일</option>
+                                    <option value="THURSDAY">목요일</option>
+                                    <option value="FRIDAY">금요일</option>
+                                    <option value="SATURDAY">토요일</option>
+                                    <option value="SUNDAY">일요일</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label className="form-label">단위 가격</label>
                                 <input
-                                    type="number"
-                                    name="unit_price"
-                                    value={formData.unit_price}
-                                    onChange={handleInputChange}
-                                    className="form-input"
+                                    type="time"
+                                    value={formData.operating_hour[0].open}
+                                    onChange={(e) => handleOperatingHourChange('open', e.target.value)}
+                                    required
+                                />
+                                <span>~</span>
+                                <input
+                                    type="time"
+                                    value={formData.operating_hour[0].close}
+                                    onChange={(e) => handleOperatingHourChange('close', e.target.value)}
+                                    required
                                 />
                             </div>
                         </div>
-
-                        <div>
-                            <label className="form-label">개요</label>
-                            <textarea
-                                name="description.overview"
-                                value={formData.description.overview}
+                        <div className="registration-form-group">
+                            <label>이용 단위</label>
+                            <select
+                                name="usage_unit"
+                                value={formData.usage_unit}
                                 onChange={handleInputChange}
-                                className="form-textarea"
+                                required
+                            >
+                                <option value="DAY">일단위</option>
+                                <option value="TIME">시간단위</option>
+                            </select>
+                        </div>
+
+                        <div className="registration-form-group">
+                            <label>단위 가격</label>
+                            <input
+                                type="number"
+                                name="unit_price"
+                                value={formData.unit_price}
+                                onChange={handleInputChange}
+                                required
                             />
                         </div>
 
-                        <div>
-                            <label className="form-label">상세 내용</label>
-                            <textarea
-                                name="description.content"
-                                value={formData.description.content}
+                        <div className="registration-form-group">
+                            <label>한줄 소개</label>
+                            <input
+                                type="text"
+                                name="description"
+                                value={formData.description}
                                 onChange={handleInputChange}
-                                className="form-textarea"
+                                required
                             />
                         </div>
 
-                        <div>
-                            <label className="form-label">이미지 업로드</label>
-                            <div className="image-upload">
-                                <input
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                />
-                                <p>최대 5장까지 업로드 가능합니다.</p>
-                            </div>
-                            {formData.images.length > 0 && (
-                                <div className="preview-container">
-                                    {formData.images.map((image, index) => (
-                                        <div key={index} className="relative">
-                                            <img
-                                                src={image.url}
-                                                alt={`Preview ${index}`}
-                                                className="preview-image"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setFormData(prev => ({
-                                                        ...prev,
-                                                        images: prev.images.filter((_, i) => i !== index)
-                                                    }));
-                                                }}
-                                                className="remove-btn"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                        <div className="registration-form-group">
+                            <label>상세 설명</label>
+                            <textarea
+                                name="content"
+                                value={formData.content}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
-                    </div>
 
-                    <div className="btn-container">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="cancel-btn"
-                        >
-                            취소
-                        </button>
-                        <button
-                            type="submit"
-                            className="submit-btn"
-                        >
-                            등록하기
-                        </button>
-                    </div>
-                </form>
+                        <div className="registration-form-group-image">
+                            <label>이미지 업로드</label>
+                            <input
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                required
+                                className='registration-image'
+                            />
+                        </div>
+
+                        <div className="registration-modal-actions">
+                            <button type="button" onClick={onClose} className="registration-cancel-button">
+                                취소
+                            </button>
+                            <button type="submit" className="registration-submit-button">
+                                등록하기
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

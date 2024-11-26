@@ -6,17 +6,22 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import { AuthProvider } from './utils/AuthContext';
+import { ThemeProvider } from './utils/ThemeContext'; 
+import { SearchProvider } from './utils/SearchContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <CookiesProvider>
+  <React.StrictMode>
     <BrowserRouter>
-    <AuthProvider>
-    <App />
-    </AuthProvider>
-  </BrowserRouter>
-  </CookiesProvider>
-
+      <ThemeProvider>
+        <AuthProvider>
+          <SearchProvider>
+            <App />
+          </SearchProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
