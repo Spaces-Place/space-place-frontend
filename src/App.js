@@ -10,7 +10,7 @@ import './App.css'
 import LoginModal from './pages/login';
 import RenterMypage from './pages/renter-mypage';
 import CategorySection from './pages/category';
-import MyMapPage from './pages/InfoPage';
+import MyMapPage from './pages/myMapPage';
 import ImageCarousel from './pages/mainpage';
 import Booking from './pages/booking';
 import IntroPage from './pages/intropage';
@@ -32,7 +32,6 @@ import ItemType from './constants/type/ItemType';
 // 컴포넌트
 import ScrollToTop from './components/ScrollToTop';
 import LoadingSpinner from './components/LoadingSpinner';
-import NotificationBell from './components/NotificationBell';
 import SearchBar from './components/SearchBar';
 import ThemeToggle from './components/ThemeToggle';
 
