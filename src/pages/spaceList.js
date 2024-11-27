@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/spaceList.css";
 import axios from "axios";
-import spaceDummyData from "../constants/spaceDummyData";
 
 export default function SpaceList({ type: propType }) {
   const navigate = useNavigate();
@@ -17,45 +16,38 @@ export default function SpaceList({ type: propType }) {
   const itemsPerPage = 10;
   const URL = process.env.REACT_APP_SPACE_API;
 
-  // useEffect(() => {
-  //   fetchSpaces();
-  // }, [type, currentPage]);
 
-  // const fetchSpaces = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const skip = (currentPage - 1) * itemsPerPage;
+  useEffect(() => {
+    fetchSpaces();
+  }, [type, currentPage]);
+
+  const fetchSpaces = async () => {
+    try {
+      setLoading(true);
+      const skip = (currentPage - 1) * itemsPerPage;
       
-  //     let endpoint = `/spaces?skip=${skip}&limit=${itemsPerPage}`;
-  //     if (type) {
-  //       endpoint += `&space_type=${type}`;
-  //     }
-
-  //     const response = await axios.get(`${URL}${endpoint}`);
-  //     setSpaces(response.data);
-  //     setError(null);
-  //   } catch (err) {
-  //     console.error("Error fetching spaces:", err);
-  //     setError("공간 목록을 불러오는데 실패했습니다.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleItemClick = (spaceId) => {
-    navigate(`/space/${type}/${spaceId}`);
+      let endpoint = `/spaces?skip=${skip}&limit=${itemsPerPage}`;
+      if (type) {
+        endpoint += `&space_type=${type}`;
+      }
+  
+      const response = await axios.get(`${URL}${endpoint}`);
+      console.log('Received spaces data:', response.data);  // 데이터 구조 확인
+      setSpaces(response.data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching spaces:", err);
+      setError("공간 목록을 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-// 더미 데이터 필터링 부분을 확인해보면 좋을 것 같습니다
-console.log('Type:', type);
-const filteredSpaces = spaceDummyData.filter(space => space.space_type === type);
-console.log('Filtered Spaces:', filteredSpaces);
 
-// 현재 페이지 데이터
-const startIndex = (currentPage - 1) * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
-const currentSpaces = filteredSpaces.slice(startIndex, endIndex);
-console.log('Current Page Spaces:', currentSpaces);
+  const handleItemClick = (spaceId) => {
+    console.log('Clicking space with ID:', spaceId);  // ObjectId 확인
+    navigate(`/space/${type}/${spaceId}`);
+};
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
@@ -66,18 +58,19 @@ console.log('Current Page Spaces:', currentSpaces);
       <div className={`spaceListBox ${type}-theme`}>
         <div className="list-tablebox">
           <div>
-            {currentSpaces.map((space) => (
+            {spaces.map((space) => (
               <div
                 className={`space-box ${type}-box`}
                 key={space.space_id}
                 onClick={() => handleItemClick(space.space_id)}
               >
                 <div className="list-with-box">
-                  <div className="list-space-name">{space.name}</div>
+                  <div className="list-space-name">{space.space_name}</div>
                   <div className="list-space-imagebox">
+                    {/* 임시로 기본 이미지 사용 또는 이미지 섹션 숨김 */}
                     <img 
-                      src={`/dummy/${space.images[0].filename}`}
-                      alt={space.name}
+                      src="/default-image.png"  // 기본 이미지 경로
+                      alt={space.space_name}
                     />
                   </div>
                   <div className="list-space-info">
@@ -93,8 +86,10 @@ console.log('Current Page Spaces:', currentSpaces);
                   </div>
                   {space.amenities && (
                     <div className="space-amenities">
-                      {space.amenities.slice(0, 3).join(', ')}
-                      {space.amenities.length > 3 && ' 외 ' + (space.amenities.length - 3) + '개'}
+                      {/* amenities가 문자열 배열로 된 JSON 문자열이므로 파싱 필요 */}
+                      {space.amenities.map(amenity => 
+                        JSON.parse(amenity).join(', ')
+                      )}
                     </div>
                   )}
                 </div>
@@ -113,7 +108,7 @@ console.log('Current Page Spaces:', currentSpaces);
             <span>{currentPage}</span>
             <button
               onClick={() => setCurrentPage(prev => prev + 1)}
-              disabled={currentSpaces.length < itemsPerPage}
+              disabled={spaces.length < itemsPerPage}
               className="pluspage"
             >
               {'>'}
