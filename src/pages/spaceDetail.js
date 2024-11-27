@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation, Pagination} from "swiper/modules";
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
-import spaceDummyData from "../constants/spaceDummyData";
+import axios from "axios";
 import "../styles/spaceDetail.css"
 
 import 'swiper/css';
@@ -17,6 +17,7 @@ export default function SpaceDetail({type: propType}) {
     const [showContact, setShowContact] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [coordinates, setCoordinates] = useState(null);
+    const URL = process.env.REACT_APP_SPACE_API; 
 
     const convertAddressToCoords = (address) => {
         return new Promise((resolve, reject) => {
@@ -40,68 +41,51 @@ export default function SpaceDetail({type: propType}) {
     };
 
 
-    // useEffect(() => {
-    //     const numId = parseInt(id);
-    //     console.log('찾고있는 type:', propType);
-    //     console.log('찾고있는 id:', numId);
-        
-    //     // 타입과 id로 공간 찾기
-    //     const space = tempSpaceData.find(space => 
-    //         space.space_type === propType && space.id === numId
-    //     );
-        
-    //     console.log('찾은 공간:', space);
-    //     setSpaceData(space);
-    
-    //     if (space) {
-    //         convertAddressToCoords(space.address)
-    //             .then(coords => {
-    //                 setCoordinates(coords);
-    //             })
-    //             .catch(error => {
-    //                 console.error('주소변환 실패:', error);
-    //             })
-    //             .finally(() => {
-    //                 setIsLoading(false);
-    //             });
-    //     } else {
-    //         setIsLoading(false);
-    //     }
-    // }, [propType, id]);
-
 
     useEffect(() => {
-        const numId = parseInt(id);
-        console.log('찾고있는 type:', propType);
-        console.log('찾고있는 id:', numId);
-        
-        // spaceDummyData에서 space_id로 찾도록 수정
-        const space = spaceDummyData.find(space => 
-            space.space_type === propType && space.space_id === numId
-        );
-
-        console.log(space);
-        
-        console.log('찾은 공간:', space);
-        setSpaceData(space);
-        
-        console.log(spaceData);
-        if (space) {
-            // location.address를 사용하도록 수정
-            convertAddressToCoords(space.location.address)
-                .then(coords => {
-                    setCoordinates(coords);
-                })
-                .catch(error => {
-                    console.error('주소변환 실패:', error);
-                })
-                .finally(() => {
+        const fetchSpaceDetail = async () => {
+            try {
+                console.log('찾고있는 type:', propType);
+                console.log('찾고있는 id:', id);
+    
+                const response = await axios.get(`${URL}/spaces/${id}`);
+                const space = response.data;
+                
+                if (!space) {
+                    throw new Error('공간 정보를 찾을 수 없습니다.');
+                }
+    
+                console.log('찾은 공간:', space);
+                setSpaceData(space);
+    
+                if (space.location?.address) {
+                    convertAddressToCoords(space.location.address)
+                        .then(coords => {
+                            setCoordinates(coords);
+                        })
+                        .catch(error => {
+                            console.error('주소변환 실패:', error);
+                        })
+                        .finally(() => {
+                            setIsLoading(false);
+                        });
+                } else {
                     setIsLoading(false);
-                });
-        } else {
-            setIsLoading(false);
+                }
+            } catch (error) {
+                console.error("Error fetching space detail:", error);
+                setIsLoading(false);
+                // 에러 처리 추가
+                alert(error.response?.data?.message || error.message || '공간 정보를 불러오는데 실패했습니다.');
+            }
+        };
+    
+        if (id) {
+            fetchSpaceDetail();
         }
-    }, [propType, id]);
+    }, [id, propType, URL]);
+
+
 
     if(isLoading){
         return <div>로딩중......ㅣ</div>
@@ -112,67 +96,69 @@ export default function SpaceDetail({type: propType}) {
     }
 
 
-    // const handleBooking = () => {
-    //     navigate('/booking', {
-    //         state: {
-    //             spacetype: spaceData.space_type,
-    //             spaceId: id,
-    //             name: spaceData.name,
-    //             price: spaceData.price
-    //         }
-    //     });
-    // };
-
-
 
     const handleBooking = () => {
         navigate('/booking', {
             state: {
                 spacetype: spaceData.space_type,
-                spaceId: spaceData.space_id,
-                name: spaceData.name,
+                spaceId: spaceData._id,
+                name: spaceData.space_name,  // name -> space_name으로 수정
                 price: `${spaceData.unit_price.toLocaleString()}원 / ${spaceData.usage_unit}`
             }
         });
     };
-    
+
+
+
     return(
         <>
         <div className="detail-header"></div>
         <div className={`detail-space-big-container ${spaceData.space_type}-theme`}>
             <div className="space-detail-container">
                 <div className="detail-space-header">
-                    <h1>{spaceData.name}</h1>
+                    <h1>{spaceData.space_name}</h1>
                     <p className="detail-location">{spaceData.location.sido}</p>
                 </div>
     
                 <div className="detail-space-images">
-                    <Swiper
-                        modules={[Navigation, Pagination]}
-                        spaceBetween={20}
-                        slidesPerView={1}
-                        centeredSlides={true}
-                        navigation
-                        loop={true}
-                        pagination={{ clickable: true }}
-                        loopedSlides={2}
-                        className="swiper"
-                    >
-                        {spaceData.images.map((img, index) => (
-                            <SwiperSlide key={index}>
-                                {({ isActive }) => (
-                                    <div className={`transition-all duration-300 ${isActive ? 'scale-110' : 'scale-90 opacity-50'}`}>
-                                        <img 
-                                            src={`/dummy/${img.filename}`}
-                                            alt={`${spaceData.name} 이미지 ${index + 1}`}
-                                            className="detail-img"
-                                            style={{width: '100%', height: 'auto', maxHeight: "250px"}}
-                                        />
-                                    </div>
-                                )}
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    {spaceData.images && spaceData.images.length > 0 ? (
+                        <Swiper
+                            modules={[Navigation, Pagination]}
+                            spaceBetween={20}
+                            slidesPerView={1}
+                            centeredSlides={true}
+                            navigation
+                            loop={true}
+                            pagination={{ clickable: true }}
+                            loopedSlides={2}
+                            className="swiper"
+                        >
+                            {spaceData.images.map((img, index) => (
+                                <SwiperSlide key={index}>
+                                    {({ isActive }) => (
+                                        <div className={`transition-all duration-300 ${isActive ? 'scale-110' : 'scale-90 opacity-50'}`}>
+                                            <img 
+                                                src={img.url || img.filename}
+                                                alt={`${spaceData.space_name} 이미지 ${index + 1}`}
+                                                className="detail-img"
+                                                style={{width: '100%', height: 'auto', maxHeight: "250px"}}
+                                            />
+                                        </div>
+                                    )}
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                        // 이미지가 없을 경우 기본 이미지나 메시지 표시
+                        <div className="no-images">
+                            <img 
+                                src="/default-image.png"
+                                alt="기본 이미지"
+                                className="detail-img"
+                                style={{width: '100%', height: 'auto', maxHeight: "250px"}}
+                            />
+                        </div>
+                    )}
                 </div>
     
                 <div className="detail-space-info">
@@ -197,7 +183,7 @@ export default function SpaceDetail({type: propType}) {
                     </div>
     
                     <div className="detail-info-section">
-                        <h2>{spaceData.name} 소개</h2>
+                        <h2>{spaceData.space_name} 소개</h2>
                         <p>{spaceData.content}</p>
                     </div>
                     {spaceData.amenities && (
@@ -205,7 +191,9 @@ export default function SpaceDetail({type: propType}) {
                             <h2>편의 사항</h2>
                             <ul className="detail-amenities-list">
                                 {spaceData.amenities.map((amenity, index) => (
-                                    <li key={index}>{amenity}</li>
+                                    <li key={index}>
+                                        {typeof amenity === 'string' ? amenity : JSON.stringify(amenity)}
+                                    </li>
                                 ))}
                             </ul>
                         </div>
@@ -221,7 +209,7 @@ export default function SpaceDetail({type: propType}) {
                             >
                                 <MapMarker 
                                     position={coordinates}
-                                    name={spaceData.name}
+                                    name={spaceData.space_name}
                                 />
                             </Map>
                         )}
