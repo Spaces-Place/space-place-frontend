@@ -4,6 +4,7 @@ import "../styles/spaceList.css";
 import axios from "axios";
 
 export default function SpaceList({ type: propType }) {
+
   const navigate = useNavigate();
   const { type: paramType } = useParams();
   const type = propType || paramType;
@@ -16,6 +17,8 @@ export default function SpaceList({ type: propType }) {
   const itemsPerPage = 10;
   const URL = process.env.REACT_APP_SPACE_API;
 
+  console.log('space-api : ',  URL);
+
 
   useEffect(() => {
     fetchSpaces();
@@ -26,7 +29,7 @@ export default function SpaceList({ type: propType }) {
       setLoading(true);
       const skip = (currentPage - 1) * itemsPerPage;
       
-      let endpoint = `/spaces?skip=${skip}&limit=${itemsPerPage}`;
+      let endpoint = `?skip=${skip}&limit=${itemsPerPage}`;
       if (type) {
         endpoint += `&space_type=${type}`;
       }

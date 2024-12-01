@@ -17,6 +17,15 @@ const api = axios.create({
     }
 });
 
+
+api.interceptors.request.use((config) => {
+    const token = cookies.get('access_token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
 const COOKIE_OPTIONS = {
     path: '/',
     secure: process.env.NODE_ENV === 'production',
@@ -33,7 +42,7 @@ const setAuthHeader = (token) => {
 
 const login = async (userid, password, type) => {
     try {
-        const response = await api.post('/members/sign-in', { 
+        const response = await api.post('/sign-in', { 
             user_id: userid,
             password: password,
             type: type
@@ -81,7 +90,7 @@ const getUserInfo = async(userId) => {
         if(!token) {
             throw new Error('인증토큰없음');
         }
-        const response = await api.get(`/members/${userId}`, {
+        const response = await api.get(`/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -97,7 +106,7 @@ const getUserInfo = async(userId) => {
 
 const refreshToken = async () => {
     try {
-        const response = await api.post('/members/refresh', {}, {
+        const response = await api.post('/refresh', {}, {
             headers: {
                 'Authorization': `Bearer ${cookies.get('access_token')}`
             }
@@ -163,7 +172,7 @@ const register = async (formData) => {
             phone: formData.phone,
             type: formData.type
         };
-        const response = await api.post(`/members/sign-up`, signUpData);
+        const response = await api.post(`/sign-up`, signUpData);
         
         // 회원가입 성공 시 사용자 정보를 로컬 스토리지에 저장
         const userData = {
@@ -180,6 +189,7 @@ const register = async (formData) => {
         throw new Error(error.response?.data?.detail || '회원가입에 실패했습니다.');
     }
 };
+
 
 const isTokenExpired = (token) => {
     if (!token) return true;

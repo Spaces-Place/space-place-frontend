@@ -8,7 +8,7 @@ import UserInfomation from "../components/UserInfo";
 import RegistrationModal from "./registrationModal";
 
 export default function OwnerMypage() {
-    const {user, isAuthenticated} = useContext(AuthContext);
+    const {user, isAuthenticated, logout} = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('all');
     const [date, setDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,30 +16,34 @@ export default function OwnerMypage() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-
+console.log(user);
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
                 setLoading(true);
-                console.log(user.userid);
+                if (!user || !user.userid) {
+                    throw new Error('사용자 정보가 없습니다');
+                }
+                console.log("Fetching info for user:", user.userid);
                 const info = await authService.getUserInfo(user.userid);
                 setUserInfo(info);
                 setError(null);
-                console.log(info);
-                console.log(userInfo);
             } catch (err) {
                 setError('사용자 정보를 불러오는데 실패했습니다.');
                 console.error('Error fetching user info:', err);
+                // 인증 관련 에러인 경우 로그아웃 처리
+                if (err.message.includes('인증') || err.message.includes('토큰')) {
+                    logout();
+                }
             } finally {
                 setLoading(false);
             }
         };
-
-        if (user?.userid) {
+    
+        if (isAuthenticated && user?.userid) {
             fetchUserInfo();
         }
-    }, [user?.userid]);
+    }, [user?.userid, isAuthenticated]);
 
 
     // 시설 데이터 예시 (스키마 기반)
