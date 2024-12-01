@@ -1,3 +1,4 @@
+// booking.js
 import { useState } from "react";
 import { useLocation } from 'react-router-dom';
 import "../styles/booking.css"
@@ -9,9 +10,6 @@ import { BookingStep2 } from '../components/steps/BookingStep2';
 import { BookingStep3 } from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
 
-
-
-// BookingForm 메인 컴포넌트
 export default function BookingForm() {
   const location = useLocation();
   const bookingInfo = location.state || {};
@@ -19,8 +17,6 @@ export default function BookingForm() {
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState(initialBookingData);
   const [totalPrice, setTotalPrice] = useState(0);
-
-
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -50,35 +46,33 @@ export default function BookingForm() {
     }
   };
 
-
   return (
     <>
-    <div className="bookingheader"></div>
-      <div className="booking-container">
-      <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
-      <form onSubmit={handleSubmit}>
-        {step === 1 && <BookingStep1 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} />}
-        {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
-        
-        <div className="booking-next-button">
-          {step > 1 && (
-            <button
-              type="button"
-              onClick={() => setStep(prev => prev - 1)}
-              className="booking-before"
-            >
-              이전
+      <div className="booking_header"></div>
+      <div className="booking_container">
+        <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
+        <form onSubmit={handleSubmit}>
+          {step === 1 && <BookingStep1 bookingData={bookingData} handleInputChange={handleInputChange} />}
+          {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
+          {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} />}
+          {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
+          
+          <div className="booking_next-button">
+            {step > 1 && (
+              <button
+                type="button"
+                onClick={() => setStep(prev => prev - 1)}
+                className="booking_before"
+              >
+                이전
+              </button>
+            )}
+            <button type="submit" className="booking_submit">
+              {step === CONSTANTS.STEPS ? '결제하기' : '다음'}
             </button>
-          )}
-          <button type="submit" className="booking-submit">
-            {step === CONSTANTS.STEPS ? '결제하기' : '다음'}
-          </button>
-        </div>
-      </form>
-    </div>
+          </div>
+        </form>
+      </div>
     </>
-
   );
 }

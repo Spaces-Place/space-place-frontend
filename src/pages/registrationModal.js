@@ -5,9 +5,11 @@ import { AuthContext } from '../utils/AuthContext';
 import { Cookies } from 'react-cookie';
 import authService from '../utils/authService';
 import "../styles/registrationModal.css";
+import { createSpace } from '../utils/spaceService'; 
 
 export default function RegistrationModal({ isOpen, onClose }) {
     const url = process.env.REACT_APP_SPACE_API;
+    console.log('API URL:', url);
     const cookies = new Cookies();
     const { user, isAuthenticated } = useContext(AuthContext);
 
@@ -132,92 +134,74 @@ export default function RegistrationModal({ isOpen, onClose }) {
         }));
     };
 
-    // 폼 제출 처리
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  // 폼 제출 처리
+const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        // 유효성 검사
-        const errors = validateFormData(formData);
-        if (errors.length > 0) {
-            alert(errors.join('\n'));
-            return;
+    const errors = validateFormData(formData);
+    if (errors.length > 0) {
+        alert(errors.join('\n'));
+        return;
+    }
+
+    try {
+        const validToken = await validateAndRefreshToken();
+        const formDataToSend = new FormData();
+
+        // 기본 필드들 개별적으로 추가
+        formDataToSend.append('user_id', user.userid);
+        formDataToSend.append('space_type', formData.space_type);
+        formDataToSend.append('space_name', formData.space_name);
+        formDataToSend.append('capacity', formData.capacity);
+        formDataToSend.append('space_size', formData.space_size);
+        formDataToSend.append('usage_unit', formData.usage_unit);
+        formDataToSend.append('unit_price', formData.unit_price);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('content', formData.content);
+
+        // 위치 정보 JSON 문자열로 변환
+        const locationData = {
+            type: 'Point',
+            coordinates: [0, 0],
+            sido: formData.location.sido,
+            address: formData.location.address
+        };
+        formDataToSend.append('location', JSON.stringify(locationData));
+
+        // 운영 시간 JSON 문자열로 변환
+        formDataToSend.append('operating_hour', JSON.stringify([{
+            day: formData.operating_hour[0].day,
+            open: formData.operating_hour[0].open,
+            close: formData.operating_hour[0].close
+        }]));
+
+        // 편의시설 배열 처리
+        formData.amenities.forEach(amenity => {
+            formDataToSend.append('amenities', amenity);
+        });
+
+        // 이미지 파일들 추가
+        formData.images.forEach(image => {
+            formDataToSend.append('images', image);
+        });
+
+        // 전송 전 데이터 확인
+        console.log('Sending FormData:');
+        for (let [key, value] of formDataToSend.entries()) {
+            console.log(key, value);
         }
 
-        try {
-            const validToken = await validateAndRefreshToken();
-            const formDataToSend = new FormData();
+        const response = await createSpace(formDataToSend);
+        alert('시설이 성공적으로 등록되었습니다.');
+        onClose();
+        window.location.reload();
 
-            // location 데이터 준비
-            const locationData = {
-                type: 'Point',
-                coordinates: [0, 0], // TODO: 실제 좌표값 설정 필요
-                sido: formData.location.sido,
-                address: formData.location.address
-            };
-
-            // operating_hour 데이터 준비
-            const operatingHourData = [{
-                day: formData.operating_hour[0].day,
-                open: formData.operating_hour[0].open,
-                close: formData.operating_hour[0].close
-            }];
-
-            // FormData에 모든 필드 추가
-            Object.entries({
-                user_id: formData.user_id,
-                space_type: formData.space_type,
-                space_name: formData.space_name,
-                capacity: formData.capacity,
-                space_size: formData.space_size,
-                usage_unit: formData.usage_unit,
-                unit_price: formData.unit_price,
-                amenities: JSON.stringify(formData.amenities),
-                description: formData.description,
-                content: formData.content,
-                location: JSON.stringify(locationData),
-                operating_hour: JSON.stringify(operatingHourData)
-            }).forEach(([key, value]) => {
-                formDataToSend.append(key, value);
-            });
-
-            // 이미지 파일들 추가
-            formData.images.forEach(image => {
-                formDataToSend.append('images', image);
-            });
-
-            const response = await fetch(`${url}/spaces/`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${validToken}`,
-                },
-                body: formDataToSend
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.detail || '시설 등록에 실패했습니다.');
-            }
-
-            alert('시설이 성공적으로 등록되었습니다.');
-            onClose();
-            window.location.reload();
-
-        } catch (error) {
-            console.error('시설 등록 에러:', error);
-            
-            if (error.message.includes('토큰') || 
-                error.message.includes('로그인') || 
-                error.message.includes('인증')) {
-                cookies.remove('access_token');
-                cookies.remove('user_id');
-                cookies.remove('user_type');
-                alert('다시 로그인해주세요.');
-                window.location.href = '/';
-            } else {
-                alert(error.message || '시설 등록에 실패했습니다.');
-            }
-        }
-    };
+    } catch (error) {
+        console.error('시설 등록 에러:', error);
+        const errorMessage = error.response?.data?.detail || error.message || '시설 등록에 실패했습니다.';
+        alert(errorMessage);
+    }
+};
 
     // 컴포넌트 마운트 시 인증 체크
     useEffect(() => {
