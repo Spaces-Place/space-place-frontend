@@ -1,24 +1,30 @@
-import { CONSTANTS } from '../constants/bookingIndex.js';
+// RenderStepIndicator.js
+export const RenderStepIndicator = ({ currentStep, totalStep }) => {
+  const steps = [
+    { number: 1, label: '예약정보' },
+    { number: 2, label: '예약자정보' },
+    { number: 3, label: '결제정보' },
+    { number: 4, label: '예약확인' },
+  ];
 
-export const RenderStepIndicator = ({step}) => (
-  <div className="booking-content">
-    <div className="booking-date">
-      {Array.from({ length: CONSTANTS.STEPS }, (_, i) => i + 1).map((stepNum) => (
-        <div
-          key={stepNum}
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${
-            step >= stepNum ? 'bg-blue-500 text-white' : 'bg-gray-200'
-          }`}
-        >
-          {stepNum}
+  return (
+    <div className="booking_step-numbers">
+      {steps.map(({number, label}) => (
+        <div key={number} className="booking_step-item">
+          <div 
+            className={`booking_step-number ${
+              currentStep === number 
+                ? 'active'
+                : currentStep > number 
+                  ? 'completed' 
+                  : ''
+            }`}
+          >
+            {number}
+          </div>
+          <div className="booking_step-label">{label}</div>
         </div>
       ))}
     </div>
-    <div className="booking-date-box">
-      <div
-        className="booking-date-round"
-        style={{ width: `${(step / CONSTANTS.STEPS) * 100}%` }}
-      />
-    </div>
-  </div>
-);
+  );
+};

@@ -87,14 +87,6 @@ export default function SpaceList({ type: propType }) {
                   <div className="list-space-price">
                     {space.unit_price.toLocaleString()}원 / {space.usage_unit}
                   </div>
-                  {space.amenities && (
-                    <div className="space-amenities">
-                      {/* amenities가 문자열 배열로 된 JSON 문자열이므로 파싱 필요 */}
-                      {space.amenities.map(amenity => 
-                        JSON.parse(amenity).join(', ')
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             ))}

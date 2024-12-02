@@ -1,14 +1,14 @@
-// booking.js
+// BookingForm.js
 import { useState } from "react";
 import { useLocation } from 'react-router-dom';
-import "../styles/booking.css"
-import {calculatePrice} from '../utils/timeUtils';
+import { calculatePrice } from '../utils/timeUtils';
 import { CONSTANTS, initialBookingData } from '../constants/bookingIndex';
 import { RenderStepIndicator } from '../components/RenderStepIndicator';
 import { BookingStep1 } from '../components/steps/BookingStep1';
 import { BookingStep2 } from '../components/steps/BookingStep2';
 import { BookingStep3 } from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
+import { handlePayment, initiateKakaoPayment  } from '../utils/paymentService';
 
 export default function BookingForm() {
   const location = useLocation();
@@ -36,43 +36,50 @@ export default function BookingForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (step < CONSTANTS.STEPS) {
       setStep(prev => prev + 1);
     } else {
-      // TODO: API 호출 로직 추가
-      alert("예약이 완료되었습니다.");
+      if (!bookingData.agreement) {
+        alert('예약 정책에 동의해주세요.');
+        return;
+      }
+  
+      try {
+        // 카카오페이 결제 시작
+        if (bookingData.paymentMethod === 'kakao') {
+          await initiateKakaoPayment(bookingData, totalPrice, bookingInfo.spaceId);
+        } else {
+          alert('현재 카카오페이만 지원됩니다.');
+        }
+      } catch (error) {
+        alert('결제 처리 중 오류가 발생했습니다.');
+        console.error('Payment error:', error);
+      }
     }
   };
 
   return (
-    <>
-      <div className="booking_header"></div>
-      <div className="booking_container">
-        <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
-        <form onSubmit={handleSubmit}>
-          {step === 1 && <BookingStep1 bookingData={bookingData} handleInputChange={handleInputChange} />}
-          {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-          {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} />}
-          {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
-          
-          <div className="booking_next-button">
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={() => setStep(prev => prev - 1)}
-                className="booking_before"
-              >
-                이전
-              </button>
-            )}
-            <button type="submit" className="booking_submit">
-              {step === CONSTANTS.STEPS ? '결제하기' : '다음'}
+    <div className="booking_container">
+      <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
+      <form onSubmit={handleSubmit}>
+        {step === 1 && <BookingStep1 bookingData={bookingData} handleInputChange={handleInputChange} />}
+        {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
+        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} />}
+        {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
+        
+        <div className="booking_next-button">
+          {step > 1 && (
+            <button type="button" onClick={() => setStep(prev => prev - 1)} className="booking_before">
+              이전
             </button>
-          </div>
-        </form>
-      </div>
-    </>
+          )}
+          <button type="submit" className="booking_submit">
+            {step === CONSTANTS.STEPS ? '결제하기' : '다음'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
