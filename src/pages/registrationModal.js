@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import AddressSearch from '../components/AdressSearch';
 import 'react-calendar/dist/Calendar.css';
 import ItemType from '../constants/type/ItemType';
 import { AuthContext } from '../utils/AuthContext';
@@ -286,24 +287,24 @@ export default function RegistrationModal({ isOpen, onClose }) {
                         {/* 주소 */}
                         <div className="registration_form-group">
                             <label>주소</label>
-                            <input
-                                type="text"
-                                name="sido"
-                                placeholder="시/도"
-                                value={formData.location.sido}
-                                onChange={handleLocationChange}
-                                required
-                                className="registration_input address"
-                            />
-                            <input
-                                type="text"
-                                name="address"
-                                placeholder="상세주소"
-                                value={formData.location.address}
-                                onChange={handleLocationChange}
-                                required
-                                className="registration_input address"
-                            />
+                            <div className="registration_form-group">
+                                <AddressSearch 
+                                    onCompletePost={(data) => {
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            location: {
+                                                type: 'Point',
+                                                coordinates: [
+                                                    data.coordinates[0], // 경도
+                                                    data.coordinates[1]  // 위도
+                                                ],
+                                                sido: data.sido,
+                                                address: data.address
+                                            }
+                                        }));
+                                    }}
+                                />
+                            </div>
                         </div>
 
                         {/* 수용 인원 & 공간 크기 */}
