@@ -10,6 +10,10 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
   // API URL 확인을 위한 로깅 추가
   const url = `${process.env.REACT_APP_PYMENTS_API}/kakao`;
   console.log('Payment API URL:', url);
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('로그인이 필요합니다.');
+  }
   
   try {
     const response = await axios.post(url, {
@@ -19,7 +23,7 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
       end_time: bookingData.endTime
     }, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       // CORS 이슈 디버깅을 위한 설정
@@ -32,8 +36,12 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
     
     return response.data;
   } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+    }
     // 자세한 에러 정보 로깅
     console.error('Payment Error:', {
+      
       status: error.response?.status,
       data: error.response?.data,
       config: error.config
