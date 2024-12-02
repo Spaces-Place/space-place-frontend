@@ -5,7 +5,8 @@ import { AuthContext } from '../utils/AuthContext';
 import { Cookies } from 'react-cookie';
 import authService from '../utils/authService';
 import "../styles/registrationModal.css";
-import { createSpace } from '../utils/spaceService'; 
+import { createSpace } from '../utils/spaceService';
+import { Button, Dropdown, DropdownButton, FloatingLabel, Form, InputGroup, ListGroup } from 'react-bootstrap';
 
 export default function RegistrationModal({ isOpen, onClose }) {
     const url = process.env.REACT_APP_SPACE_API;
@@ -42,7 +43,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
     // 폼 유효성 검사 함수
     const validateFormData = (data) => {
         const errors = [];
-        
+
         if (!data.space_name) errors.push('시설명은 필수입니다');
         if (data.capacity <= 0) errors.push('수용 인원은 0보다 커야 합니다');
         if (data.space_size <= 0) errors.push('공간 크기는 0보다 커야 합니다');
@@ -83,7 +84,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const numberFields = ['unit_price', 'capacity', 'space_size'];
-        
+
+        if (numberFields.includes(name) && isNaN(value)) {
+            return;
+        }
+
         setFormData(prev => ({
             ...prev,
             [name]: numberFields.includes(name) ? Number(value) : value
@@ -124,84 +129,108 @@ export default function RegistrationModal({ isOpen, onClose }) {
     };
 
     // 편의시설 처리
+    const [inputAmenity, setInputAmenity] = useState('')
+
     const handleAmenitiesChange = (e) => {
         const { value, checked } = e.target;
         setFormData(prev => ({
             ...prev,
-            amenities: checked 
+            amenities: checked
                 ? [...prev.amenities, value]
                 : prev.amenities.filter(item => item !== value)
         }));
     };
 
-  // 폼 제출 처리
-const handleSubmit = async (e) => {
-    e.preventDefault();
+    const addAmenity = (event) => {
+        if (event.key === "Enter") {
+            const trimmedValue = inputAmenity.trim();
+            if (trimmedValue !== '') {
+                if (!formData.amenities.includes(trimmedValue)) {
+                    setFormData(prev => ({
+                        ...prev,
+                        amenities: [...prev.amenities, trimmedValue]
+                    }));
+                }
+                setInputAmenity(''); // 입력 필드 비우기
+            }
+        }
+    };
 
-    const errors = validateFormData(formData);
-    if (errors.length > 0) {
-        alert(errors.join('\n'));
-        return;
-    }
+    const removeAmenity = (tagToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            amenities: prev.amenities.filter(item => item !== tagToRemove)
+        }));
+    };
 
-    try {
-        const validToken = await validateAndRefreshToken();
-        const formDataToSend = new FormData();
+    // 폼 제출 처리
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-        // 기본 필드들 개별적으로 추가
-        formDataToSend.append('user_id', user.userid);
-        formDataToSend.append('space_type', formData.space_type);
-        formDataToSend.append('space_name', formData.space_name);
-        formDataToSend.append('capacity', formData.capacity);
-        formDataToSend.append('space_size', formData.space_size);
-        formDataToSend.append('usage_unit', formData.usage_unit);
-        formDataToSend.append('unit_price', formData.unit_price);
-        formDataToSend.append('description', formData.description);
-        formDataToSend.append('content', formData.content);
-
-        // 위치 정보 JSON 문자열로 변환
-        const locationData = {
-            type: 'Point',
-            coordinates: [0, 0],
-            sido: formData.location.sido,
-            address: formData.location.address
-        };
-        formDataToSend.append('location', JSON.stringify(locationData));
-
-        // 운영 시간 JSON 문자열로 변환
-        formDataToSend.append('operating_hour', JSON.stringify([{
-            day: formData.operating_hour[0].day,
-            open: formData.operating_hour[0].open,
-            close: formData.operating_hour[0].close
-        }]));
-
-        // 편의시설 배열 처리
-        formData.amenities.forEach(amenity => {
-            formDataToSend.append('amenities', amenity);
-        });
-
-        // 이미지 파일들 추가
-        formData.images.forEach(image => {
-            formDataToSend.append('images', image);
-        });
-
-        // 전송 전 데이터 확인
-        console.log('Sending FormData:');
-        for (let [key, value] of formDataToSend.entries()) {
-            console.log(key, value);
+        const errors = validateFormData(formData);
+        if (errors.length > 0) {
+            alert(errors.join('\n'));
+            return;
         }
 
-        const response = await createSpace(formDataToSend);
-        alert('시설이 성공적으로 등록되었습니다.');
-        onClose();
-        window.location.reload();
+        try {
+            const validToken = await validateAndRefreshToken();
+            const formDataToSend = new FormData();
 
-    } catch (error) {
-        console.error('시설 등록 에러:', error);
-        const errorMessage = error.response?.data?.detail || error.message || '시설 등록에 실패했습니다.';
-        alert(errorMessage);
-    }
-};
+            // 기본 필드들 개별적으로 추가
+            formDataToSend.append('user_id', user.userid);
+            formDataToSend.append('space_type', formData.space_type);
+            formDataToSend.append('space_name', formData.space_name);
+            formDataToSend.append('capacity', formData.capacity);
+            formDataToSend.append('space_size', formData.space_size);
+            formDataToSend.append('usage_unit', formData.usage_unit);
+            formDataToSend.append('unit_price', formData.unit_price);
+            formDataToSend.append('description', formData.description);
+            formDataToSend.append('content', formData.content);
+
+            // 위치 정보 JSON 문자열로 변환
+            const locationData = {
+                type: 'Point',
+                coordinates: [0, 0],
+                sido: formData.location.sido,
+                address: formData.location.address
+            };
+            formDataToSend.append('location', JSON.stringify(locationData));
+
+            // 운영 시간 JSON 문자열로 변환
+            formDataToSend.append('operating_hour', JSON.stringify([{
+                day: formData.operating_hour[0].day,
+                open: formData.operating_hour[0].open,
+                close: formData.operating_hour[0].close
+            }]));
+
+            // 편의시설 배열 처리
+            formData.amenities.forEach(amenity => {
+                formDataToSend.append('amenities', amenity);
+            });
+
+            // 이미지 파일들 추가
+            formData.images.forEach(image => {
+                formDataToSend.append('images', image);
+            });
+
+            // 전송 전 데이터 확인
+            console.log('Sending FormData:');
+            for (let [key, value] of formDataToSend.entries()) {
+                console.log(key, value);
+            }
+
+            const response = await createSpace(formDataToSend);
+            alert('시설이 성공적으로 등록되었습니다.');
+            onClose();
+            window.location.reload();
+
+        } catch (error) {
+            console.error('시설 등록 에러:', error);
+            const errorMessage = error.response?.data?.detail || error.message || '시설 등록에 실패했습니다.';
+            alert(errorMessage);
+        }
+    };
 
     // 컴포넌트 마운트 시 인증 체크
     useEffect(() => {
@@ -228,9 +257,9 @@ const handleSubmit = async (e) => {
                     <h3>새 시설 등록</h3>
                 </div>
                 <div className="modal-content">
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         {/* 시설 유형 */}
-                        <div className="registration-form-group">
+                        {/* <div className="registration-form-group">
                             <label>시설 유형</label>
                             <select
                                 name="space_type"
@@ -242,10 +271,31 @@ const handleSubmit = async (e) => {
                                     <option key={type} value={type}>{title}</option>
                                 ))}
                             </select>
-                        </div>
+                        </div> */}
 
                         {/* 시설명 */}
-                        <div className="registration-form-group">
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text>시설명</InputGroup.Text>
+                            <Form.Control
+                                min="1"
+                                name="space_name"
+                                value={formData.space_name}
+                                onChange={handleInputChange}
+                                required />
+                            <DropdownButton
+                                variant="outline-secondary"
+                                title={formData.space_type ? ItemType.find(item => item.type === formData.space_type)?.title : "선택하세요"}
+                                id="input-group-dropdown-1"
+                                onSelect={(eventKey) => handleInputChange({ target: { name: "space_type", value: eventKey } })}
+                            >
+                                {ItemType.map(({ type, title }) => (
+                                    <Dropdown.Item key={type} eventKey={type}>
+                                        {title}
+                                    </Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+                        </InputGroup>
+                        {/* <div className="registration-form-group">
                             <label>시설명</label>
                             <input
                                 type="text"
@@ -254,7 +304,7 @@ const handleSubmit = async (e) => {
                                 onChange={handleInputChange}
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* 주소 */}
                         <div className="registration-form-group">
@@ -280,7 +330,24 @@ const handleSubmit = async (e) => {
                         </div>
 
                         {/* 수용 인원 */}
-                        <div className="registration-form-group">
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text>수용 인원(명)</InputGroup.Text>
+                            <Form.Control
+                                min="1"
+                                name="capacity"
+                                value={formData.capacity}
+                                onChange={handleInputChange}
+                                required />
+                            <InputGroup.Text>공간 크기(m²)</InputGroup.Text>
+                            <Form.Control
+                                name="space_size"
+                                min="1"
+                                value={formData.space_size}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </InputGroup>
+                        {/* <div className="registration-form-group">
                             <label>수용 인원</label>
                             <input
                                 type="number"
@@ -290,10 +357,10 @@ const handleSubmit = async (e) => {
                                 onChange={handleInputChange}
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* 공간 크기 */}
-                        <div className="registration-form-group">
+                        {/* <div className="registration-form-group">
                             <label>공간 크기(m²)</label>
                             <input
                                 type="number"
@@ -303,7 +370,7 @@ const handleSubmit = async (e) => {
                                 onChange={handleInputChange}
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* 운영시간 */}
                         <div className="registration-form-group">
@@ -339,7 +406,24 @@ const handleSubmit = async (e) => {
                         </div>
 
                         {/* 이용 단위 */}
-                        <div className="registration-form-group">
+                        <InputGroup className="mb-3">
+                            <DropdownButton
+                                variant="outline-secondary"
+                                title={formData.usage_unit === "TIME" ? "시간단위" : "일단위"}
+                                onSelect={(eventKey) => handleInputChange({ target: { name: "usage_unit", value: eventKey } })}
+                            >
+                                <Dropdown.Item eventKey="TIME">시간단위</Dropdown.Item>
+                                <Dropdown.Item eventKey="DAY">일단위</Dropdown.Item>
+                            </DropdownButton>
+                            <Form.Control
+                                name="unit_price"
+                                value={formData.unit_price}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <InputGroup.Text>원</InputGroup.Text>
+                        </InputGroup>
+                        {/* <div className="registration-form-group">
                             <label>이용 단위</label>
                             <select
                                 name="usage_unit"
@@ -350,10 +434,10 @@ const handleSubmit = async (e) => {
                                 <option value="TIME">시간단위</option>
                                 <option value="DAY">일단위</option>
                             </select>
-                        </div>
+                        </div> */}
 
                         {/* 단위 가격 */}
-                        <div className="registration-form-group">
+                        {/* <div className="registration-form-group">
                             <label>단위 가격</label>
                             <input
                                 type="number"
@@ -363,10 +447,44 @@ const handleSubmit = async (e) => {
                                 onChange={handleInputChange}
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* 편의시설 */}
-                        <div className="registration-form-group">
+                        <div className="mb-3">
+                            <Form.Label>편의 시설</Form.Label>
+                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                                {/* 태그 리스트를 입력 필드의 왼쪽에 배치 */}
+                                {formData.amenities.map((amenity, index) => (
+                                    <ListGroup.Item
+                                        key={index}
+                                        className="d-flex justify-content-between align-items-center"
+                                        style={{
+                                            padding: '5px',
+                                            fontSize: '12px',
+                                            display: 'inline-flex',
+                                            margin: '2px'
+                                        }}
+                                    >
+                                        {amenity}
+                                        <Button variant="outline-danger" size="sm" onClick={() => removeAmenity(amenity)}>
+                                            x
+                                        </Button>
+                                    </ListGroup.Item>
+                                ))}
+                                {/* 입력 필드 */}
+                                <Form.Control
+                                    type="text"
+                                    name="amenities"
+                                    value={inputAmenity}
+                                    onChange={(e) => setInputAmenity(e.target.value)}
+                                    onKeyUp={addAmenity}
+                                    placeholder="입력 후 엔터"
+                                    style={{ fontSize: '12px', flex: '1', marginLeft: '5px' }} // 여백 추가
+                                />
+                            </div>
+                        </div>
+
+                        {/* <div className="registration-form-group">
                             <label>편의시설</label>
                             <div className="amenities-checkboxes">
                                 <label>
@@ -387,12 +505,25 @@ const handleSubmit = async (e) => {
                                     />
                                     주차장
                                 </label>
-                                {/* 추가 편의시설 체크박스들 */}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* 한줄 소개 */}
-                        <div className="registration-form-group">
+                        <div className="mb-3">
+                            <FloatingLabel
+                                controlId="floatingTextarea"
+                                label="한줄 소개"
+                            >
+                                <Form.Control
+                                    as="textarea"
+                                    placeholder="Leave a comment here"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    required />
+                            </FloatingLabel>
+                        </div>
+                        {/* <div className="registration-form-group">
                             <label>한줄 소개</label>
                             <input
                                 type="text"
@@ -401,9 +532,22 @@ const handleSubmit = async (e) => {
                                 onChange={handleInputChange}
                                 required
                             />
-                        </div>
+                        </div> */}
                         {/* 상세 설명 */}
-                        <div className="registration-form-group">
+                        <div className="mb-3">
+                            <FloatingLabel controlId="floatingTextarea2" label="상세 설명">
+                                <Form.Control
+                                    name="content"
+                                    as="textarea"
+                                    value={formData.content}
+                                    onChange={handleInputChange}
+                                    placeholder="시설에 대한 상세한 설명을 입력해주세요"
+                                    required
+                                    style={{ height: '100px' }}
+                                />
+                            </FloatingLabel>
+                        </div>
+                        {/* <div className="registration-form-group">
                             <label>상세 설명</label>
                             <textarea
                                 name="content"
@@ -413,7 +557,7 @@ const handleSubmit = async (e) => {
                                 placeholder="시설에 대한 상세한 설명을 입력해주세요"
                                 rows="4"
                             />
-                        </div>
+                        </div> */}
 
                         {/* 이미지 업로드 */}
                         <div className="registration-form-group-image">
@@ -434,7 +578,11 @@ const handleSubmit = async (e) => {
                         </div>
 
                         {/* 버튼 영역 */}
-                        <div className="registration-modal-actions">
+                        <div className="registration-modal-actions2">
+                            <Button type="button" variant="outline-secondary" className='registration-cancel-button' onClick={onClose}>취소</Button>
+                            <Button type="button" variant="outline-success" className='registration-submit-button' onClick={handleSubmit}>등록</Button>
+                        </div>
+                        {/* <div className="registration-modal-actions">
                             <button 
                                 type="button" 
                                 onClick={onClose} 
@@ -448,10 +596,10 @@ const handleSubmit = async (e) => {
                             >
                                 등록하기
                             </button>
-                        </div>
+                        </div> */}
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
