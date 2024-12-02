@@ -7,28 +7,39 @@ if (!PAYMENT_API_URL) {
 }
 
 export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => {
- try {
-   const response = await axios.post(`${PAYMENT_API_URL}/kakao`, {
-     space_id: spaceId,
-     use_date: bookingData.date,
-     start_time: bookingData.startTime,
-     end_time: bookingData.endTime
-   }, {
-     headers: {
-       'Authorization': `Bearer ${localStorage.getItem('token')}`,
-       'Content-Type': 'application/json'
-     }
-   });
+  // API URL 확인을 위한 로깅 추가
+  const url = `${process.env.REACT_APP_PYMENTS_API}/kakao`;
+  console.log('Payment API URL:', url);
+  
+  try {
+    const response = await axios.post(url, {
+      space_id: spaceId,
+      use_date: bookingData.date,
+      start_time: bookingData.startTime,
+      end_time: bookingData.endTime
+    }, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      },
+      // CORS 이슈 디버깅을 위한 설정
+      withCredentials: true
+    });
 
-   if (response.data.next_redirect_pc_url) {
-     window.location.href = response.data.next_redirect_pc_url;
-   }
-   
-   return response.data;
- } catch (error) {
-   console.error('Payment initiation failed:', error.response?.data || error.message);
-   throw error;
- }
+    if (response.data.next_redirect_pc_url) {
+      window.location.href = response.data.next_redirect_pc_url;
+    }
+    
+    return response.data;
+  } catch (error) {
+    // 자세한 에러 정보 로깅
+    console.error('Payment Error:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      config: error.config
+    });
+    throw error;
+  }
 };
 
 export const handlePaymentResult = async (searchParams) => {
