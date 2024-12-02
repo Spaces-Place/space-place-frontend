@@ -84,7 +84,10 @@ html, body {
   padding: 0.5rem 0;
   transition: all 0.3s ease;
 }
-
+.theme-toggle{
+  margin-right: 10px;
+  padding-bottom: 10px;
+}
 .navbar.scrolled {
   background: rgba(255, 255, 255, 0.95) !important;
   box-shadow: var(--shadow-md);

@@ -20,7 +20,6 @@ import SpaceDetail from './pages/spaceDetail';
 import SearchResults from './pages/searchResults';
 import NotFound from './pages/notFound';
 import Contact from './pages/contact';
-import FAQ from './pages/faq';
 import Settings from './pages/Settings';
 
 // 컨텍스트 및 상수
@@ -34,6 +33,7 @@ import ScrollToTop from './components/ScrollToTop';
 import LoadingSpinner from './components/LoadingSpinner';
 import SearchBar from './components/SearchBar';
 import ThemeToggle from './components/ThemeToggle';
+import PaymentResult from './pages/PaymentResult';
 
 // 보호된 라우트 컴포넌트
 const PrivateRoute = ({ children, requiredRole }) => {
@@ -126,7 +126,6 @@ function App() {
                   ))}
                 </NavDropdown>
                 <Nav.Link as={Link} to="/contact">문의하기</Nav.Link>
-                <Nav.Link as={Link} to="/faq">FAQ</Nav.Link>
               </Nav>
               
               <Nav className="ms-auto">
@@ -170,7 +169,7 @@ function App() {
         onLogin={handleLogin}
       />
 
-      <Routes>
+<Routes>
         <Route 
           path="/" 
           element={
@@ -187,7 +186,6 @@ function App() {
         {/* 공개 라우트 */}
         <Route path="/intro" element={<IntroPage />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/faq" element={<FAQ />} />
         <Route path="/mappage" element={<MyMapPage />} />
         <Route path="/search" element={<SearchResults query={searchQuery} />} />
 
@@ -218,6 +216,23 @@ function App() {
         <Route path="/settings" element={
           <PrivateRoute>
             <Settings />
+          </PrivateRoute>
+        } />
+
+        {/* 결제 결과 처리 라우트 */}
+        <Route path="/payment/success" element={
+          <PrivateRoute>
+            <PaymentResult type="success" />
+          </PrivateRoute>
+        } />
+        <Route path="/payment/cancel" element={
+          <PrivateRoute>
+            <PaymentResult type="cancel" />
+          </PrivateRoute>
+        } />
+        <Route path="/payment/fail" element={
+          <PrivateRoute>
+            <PaymentResult type="fail" />
           </PrivateRoute>
         } />
 
