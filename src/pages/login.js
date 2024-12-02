@@ -23,6 +23,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
+    e.preventDefault(); // 입력 시에도 URL 변경 방지
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
@@ -31,19 +32,20 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // URL 변경 방지
     setError('');
     setMessage('');
     
     try {
       if (isLoginView) {
         const response = await login(formData.userid, formData.password, formData.type);
-        onLogin(response.user);
-        onClose();
+        if (response && response.user) {
+          onLogin(response.user);
+          onClose();
+        }
       } else {
         const message = await authService.register(formData);
         setMessage(message);
-        // 회원가입 성공 후 잠시 대기했다가 로그인 화면으로 전환
         setTimeout(() => {
           setIsLoginView(true);
           setFormData(prev => ({
@@ -65,41 +67,45 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   return (
     <div className="login_modal">
       <div className="login_modal-con">
-        <div className="login-header">
+        <div className="login_header">
           <h2>{isLoginView ? '로그인' : '회원가입'}</h2>
-          <button onClick={onClose} className="close-button">X</button>
+          <button onClick={onClose} className="login_close-button">X</button>
         </div>
         
         {error && (
-          <div className="error-message" style={{ color: 'red', margin: '10px 0', textAlign: 'center' }}>
+          <div className="login_error-message">
             {error}
           </div>
         )}
         {message && (
-          <div className="success-message" style={{ color: 'green', margin: '10px 0', textAlign: 'center' }}>
+          <div className="login_success-message">
             {message}
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
-            <div className="user-type-selection">
-              {Object.entries(USER_TYPE_LABELS).map(([value, label]) => (
-                <button
-                  type="button"
-                  key={value}
-                  className={`type-button ${formData.type === value ? 'active' : ''}`}
-                  onClick={() => setFormData(prev => ({ ...prev, type: value }))}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+        <form onSubmit={handleSubmit} className="login_form" method="POST">
+          <div className="login_type-selection">
+            {Object.entries(USER_TYPE_LABELS).map(([value, label]) => (
+              <button
+                type="button"
+                key={value}
+                className={`login_type-button ${formData.type === value ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFormData(prev => ({ ...prev, type: value }));
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <input
             type="text"
             name="userid"
             placeholder="User ID"
             value={formData.userid}
             onChange={handleChange}
+            className="login_input"
             required
           />
           <input
@@ -108,6 +114,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
+            className="login_input"
             required
           />
           {!isLoginView && (
@@ -118,6 +125,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 placeholder="Name"
                 value={formData.name}
                 onChange={handleChange}
+                className="login_input"
                 required
               />
               <input
@@ -126,6 +134,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}
+                className="login_input"
                 required
               />
               <input
@@ -134,19 +143,21 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 placeholder="Phone"
                 value={formData.phone}
                 onChange={handleChange}
+                className="login_input"
                 required
               />
             </>
           )}
-          <button type="submit" className="submit-button">
+          <button type="submit" className="login_submit-button">
             {isLoginView ? '로그인' : '회원가입'}
           </button>
         </form>
-        <p className="switch-view">
+        <p className="login_switch-view">
           또는
           <span
-            className="swap-btn"
-            onClick={() => {
+            className="login_swap-btn"
+            onClick={(e) => {
+              e.preventDefault();
               setIsLoginView(!isLoginView);
               setError('');
               setMessage('');

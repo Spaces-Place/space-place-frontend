@@ -4,67 +4,32 @@ import ItemType from '../constants/type/ItemType';
 import { AuthContext } from '../utils/AuthContext';
 import { Cookies } from 'react-cookie';
 import authService from '../utils/authService';
-import "../styles/registrationModal.css"
-
+import "../styles/registrationModal.css";
+import { createSpace } from '../utils/spaceService'; 
 
 export default function RegistrationModal({ isOpen, onClose }) {
     const url = process.env.REACT_APP_SPACE_API;
+    console.log('API URL:', url);
     const cookies = new Cookies();
     const { user, isAuthenticated } = useContext(AuthContext);
 
-    // 토큰 가져오기
-    const getToken = () => {
-        const token = cookies.get('access_token');
-        if (!token) throw new Error('인증 토큰이 없습니다.');
-        return token;
-    };
-
-
-
-    // 토큰 갱신 및 검증
-    const validateAndRefreshToken = async () => {
-        try {
-            const token = cookies.get('access_token');
-            if (!token) {
-                throw new Error('토큰이 없습니다.');
-            }
-
-
-            // TODO: 구현 안된 기능임.
-            // 토큰 만료 확인
-            if (authService.isTokenExpired(token)) {
-                console.log('토큰 만료, 갱신 시도');
-                const newToken = await authService.refreshToken();
-                if (!newToken) {
-                    throw new Error('토큰 갱신 실패');
-                }
-                return newToken;
-            }
-
-            return token;
-        } catch (error) {
-            console.error('Token validation error:', error);
-            throw error;
-        }
-    };
-
-    // 초기 formData 설정
+    // 초기 상태 백엔드 스키마에 맞춰 재구성
     const [formData, setFormData] = useState({
         user_id: user?.userid || '',
-        space_type: 'CAMPING',
-        space_name: '캠핑장',
-        capacity: '22',
-        space_size: '2',
-        usage_unit: 'DAY',
-        unit_price: '10000',
-        amenities: ['wifi'],
-        description: '오십쇼',
-        content: '내용',
+        space_type: 'PLAYING',
+        space_name: '',
+        capacity: 0,
+        space_size: 0,
+        usage_unit: 'TIME',
+        unit_price: 0,
+        amenities: [],
+        description: '',
+        content: '',
         location: {
-            sido: '서울특별시',
-            address: '서울특별시 독산동',
             type: 'Point',
-            coordinates: [127.123456, 34.123456],
+            coordinates: [0, 0],
+            sido: '',
+            address: ''
         },
         operating_hour: [{
             day: 'MONDAY',
@@ -74,50 +39,58 @@ export default function RegistrationModal({ isOpen, onClose }) {
         images: []
     });
 
-    useEffect(() => {
+    // 폼 유효성 검사 함수
+    const validateFormData = (data) => {
+        const errors = [];
+        
+        if (!data.space_name) errors.push('시설명은 필수입니다');
+        if (data.capacity <= 0) errors.push('수용 인원은 0보다 커야 합니다');
+        if (data.space_size <= 0) errors.push('공간 크기는 0보다 커야 합니다');
+        if (data.unit_price <= 0) errors.push('단위 가격은 0보다 커야 합니다');
+        if (!data.location.sido || !data.location.address) {
+            errors.push('주소 정보는 필수입니다');
+        }
+        if (!data.operating_hour?.[0]?.open || !data.operating_hour?.[0]?.close) {
+            errors.push('운영 시간 정보는 필수입니다');
+        }
+        if (!data.description) errors.push('한줄 소개는 필수입니다');
+        if (!data.content) errors.push('상세 설명은 필수입니다');
+        if (!data.images.length) errors.push('최소 1개의 이미지가 필요합니다');
+
+        return errors;
+    };
+
+    // 토큰 검증 및 갱신 함수
+    const validateAndRefreshToken = async () => {
         try {
-            // 컴포넌트 마운트 시 토큰 확인
-            const token = getToken();
-            if (!token) {
-                alert('로그인이 필요한 서비스입니다.');
-                // window.location.href = '/';
-                return;
+            const token = cookies.get('access_token');
+            if (!token) throw new Error('토큰이 없습니다.');
+
+            // 토큰 만료 확인 및 갱신
+            if (authService.isTokenExpired(token)) {
+                const newToken = await authService.refreshToken();
+                if (!newToken) throw new Error('토큰 갱신 실패');
+                return newToken;
             }
+            return token;
         } catch (error) {
-            alert('로그인이 필요한 서비스입니다.');
-            // window.location.href = '/';
-            return;
-        }
-
-        if (!isAuthenticated) {
-            alert('로그인이 필요한 서비스입니다.');
-            // window.location.href = '/';
-            return;
-        }
-
-        if (user?.type !== 'vendor') {
-            alert('공간 등록은 공간 제공자만 가능합니다.');
-            onClose();
-            return;
-        }
-    }, [isAuthenticated, user, onClose]);
-
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'unit_price' || name === 'capacity' || name === 'space_size' || name === 'user_id') {
-            setFormData(prev => ({
-                ...prev,
-                [name]: Number(value)
-            }));
-        } else {
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
+            console.error('Token validation error:', error);
+            throw error;
         }
     };
 
+    // 기본 입력 처리
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        const numberFields = ['unit_price', 'capacity', 'space_size'];
+        
+        setFormData(prev => ({
+            ...prev,
+            [name]: numberFields.includes(name) ? Number(value) : value
+        }));
+    };
+
+    // 위치 정보 처리
     const handleLocationChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -129,6 +102,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
         }));
     };
 
+    // 운영 시간 처리
     const handleOperatingHourChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
@@ -139,7 +113,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
         }));
     };
 
-
+    // 이미지 처리
     const handleImageChange = (e) => {
         if (e.target.files) {
             setFormData(prev => ({
@@ -149,149 +123,113 @@ export default function RegistrationModal({ isOpen, onClose }) {
         }
     };
 
-
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            // 토큰 검증 및 갱신
-            const validToken = await validateAndRefreshToken();
-
-            const formDataToSend = new FormData();
-
-            // 기본 데이터 준비
-            const basicData = {
-                ...formData,
-                user_id: user.userid,
-                unit_price: Number(formData.unit_price),
-                capacity: Number(formData.capacity),
-                space_size: Number(formData.space_size),
-                amenities: formData.amenities.length ? formData.amenities : [],
-                location: {
-                    ...formData.location,
-                    coordinates: [0, 0]
-                },
-                operating_hour: formData.operating_hour.map(hour => ({
-                    ...hour,
-                    open: hour.open || '09:00',
-                    close: hour.close || '18:00'
-                }))
-            };
-
-            // FormData에 데이터 추가
-            Object.keys(basicData).forEach(key => {
-                if (key !== 'images') {
-                    if (typeof basicData[key] === 'object') {
-                        formDataToSend.append(key, JSON.stringify(basicData[key]));
-                    } else {
-                        formDataToSend.append(key, basicData[key]);
-                    }
-                }
-            });
-
-            // 이미지 처리
-            if (formData.images && formData.images.length > 0) {
-                formData.images.forEach((image, index) => {
-                    formDataToSend.append(`images`, image);
-                });
-            }
-
-            // 요청 전 데이터 확인
-            console.log('Sending request with token:', validToken);
-            
-            debugger;
-
-            const response = await fetch(`${url}/spaces/`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${validToken}`,
-                },
-                // credentials: 'include',
-                body: formDataToSend
-            });
-
-            console.log(response);
-
-            const contentType = response.headers.get('content-type');
-            let errorData;
-
-            if (contentType && contentType.includes('application/json')) {
-                errorData = await response.json();
-            } else {
-                errorData = await response.text();
-            }
-
-            if (response.status === 403) {
-                console.error('Authorization error:', errorData);
-
-                if (typeof errorData === 'object' && errorData.detail) {
-                    // 토큰 관련 오류
-                    cookies.remove('access_token');
-                    cookies.remove('user_id');
-                    cookies.remove('user_type');
-
-                    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-                    debugger;
-
-                    window.location.href = '/';
-                    return;
-                }
-            }
-
-            if (!response.ok) {
-                throw new Error(
-                    typeof errorData === 'object' ? errorData.detail : errorData
-                );
-            }
-
-            alert('시설이 성공적으로 등록되었습니다.');
-            onClose();
-            window.location.reload();
-
-        } catch (error) {
-            console.error('시설 등록 에러:', error);
-
-            if (error.message.includes('토큰') ||
-                error.message.includes('로그인') ||
-                error.message.includes('인증')) {
-                // 인증 관련 에러 처리
-                cookies.remove('access_token');
-                cookies.remove('user_id');
-                cookies.remove('user_type');
-
-                alert('다시 로그인해주세요.');
-                window.location.href = '/';
-            } else {
-                alert(error.message || '시설 등록에 실패했습니다.');
-            }
-        }
+    // 편의시설 처리
+    const handleAmenitiesChange = (e) => {
+        const { value, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            amenities: checked 
+                ? [...prev.amenities, value]
+                : prev.amenities.filter(item => item !== value)
+        }));
     };
 
+  // 폼 제출 처리
+const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    const errors = validateFormData(formData);
+    if (errors.length > 0) {
+        alert(errors.join('\n'));
+        return;
+    }
+
+    try {
+        const validToken = await validateAndRefreshToken();
+        const formDataToSend = new FormData();
+
+        // 기본 필드들 개별적으로 추가
+        formDataToSend.append('user_id', user.userid);
+        formDataToSend.append('space_type', formData.space_type);
+        formDataToSend.append('space_name', formData.space_name);
+        formDataToSend.append('capacity', formData.capacity);
+        formDataToSend.append('space_size', formData.space_size);
+        formDataToSend.append('usage_unit', formData.usage_unit);
+        formDataToSend.append('unit_price', formData.unit_price);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('content', formData.content);
+
+        // 위치 정보 JSON 문자열로 변환
+        const locationData = {
+            type: 'Point',
+            coordinates: [0, 0],
+            sido: formData.location.sido,
+            address: formData.location.address
+        };
+        formDataToSend.append('location', JSON.stringify(locationData));
+
+        // 운영 시간 JSON 문자열로 변환
+        formDataToSend.append('operating_hour', JSON.stringify([{
+            day: formData.operating_hour[0].day,
+            open: formData.operating_hour[0].open,
+            close: formData.operating_hour[0].close
+        }]));
+
+        // 편의시설 배열 처리
+        formData.amenities.forEach(amenity => {
+            formDataToSend.append('amenities', amenity);
+        });
+
+        // 이미지 파일들 추가
+        formData.images.forEach(image => {
+            formDataToSend.append('images', image);
+        });
+
+        // 전송 전 데이터 확인
+        console.log('Sending FormData:');
+        for (let [key, value] of formDataToSend.entries()) {
+            console.log(key, value);
+        }
+
+        const response = await createSpace(formDataToSend);
+        alert('시설이 성공적으로 등록되었습니다.');
+        onClose();
+        window.location.reload();
+
+    } catch (error) {
+        console.error('시설 등록 에러:', error);
+        const errorMessage = error.response?.data?.detail || error.message || '시설 등록에 실패했습니다.';
+        alert(errorMessage);
+    }
+};
+
+    // 컴포넌트 마운트 시 인증 체크
+    useEffect(() => {
+        if (!isAuthenticated) {
+            alert('로그인이 필요한 서비스입니다.');
+            onClose();
+            return;
+        }
+
+        if (user?.type !== 'vendor') {
+            alert('공간 등록은 공간 제공자만 가능합니다.');
+            onClose();
+            return;
+        }
+    }, [isAuthenticated, user, onClose]);
 
     if (!isOpen) return null;
 
     return (
         <div className="registration-modal-overlay">
             <div className="registration-modal-wrap">
-            <button onClick={onClose} className="registration-close-button">×</button>
+                <button onClick={onClose} className="registration-close-button">×</button>
                 <div className="registration-modal-title">
                     <h3>새 시설 등록</h3>
                 </div>
                 <div className="modal-content">
                     <form onSubmit={handleSubmit}>
-                        <div className="registration-form-group">
-                            <label>등록자</label>
-                            <input
-                                type="text"
-                                name="user_id"
-                                value={formData.user_id}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
+                        {/* 시설 유형 */}
                         <div className="registration-form-group">
                             <label>시설 유형</label>
                             <select
@@ -306,6 +244,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                             </select>
                         </div>
 
+                        {/* 시설명 */}
                         <div className="registration-form-group">
                             <label>시설명</label>
                             <input
@@ -317,7 +256,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                             />
                         </div>
 
-                        {/* Location fields */}
+                        {/* 주소 */}
                         <div className="registration-form-group">
                             <label>주소</label>
                             <input
@@ -340,27 +279,33 @@ export default function RegistrationModal({ isOpen, onClose }) {
                             />
                         </div>
 
+                        {/* 수용 인원 */}
                         <div className="registration-form-group">
                             <label>수용 인원</label>
                             <input
                                 type="number"
                                 name="capacity"
+                                min="1"
                                 value={formData.capacity}
                                 onChange={handleInputChange}
                                 required
                             />
                         </div>
 
+                        {/* 공간 크기 */}
                         <div className="registration-form-group">
                             <label>공간 크기(m²)</label>
                             <input
                                 type="number"
                                 name="space_size"
+                                min="1"
                                 value={formData.space_size}
                                 onChange={handleInputChange}
                                 required
                             />
                         </div>
+
+                        {/* 운영시간 */}
                         <div className="registration-form-group">
                             <label>운영시간</label>
                             <div className="time-inputs">
@@ -392,6 +337,8 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 />
                             </div>
                         </div>
+
+                        {/* 이용 단위 */}
                         <div className="registration-form-group">
                             <label>이용 단위</label>
                             <select
@@ -400,22 +347,51 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 onChange={handleInputChange}
                                 required
                             >
-                                <option value="DAY">일단위</option>
                                 <option value="TIME">시간단위</option>
+                                <option value="DAY">일단위</option>
                             </select>
                         </div>
 
+                        {/* 단위 가격 */}
                         <div className="registration-form-group">
                             <label>단위 가격</label>
                             <input
                                 type="number"
                                 name="unit_price"
+                                min="0"
                                 value={formData.unit_price}
                                 onChange={handleInputChange}
                                 required
                             />
                         </div>
 
+                        {/* 편의시설 */}
+                        <div className="registration-form-group">
+                            <label>편의시설</label>
+                            <div className="amenities-checkboxes">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        value="wifi"
+                                        checked={formData.amenities.includes('wifi')}
+                                        onChange={handleAmenitiesChange}
+                                    />
+                                    Wi-Fi
+                                </label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        value="parking"
+                                        checked={formData.amenities.includes('parking')}
+                                        onChange={handleAmenitiesChange}
+                                    />
+                                    주차장
+                                </label>
+                                {/* 추가 편의시설 체크박스들 */}
+                            </div>
+                        </div>
+
+                        {/* 한줄 소개 */}
                         <div className="registration-form-group">
                             <label>한줄 소개</label>
                             <input
@@ -426,7 +402,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 required
                             />
                         </div>
-
+                        {/* 상세 설명 */}
                         <div className="registration-form-group">
                             <label>상세 설명</label>
                             <textarea
@@ -434,9 +410,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 value={formData.content}
                                 onChange={handleInputChange}
                                 required
+                                placeholder="시설에 대한 상세한 설명을 입력해주세요"
+                                rows="4"
                             />
                         </div>
 
+                        {/* 이미지 업로드 */}
                         <div className="registration-form-group-image">
                             <label>이미지 업로드</label>
                             <input
@@ -447,13 +426,26 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 required
                                 className='registration-image'
                             />
+                            {formData.images.length > 0 && (
+                                <small className="image-count">
+                                    {formData.images.length}개의 이미지가 선택됨
+                                </small>
+                            )}
                         </div>
 
+                        {/* 버튼 영역 */}
                         <div className="registration-modal-actions">
-                            <button type="button" onClick={onClose} className="registration-cancel-button">
+                            <button 
+                                type="button" 
+                                onClick={onClose} 
+                                className="registration-cancel-button"
+                            >
                                 취소
                             </button>
-                            <button type="submit" className="registration-submit-button">
+                            <button 
+                                type="submit" 
+                                className="registration-submit-button"
+                            >
                                 등록하기
                             </button>
                         </div>

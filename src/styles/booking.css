@@ -1,8 +1,9 @@
-/* Booking Container */
-.bookingheader{
+/* booking.css */
+.booking_header {
     height: 100px;
 }
-.booking-container {
+
+.booking_container {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
@@ -11,11 +12,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.booking-content {
+.booking_content {
     margin-bottom: 2rem;
 }
 
-.booking-date {
+.booking_date {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,92 +26,91 @@
     color: white;
 }
 
-
-.booking-date-box {
+.booking_date-box {
     height: 4px;
     background-color: #e2e8f0;
     border-radius: 2px;
     overflow: hidden;
 }
 
-.booking-date-round {
+.booking_date-round {
     height: 100%;
     background-color: #3b82f6;
     transition: width 0.3s ease;
 }
 
 /* Step 1 Styles */
-.step1-text {
+.booking_step1-text {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1f2937;
 }
 
-.space {
+.booking_space {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.step1-data {
+.booking_step1-data {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #4b5563;
 }
 
-.step1-input-date {
+.booking_step1-input-date {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 4px;
 }
 
-.step1-startTime {
+.booking_step1-startTime {
     display: flex;
     gap: 1rem;
     align-items: center;
 }
 
-.step1-startTime-label,
-.step1-endTime {
+.booking_step1-startTime-label,
+.booking_step1-endTime {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #4b5563;
 }
 
-.step1-startTime-select,
-.step1-endTime-select {
+.booking_step1-startTime-select,
+.booking_step1-endTime-select {
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 4px;
     width: 150px;
 }
 
-.step1-number-lable {
+.booking_step1-number-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #4b5563;
 }
 
-.step1-number-input {
+.booking_step1-number-input {
     width: 100px;
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 4px;
 }
 
-.step1-requirements-label {
+.booking_step1-requirements-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #4b5563;
 }
 
-.step1-requirements-textarea {
+.booking_step1-requirements-textarea {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #d1d5db;
@@ -119,29 +119,29 @@
 }
 
 /* Step 2 Styles */
-.step2-info {
+.booking_step2-info {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1f2937;
 }
 
-.step2-box {
+.booking_step2-box {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.step2-name-label,
-.step2-emil-label {
+.booking_step2-name-label,
+.booking_step2-email-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #4b5563;
 }
 
-.step2-name-input,
-input[type="email"] {
+.booking_step2-name-input,
+.booking_step2-email-input {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #d1d5db;
@@ -149,76 +149,76 @@ input[type="email"] {
 }
 
 /* Step 3 Styles */
-.step3-info {
+.booking_step3-info {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1f2937;
 }
 
-.step3-booking {
+.booking_step3-booking {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.step3-money {
+.booking_step3-money {
     background-color: #f3f4f6;
     padding: 1rem;
     border-radius: 4px;
 }
 
-.step3-money-text {
+.booking_step3-money-text {
     font-size: 1.1rem;
     font-weight: 600;
     color: #374151;
     margin-bottom: 0.5rem;
 }
 
-.step3-money-small-text {
+.booking_step3-money-small-text {
     font-size: 1.5rem;
     font-weight: 700;
     color: #3b82f6;
 }
 
-.step3-paymentMethod-label {
+.booking_step3-paymentMethod-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #4b5563;
 }
 
-.step3-paymentMethod-select {
+.booking_step3-paymentMethod-select {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 4px;
 }
 
-.step3-flexItem {
+.booking_step3-flexItem {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.step3-flexItem-checkbox {
+.booking_step3-flexItem-checkbox {
     width: 1rem;
     height: 1rem;
 }
 
-.step3-text-label {
+.booking_step3-text-label {
     color: #4b5563;
 }
 
 /* Step 4 Styles */
-.step4-text {
+.booking_step4-text {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1f2937;
 }
 
-.step4-round {
+.booking_step4-round {
     background-color: #f3f4f6;
     padding: 1.5rem;
     border-radius: 8px;
@@ -227,29 +227,29 @@ input[type="email"] {
     gap: 1.5rem;
 }
 
-.step4-booking-info,
-.step4-booking-people,
-.step4-booking-payment {
+.booking_step4-booking-info,
+.booking_step4-booking-people,
+.booking_step4-booking-payment {
     font-size: 1.1rem;
     font-weight: 600;
     color: #374151;
     margin-bottom: 0.75rem;
 }
 
-.step4-round p {
+.booking_step4-round p {
     margin: 0.5rem 0;
     color: #4b5563;
 }
 
 /* Button Styles */
-.booking-next-button {
+.booking_next-button {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     margin-top: 2rem;
 }
 
-.booking-before {
+.booking_before {
     padding: 0.5rem 1.5rem;
     background-color: #e5e7eb;
     color: #374151;
@@ -260,11 +260,11 @@ input[type="email"] {
     transition: background-color 0.2s;
 }
 
-.booking-before:hover {
+.booking_before:hover {
     background-color: #d1d5db;
 }
 
-.booking-submit {
+.booking_submit {
     padding: 0.5rem 1.5rem;
     background-color: #3b82f6;
     color: white;
@@ -275,27 +275,26 @@ input[type="email"] {
     transition: background-color 0.2s;
 }
 
-.booking-submit:hover {
+.booking_submit:hover {
     background-color: #2563eb;
 }
 
-/* Responsive Design */
 @media (max-width: 640px) {
-    .booking-container {
+    .booking_container {
         padding: 1rem;
     }
 
-    .step1-startTime {
+    .booking_step1-startTime {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .step1-startTime-select,
-    .step1-endTime-select {
+    .booking_step1-startTime-select,
+    .booking_step1-endTime-select {
         width: 100%;
     }
 
-    .booking-date {
+    .booking_date {
         padding: 0 1rem;
     }
 }
