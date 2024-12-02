@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { BrowserRouter as Router, Routes, Route, Link, NavLink, Navigate } from 'react-router-dom';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
@@ -106,6 +107,11 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
+  <Helmet>
+  <title>Space Place</title>
+  <link rel="shortcut icon" href="/helmet.png" />
+  <link rel="icon" type="image/png" href="/helmet.png" />
+</Helmet>
       <header className="App-header">
         <Navbar collapseOnSelect expand="lg" className="nav-container">
           <Container className="nav-container">
