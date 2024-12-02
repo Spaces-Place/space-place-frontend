@@ -95,13 +95,11 @@ export default function SpaceDetail({type: propType}) {
         return<div>공간 정보를 찾을 수 없습니다.</div>
     }
 
-
-
     const handleBooking = () => {
         navigate('/booking', {
             state: {
                 spacetype: spaceData.space_type,
-                spaceId: spaceData._id,
+                spaceId: spaceData.space_id,
                 name: spaceData.space_name,  // name -> space_name으로 수정
                 price: `${spaceData.unit_price.toLocaleString()}원 / ${spaceData.usage_unit}`
             }
