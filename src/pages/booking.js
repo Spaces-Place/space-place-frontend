@@ -13,7 +13,7 @@ import { handlePayment, initiateKakaoPayment  } from '../utils/paymentService';
 export default function BookingForm() {
   const location = useLocation();
   const bookingInfo = location.state || {};
-  
+      
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState(initialBookingData);
   const [totalPrice, setTotalPrice] = useState(0);
