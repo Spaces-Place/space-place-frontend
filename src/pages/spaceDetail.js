@@ -48,7 +48,7 @@ export default function SpaceDetail({type: propType}) {
                 console.log('찾고있는 type:', propType);
                 console.log('찾고있는 id:', id);
     
-                const response = await axios.get(`${URL}/spaces/${id}`);
+                const response = await axios.get(`${URL}/${id}`);
                 const space = response.data;
                 
                 if (!space) {
@@ -108,7 +108,39 @@ export default function SpaceDetail({type: propType}) {
         });
     };
 
-
+    const renderDetailAmenities = (amenities) => {
+        if (!amenities) return null;
+      
+        return (
+          <div className="detail-info-section">
+            <h2>편의 사항</h2>
+            <ul className="detail-amenities-list">
+              {amenities.map((amenity, index) => {
+                try {
+                  let displayAmenity;
+                  if (Array.isArray(amenity)) {
+                    displayAmenity = amenity.join(', ');
+                  } else if (typeof amenity === 'string') {
+                    try {
+                      const parsed = JSON.parse(amenity);
+                      displayAmenity = Array.isArray(parsed) ? parsed.join(', ') : amenity;
+                    } catch {
+                      displayAmenity = amenity;
+                    }
+                  } else {
+                    displayAmenity = String(amenity);
+                  }
+                  
+                  return <li key={index}>{displayAmenity}</li>;
+                } catch (err) {
+                  console.error('Amenity 표시 오류:', err);
+                  return null;
+                }
+              }).filter(Boolean)}
+            </ul>
+          </div>
+        );
+      };
 
     return(
         <>
@@ -190,11 +222,7 @@ export default function SpaceDetail({type: propType}) {
                         <div className="detail-info-section">
                             <h2>편의 사항</h2>
                             <ul className="detail-amenities-list">
-                                {spaceData.amenities.map((amenity, index) => (
-                                    <li key={index}>
-                                        {typeof amenity === 'string' ? amenity : JSON.stringify(amenity)}
-                                    </li>
-                                ))}
+                            {spaceData.amenities && renderDetailAmenities(spaceData.amenities)}
                             </ul>
                         </div>
                     )}

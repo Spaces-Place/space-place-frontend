@@ -1,12 +1,12 @@
 export const RequirementsInput = ({ bookingData, handleInputChange }) => (
-  <div>
-    <label className="step1-requirements-label">요청사항</label>
+  <div className="booking_requirements">
+    <label className="booking_requirements-label">요청사항</label>
     <textarea
       name="requirements"
       value={bookingData.requirements}
       onChange={handleInputChange}
-      className="step1-requirements-textarea"
-      rows="3"
+      placeholder="요청사항을 입력해주세요"
+      className="booking_requirements-input"
     />
   </div>
 );

@@ -1,4 +1,6 @@
 /* booking.css */
+
+/* 기본 컨테이너 스타일 */
 .booking_header {
     height: 100px;
 }
@@ -7,15 +9,16 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .booking_content {
     margin-bottom: 2rem;
 }
 
+/* 단계 표시 스타일 */
 .booking_date {
     display: flex;
     justify-content: space-between;
@@ -23,107 +26,174 @@
     margin: 0 auto 1rem;
     padding: 0 2rem;
     text-align: center;
-    color: white;
+    color: var(--text-primary);
 }
 
 .booking_date-box {
     height: 4px;
-    background-color: #e2e8f0;
+    background-color: rgba(115, 113, 252, 0.1);
     border-radius: 2px;
     overflow: hidden;
 }
 
 .booking_date-round {
     height: 100%;
-    background-color: #3b82f6;
+    background: var(--gradient-primary);
     transition: width 0.3s ease;
 }
 
-/* Step 1 Styles */
+/* Step 1 스타일 */
+/* booking-step1.css */
+.booking_step {
+    padding: 2rem;
+}
+
 .booking_step1-text {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: #1f2937;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
 }
 
 .booking_space {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
+/* 날짜 입력 스타일 */
 .booking_step1-data {
     display: block;
-    margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #4b5563;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
 }
 
 .booking_step1-input-date {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    transition: all 0.3s ease;
 }
 
-.booking_step1-startTime {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+.booking_step1-input-date:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
 }
 
-.booking_step1-startTime-label,
-.booking_step1-endTime {
+/* 시간 선택 스타일 */
+.booking_time-selection {
+    margin-bottom: 1.5rem;
+}
+
+.booking_time-label {
     display: block;
-    margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #4b5563;
-}
-
-.booking_step1-startTime-select,
-.booking_step1-endTime-select {
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    width: 150px;
-}
-
-.booking_step1-number-label {
-    display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #4b5563;
+    color: var(--text-primary);
 }
 
-.booking_step1-number-input {
-    width: 100px;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-}
-
-.booking_step1-requirements-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #4b5563;
-}
-
-.booking_step1-requirements-textarea {
+.booking_time-select {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    resize: vertical;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Step 2 Styles */
+.booking_time-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
+}
+
+/* 인원 입력 스타일 */
+.booking_people-input {
+    margin-bottom: 1.5rem;
+}
+
+.booking_people-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.booking_people-number {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    transition: all 0.3s ease;
+}
+
+.booking_people-number:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
+}
+
+/* 요청사항 입력 스타일 */
+.booking_requirements {
+    margin-bottom: 1.5rem;
+}
+
+.booking_requirements-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.booking_requirements-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.booking_requirements-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .booking_step {
+        padding: 1rem;
+    }
+
+    .booking_space {
+        gap: 1.5rem;
+    }
+}
+
+/* Step 2 스타일 */
 .booking_step2-info {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 .booking_step2-box {
@@ -133,27 +203,40 @@
 }
 
 .booking_step2-name-label,
-.booking_step2-email-label {
+.booking_step2-email-label,
+.booking_step2-phone-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
 .booking_step2-name-input,
-.booking_step2-email-input {
+.booking_step2-email-input,
+.booking_step2-phone-input {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
-/* Step 3 Styles */
+.booking_step2-name-input:focus,
+.booking_step2-email-input:focus,
+.booking_step2-phone-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
+}
+
+/* Step 3 스타일 */
 .booking_step3-info {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 .booking_step3-booking {
@@ -163,36 +246,43 @@
 }
 
 .booking_step3-money {
-    background-color: #f3f4f6;
-    padding: 1rem;
-    border-radius: 4px;
+    background: var(--gradient-surface);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
 .booking_step3-money-text {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 
 .booking_step3-money-small-text {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #3b82f6;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .booking_step3-paymentMethod-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
 .booking_step3-paymentMethod-select {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
 .booking_step3-flexItem {
@@ -202,26 +292,26 @@
 }
 
 .booking_step3-flexItem-checkbox {
-    width: 1rem;
-    height: 1rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--primary);
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.booking_step3-text-label {
-    color: #4b5563;
-}
-
-/* Step 4 Styles */
+/* Step 4 스타일 */
 .booking_step4-text {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 .booking_step4-round {
-    background-color: #f3f4f6;
+    background: var(--gradient-surface);
     padding: 1.5rem;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -232,16 +322,18 @@
 .booking_step4-booking-payment {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--text-primary);
     margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(115, 113, 252, 0.1);
 }
 
 .booking_step4-round p {
     margin: 0.5rem 0;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
-/* Button Styles */
+/* 버튼 스타일 */
 .booking_next-button {
     display: flex;
     justify-content: flex-end;
@@ -250,51 +342,179 @@
 }
 
 .booking_before {
-    padding: 0.5rem 1.5rem;
-    background-color: #e5e7eb;
-    color: #374151;
+    padding: 0.75rem 1.5rem;
+    background: rgba(115, 113, 252, 0.1);
+    color: var(--text-primary);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
 }
 
 .booking_before:hover {
-    background-color: #d1d5db;
+    background: rgba(115, 113, 252, 0.2);
+    transform: translateY(-2px);
 }
 
 .booking_submit {
-    padding: 0.5rem 1.5rem;
-    background-color: #3b82f6;
+    padding: 0.75rem 1.5rem;
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
 }
 
 .booking_submit:hover {
-    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-@media (max-width: 640px) {
+/* 결제 결과 페이지 스타일 */
+.booking_payment-result {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.booking_payment-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.booking_payment-status {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+/* booking-steps-indicator.css */
+.booking_step-numbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 1rem;
+    position: relative;
+}
+
+/* 연결선 스타일 */
+.booking_step-numbers::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 2px;
+    background: rgba(115, 113, 252, 0.1);
+    z-index: 0;
+}
+
+/* 스텝 번호 스타일 */
+.booking_step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid rgba(115, 113, 252, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+/* 활성화된 스텝 */
+.booking_step-number.active {
+    background: var(--gradient-primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+/* 완료된 스텝 */
+.booking_step-number.completed {
+    background: var(--surface);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* 스텝 라벨 */
+.booking_step-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .booking_step-numbers {
+        gap: 1rem;
+    }
+
+    .booking_step-numbers::before {
+        width: 70%;
+    }
+
+    .booking_step-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .booking_step-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
     .booking_container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .booking_step4-round {
         padding: 1rem;
     }
 
-    .booking_step1-startTime {
+    .booking_next-button {
         flex-direction: column;
-        align-items: flex-start;
+        gap: 0.5rem;
     }
 
-    .booking_step1-startTime-select,
-    .booking_step1-endTime-select {
+    .booking_before,
+    .booking_submit {
         width: 100%;
     }
+}
 
-    .booking_date {
-        padding: 0 1rem;
+/* 애니메이션 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.booking_step {
+    animation: slideIn 0.3s ease;
 }

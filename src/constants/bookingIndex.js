@@ -19,7 +19,7 @@ export const initialBookingData = {
     name: '',
     phone: '',
     email: '',
-    paymentMethod: 'card',
+    paymentMethod: 'kakao',
     agreement: false
   };
 
