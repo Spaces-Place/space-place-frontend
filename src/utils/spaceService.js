@@ -10,7 +10,7 @@ export const spaceApi = axios.create({
     headers: {
         'accept': 'application/json'
     },
-    withCredentials: false  // false로 변경
+    // withCredentials: false  // false로 변경
 });
 
 // 요청 인터셉터 수정
