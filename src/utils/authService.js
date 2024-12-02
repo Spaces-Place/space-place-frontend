@@ -19,6 +19,13 @@ const api = axios.create({
 
 
 api.interceptors.request.use((config) => {
+
+    if (config.baseURL && config.baseURL.startsWith('http:')) {
+        config.baseURL = config.baseURL.replace('http:', 'https:');
+    }
+    console.log('실제 요청 URL:', config.baseURL + (config.url || ''));
+
+
     const token = cookies.get('access_token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -35,6 +42,9 @@ const COOKIE_OPTIONS = {
 const setAuthHeader = (token) => {
     if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        if (axios.defaults.baseURL && axios.defaults.baseURL.startsWith('http:')) {
+            axios.defaults.baseURL = axios.defaults.baseURL.replace('http:', 'https:');
+        }
     } else {
         delete axios.defaults.headers.common['Authorization'];
     }

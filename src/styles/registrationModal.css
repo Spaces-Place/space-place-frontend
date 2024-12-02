@@ -1,21 +1,15 @@
-.registration-modal-overlay{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-.registration-modal-overlay{
+/* registrationModal.css */
+.registration_modal-overlay {
     position: fixed;
     top: 50%;
     left: 50%;
     width: 100%;
     max-width: 600px;
     height: 800px;
-    background: rgba(225, 225, 225, 0.5) !important;
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-radius: var(--radius-md);
     padding: 30px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    box-shadow: var(--shadow-md);
     transform: translate(-50%, -50%);
     opacity: 0;
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
@@ -26,55 +20,176 @@
     z-index: 1000;
 }
 
-.registration-modal-wrap{
+.registration_modal-wrap {
     height: 700px;
     overflow-y: auto;
+    padding: 1rem;
 }
 
-.registration-modal-title h3{
-    margin: 10px 0 10px 0;
+.registration_modal-title {
+    text-align: center;
+    margin-bottom: 2rem;
 }
-.registration-close-button{
-    background: none;
-    border: none;
-    font-size: 20px;
-    font-weight: bolder;
-    cursor: pointer;
+
+.registration_modal-title h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 10px 0;
+}
+
+.registration_close-button {
     position: fixed;
     right: 20px;
     top: 20px;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
 }
-.registration-form-group{
-    margin: 5px 0;
+
+.registration_close-button:hover {
+    transform: rotate(90deg);
+    background: var(--primary);
+    color: white;
 }
-.registration-form-group input {
-    height: 30px;
-    margin: 5px 5px;
-    width: 200px;
+
+.registration_form-group {
+    margin: 1rem 0;
 }
-.registration-form-group-image input{
+
+.registration_form-group input {
+    height: 3rem;
+    margin: 0.5rem 0.5rem;
+    width: 100%;
+    max-width: 200px;
+    padding: 0 1rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.registration_form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
+}
+
+.registration_form-group-image {
+    margin: 1rem 0;
+}
+
+.registration_form-group-image input {
     height: 50px;
 }
 
-.registration-modal-actions{
-    margin: 0 auto;
+.registration_modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem auto;
 }
-.registration-modal-actions button{
-    display: inline-block;
-    width: 150px;
-    margin: 10px 20px;
-    font-weight: bold;
-}   
 
-.registration-modal-actions2{
-    margin: 0 auto;
+.registration_modal-actions button {
+    width: 150px;
+    padding: 0.75rem 0;
+    font-weight: bold;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+}
+
+.registration_modal-actions2 {
     display: flex;
     justify-content: space-evenly;
+    margin: 2rem auto;
 }
 
-.registration-modal-actions2 button{
-    display: inline-block;
+.registration_modal-actions2 button {
     width: 150px;
-    margin: 10px 20px;
+    padding: 0.75rem 0;
     font-weight: bold;
-}   
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    margin: 10px 20px;
+}
+
+/* Input fields specific styles */
+.registration_form-group .address {
+    max-width: calc(50% - 1rem);
+}
+
+.registration_image {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px dashed rgba(115, 113, 252, 0.3);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+
+.registration_form-group select,
+.registration_form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.registration_form-group select:focus,
+.registration_form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(115, 113, 252, 0.1);
+}
+
+/* Amenities styles */
+.registration_amenities-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.registration_amenities-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .registration_modal-overlay {
+        padding: 1rem;
+    }
+
+    .registration_form-group input,
+    .registration_form-group .address {
+        max-width: 100%;
+    }
+
+    .registration_modal-actions2 {
+        flex-direction: column;
+        align-items: center;
+    }
+}

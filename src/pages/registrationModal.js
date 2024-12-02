@@ -250,30 +250,15 @@ export default function RegistrationModal({ isOpen, onClose }) {
     if (!isOpen) return null;
 
     return (
-        <div className="registration-modal-overlay">
-            <div className="registration-modal-wrap">
-                <button onClick={onClose} className="registration-close-button">×</button>
-                <div className="registration-modal-title">
+        <div className="registration_modal-overlay">
+            <div className="registration_modal-wrap">
+                <button onClick={onClose} className="registration_close-button">×</button>
+                <div className="registration_modal-title">
                     <h3>새 시설 등록</h3>
                 </div>
-                <div className="modal-content">
-                    <form>
+                <div className="registration_modal-content">
+                    <form className="registration_form">
                         {/* 시설 유형 */}
-                        {/* <div className="registration-form-group">
-                            <label>시설 유형</label>
-                            <select
-                                name="space_type"
-                                value={formData.space_type}
-                                onChange={handleInputChange}
-                                required
-                            >
-                                {ItemType.map(({ type, title }) => (
-                                    <option key={type} value={type}>{title}</option>
-                                ))}
-                            </select>
-                        </div> */}
-
-                        {/* 시설명 */}
                         <InputGroup className="mb-3">
                             <InputGroup.Text>시설명</InputGroup.Text>
                             <Form.Control
@@ -281,7 +266,9 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 name="space_name"
                                 value={formData.space_name}
                                 onChange={handleInputChange}
-                                required />
+                                required 
+                                className="registration_input"
+                            />
                             <DropdownButton
                                 variant="outline-secondary"
                                 title={formData.space_type ? ItemType.find(item => item.type === formData.space_type)?.title : "선택하세요"}
@@ -295,19 +282,9 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 ))}
                             </DropdownButton>
                         </InputGroup>
-                        {/* <div className="registration-form-group">
-                            <label>시설명</label>
-                            <input
-                                type="text"
-                                name="space_name"
-                                value={formData.space_name}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div> */}
 
                         {/* 주소 */}
-                        <div className="registration-form-group">
+                        <div className="registration_form-group">
                             <label>주소</label>
                             <input
                                 type="text"
@@ -316,7 +293,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 value={formData.location.sido}
                                 onChange={handleLocationChange}
                                 required
-                                className='address'
+                                className="registration_input address"
                             />
                             <input
                                 type="text"
@@ -325,11 +302,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 value={formData.location.address}
                                 onChange={handleLocationChange}
                                 required
-                                className='address'
+                                className="registration_input address"
                             />
                         </div>
 
-                        {/* 수용 인원 */}
+                        {/* 수용 인원 & 공간 크기 */}
                         <InputGroup className="mb-3">
                             <InputGroup.Text>수용 인원(명)</InputGroup.Text>
                             <Form.Control
@@ -337,7 +314,9 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 name="capacity"
                                 value={formData.capacity}
                                 onChange={handleInputChange}
-                                required />
+                                required 
+                                className="registration_input"
+                            />
                             <InputGroup.Text>공간 크기(m²)</InputGroup.Text>
                             <Form.Control
                                 name="space_size"
@@ -345,41 +324,19 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 value={formData.space_size}
                                 onChange={handleInputChange}
                                 required
+                                className="registration_input"
                             />
                         </InputGroup>
-                        {/* <div className="registration-form-group">
-                            <label>수용 인원</label>
-                            <input
-                                type="number"
-                                name="capacity"
-                                min="1"
-                                value={formData.capacity}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div> */}
-
-                        {/* 공간 크기 */}
-                        {/* <div className="registration-form-group">
-                            <label>공간 크기(m²)</label>
-                            <input
-                                type="number"
-                                name="space_size"
-                                min="1"
-                                value={formData.space_size}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div> */}
 
                         {/* 운영시간 */}
-                        <div className="registration-form-group">
+                        <div className="registration_form-group">
                             <label>운영시간</label>
-                            <div className="time-inputs">
+                            <div className="registration_time-inputs">
                                 <select
                                     value={formData.operating_hour[0].day}
                                     onChange={(e) => handleOperatingHourChange('day', e.target.value)}
                                     required
+                                    className="registration_select"
                                 >
                                     <option value="MONDAY">월요일</option>
                                     <option value="TUESDAY">화요일</option>
@@ -394,6 +351,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                     value={formData.operating_hour[0].open}
                                     onChange={(e) => handleOperatingHourChange('open', e.target.value)}
                                     required
+                                    className="registration_input"
                                 />
                                 <span>~</span>
                                 <input
@@ -401,11 +359,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                     value={formData.operating_hour[0].close}
                                     onChange={(e) => handleOperatingHourChange('close', e.target.value)}
                                     required
+                                    className="registration_input"
                                 />
                             </div>
                         </div>
 
-                        {/* 이용 단위 */}
+                        {/* 이용 단위 & 가격 */}
                         <InputGroup className="mb-3">
                             <DropdownButton
                                 variant="outline-secondary"
@@ -420,58 +379,31 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 value={formData.unit_price}
                                 onChange={handleInputChange}
                                 required
+                                className="registration_input"
                             />
                             <InputGroup.Text>원</InputGroup.Text>
                         </InputGroup>
-                        {/* <div className="registration-form-group">
-                            <label>이용 단위</label>
-                            <select
-                                name="usage_unit"
-                                value={formData.usage_unit}
-                                onChange={handleInputChange}
-                                required
-                            >
-                                <option value="TIME">시간단위</option>
-                                <option value="DAY">일단위</option>
-                            </select>
-                        </div> */}
-
-                        {/* 단위 가격 */}
-                        {/* <div className="registration-form-group">
-                            <label>단위 가격</label>
-                            <input
-                                type="number"
-                                name="unit_price"
-                                min="0"
-                                value={formData.unit_price}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div> */}
 
                         {/* 편의시설 */}
                         <div className="mb-3">
                             <Form.Label>편의 시설</Form.Label>
-                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                                {/* 태그 리스트를 입력 필드의 왼쪽에 배치 */}
+                            <div className="registration_amenities-container">
                                 {formData.amenities.map((amenity, index) => (
                                     <ListGroup.Item
                                         key={index}
-                                        className="d-flex justify-content-between align-items-center"
-                                        style={{
-                                            padding: '5px',
-                                            fontSize: '12px',
-                                            display: 'inline-flex',
-                                            margin: '2px'
-                                        }}
+                                        className="registration_amenity-item"
                                     >
                                         {amenity}
-                                        <Button variant="outline-danger" size="sm" onClick={() => removeAmenity(amenity)}>
+                                        <Button 
+                                            variant="outline-danger" 
+                                            size="sm" 
+                                            onClick={() => removeAmenity(amenity)}
+                                            className="registration_remove-btn"
+                                        >
                                             x
                                         </Button>
                                     </ListGroup.Item>
                                 ))}
-                                {/* 입력 필드 */}
                                 <Form.Control
                                     type="text"
                                     name="amenities"
@@ -479,34 +411,10 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                     onChange={(e) => setInputAmenity(e.target.value)}
                                     onKeyUp={addAmenity}
                                     placeholder="입력 후 엔터"
-                                    style={{ fontSize: '12px', flex: '1', marginLeft: '5px' }} // 여백 추가
+                                    className="registration_amenity-input"
                                 />
                             </div>
                         </div>
-
-                        {/* <div className="registration-form-group">
-                            <label>편의시설</label>
-                            <div className="amenities-checkboxes">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        value="wifi"
-                                        checked={formData.amenities.includes('wifi')}
-                                        onChange={handleAmenitiesChange}
-                                    />
-                                    Wi-Fi
-                                </label>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        value="parking"
-                                        checked={formData.amenities.includes('parking')}
-                                        onChange={handleAmenitiesChange}
-                                    />
-                                    주차장
-                                </label>
-                            </div>
-                        </div> */}
 
                         {/* 한줄 소개 */}
                         <div className="mb-3">
@@ -520,19 +428,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
-                                    required />
+                                    required
+                                    className="registration_textarea"
+                                />
                             </FloatingLabel>
                         </div>
-                        {/* <div className="registration-form-group">
-                            <label>한줄 소개</label>
-                            <input
-                                type="text"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div> */}
+
                         {/* 상세 설명 */}
                         <div className="mb-3">
                             <FloatingLabel controlId="floatingTextarea2" label="상세 설명">
@@ -544,23 +445,13 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                     placeholder="시설에 대한 상세한 설명을 입력해주세요"
                                     required
                                     style={{ height: '100px' }}
+                                    className="registration_textarea"
                                 />
                             </FloatingLabel>
                         </div>
-                        {/* <div className="registration-form-group">
-                            <label>상세 설명</label>
-                            <textarea
-                                name="content"
-                                value={formData.content}
-                                onChange={handleInputChange}
-                                required
-                                placeholder="시설에 대한 상세한 설명을 입력해주세요"
-                                rows="4"
-                            />
-                        </div> */}
 
                         {/* 이미지 업로드 */}
-                        <div className="registration-form-group-image">
+                        <div className="registration_form-group-image">
                             <label>이미지 업로드</label>
                             <input
                                 type="file"
@@ -568,38 +459,37 @@ export default function RegistrationModal({ isOpen, onClose }) {
                                 accept="image/*"
                                 onChange={handleImageChange}
                                 required
-                                className='registration-image'
+                                className="registration_image-input"
                             />
                             {formData.images.length > 0 && (
-                                <small className="image-count">
+                                <small className="registration_image-count">
                                     {formData.images.length}개의 이미지가 선택됨
                                 </small>
                             )}
                         </div>
 
                         {/* 버튼 영역 */}
-                        <div className="registration-modal-actions2">
-                            <Button type="button" variant="outline-secondary" className='registration-cancel-button' onClick={onClose}>취소</Button>
-                            <Button type="button" variant="outline-success" className='registration-submit-button' onClick={handleSubmit}>등록</Button>
-                        </div>
-                        {/* <div className="registration-modal-actions">
-                            <button 
+                        <div className="registration_modal-actions2">
+                            <Button 
                                 type="button" 
-                                onClick={onClose} 
-                                className="registration-cancel-button"
+                                variant="outline-secondary" 
+                                className="registration_cancel-button" 
+                                onClick={onClose}
                             >
                                 취소
-                            </button>
-                            <button 
-                                type="submit" 
-                                className="registration-submit-button"
+                            </Button>
+                            <Button 
+                                type="button" 
+                                variant="outline-success" 
+                                className="registration_submit-button" 
+                                onClick={handleSubmit}
                             >
-                                등록하기
-                            </button>
-                        </div> */}
+                                등록
+                            </Button>
+                        </div>
                     </form>
                 </div>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 }
