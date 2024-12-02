@@ -1,5 +1,5 @@
 // BookingForm.js
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { useLocation } from 'react-router-dom';
 import { calculatePrice } from '../utils/timeUtils';
 import { CONSTANTS, initialBookingData } from '../constants/bookingIndex';
@@ -17,6 +17,7 @@ export default function BookingForm() {
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState(initialBookingData);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,28 +39,43 @@ export default function BookingForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (step < CONSTANTS.STEPS) {
+    
+    if (step < 3) { // 1,2단계는 그냥 다음으로
       setStep(prev => prev + 1);
-    } else {
+    } 
+    else if (step === 3) { // 3단계에서 결제 처리
       if (!bookingData.agreement) {
         alert('예약 정책에 동의해주세요.');
         return;
       }
-  
+ 
       try {
-        // 카카오페이 결제 시작
+        setPaymentProcessing(true);
         if (bookingData.paymentMethod === 'kakao') {
-          await initiateKakaoPayment(bookingData, totalPrice, bookingInfo.spaceId);
+          const response = await initiateKakaoPayment(bookingData, totalPrice, bookingInfo.spaceId);
+          // 카카오페이 결제창으로 바로 이동
+          if (response.next_redirect_pc_url) {
+            window.location.href = response.next_redirect_pc_url;
+          }
         } else {
           alert('현재 카카오페이만 지원됩니다.');
         }
       } catch (error) {
         alert('결제 처리 중 오류가 발생했습니다.');
         console.error('Payment error:', error);
+      } finally {
+        setPaymentProcessing(false);
       }
     }
   };
 
+  useEffect(() => {
+    const paymentSuccess = location.state?.paymentSuccess;
+    if (paymentSuccess) {
+      setStep(4);
+    }
+  }, [location]);
+ 
   return (
     <div className="booking_container">
       <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
@@ -70,13 +86,22 @@ export default function BookingForm() {
         {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
         
         <div className="booking_next-button">
-          {step > 1 && (
-            <button type="button" onClick={() => setStep(prev => prev - 1)} className="booking_before">
+          {step > 1 && step < 4 && (
+            <button 
+              type="button" 
+              onClick={() => setStep(prev => prev - 1)} 
+              className="booking_before"
+              disabled={paymentProcessing}
+            >
               이전
             </button>
           )}
-          <button type="submit" className="booking_submit">
-            {step === CONSTANTS.STEPS ? '결제하기' : '다음'}
+          <button 
+            type="submit" 
+            className="booking_submit"
+            disabled={paymentProcessing}
+          >
+            {step === 3 ? '결제하기' : (step === 4 ? '완료' : '다음')}
           </button>
         </div>
       </form>
