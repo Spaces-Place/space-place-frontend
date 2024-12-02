@@ -5,6 +5,8 @@ import { Cookies } from 'react-cookie';
 const cookies = new Cookies();
 const SPACE_API_URL = process.env.REACT_APP_SPACE_API;
 
+console.log('SPACE_API_URL:', SPACE_API_URL);
+
 export const spaceApi = axios.create({
     baseURL: SPACE_API_URL,
     headers: {
@@ -13,9 +15,11 @@ export const spaceApi = axios.create({
     // withCredentials: false  // false로 변경
 });
 
+
 // 요청 인터셉터 수정
 spaceApi.interceptors.request.use(
     (config) => {
+        console.log('Request URL:', config.baseURL + config.url);
         const token = cookies.get('access_token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -24,6 +28,10 @@ spaceApi.interceptors.request.use(
         if (config.data instanceof FormData) {
             delete config.headers['Content-Type'];
         }
+        if (config.baseURL && config.baseURL.startsWith('http:')) {
+            config.baseURL = config.baseURL.replace('http:', 'https:');
+        }
+    
         return config;
     },
     (error) => {
@@ -42,6 +50,12 @@ export const createSpace = async (formData) => {
         return response.data;
     } catch (error) {
         console.error('Space creation error:', error);
+
+        if (error.response) {
+            console.error('Error response:', error.response.data);
+            console.error('Error status:', error.response.status);
+        }
+        
         throw error;
     }
 };
