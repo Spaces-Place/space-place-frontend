@@ -33,7 +33,7 @@ spaceApi.interceptors.request.use(
 
 export const createSpace = async (formData) => {
     try {
-        const response = await spaceApi.post('/', formData, {
+        const response = await spaceApi.post('', formData, {
             headers: {
                 // multipart/form-data는 브라우저가 자동으로 설정
                 'Authorization': `Bearer ${cookies.get('access_token')}`
