@@ -6,14 +6,17 @@ import { CONSTANTS, initialBookingData } from '../constants/bookingIndex';
 import { RenderStepIndicator } from '../components/RenderStepIndicator';
 import { BookingStep1 } from '../components/steps/BookingStep1';
 import { BookingStep2 } from '../components/steps/BookingStep2';
-import { BookingStep3 } from '../components/steps/BookingStep3';
+import BookingStep3 from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
 import { handlePayment, initiateKakaoPayment  } from '../utils/paymentService';
 
 export default function BookingForm() {
   const location = useLocation();
   const bookingInfo = location.state || {};
-      
+    
+
+  const usageUnit = bookingInfo.usageUnit;
+
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState(initialBookingData);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -28,10 +31,10 @@ export default function BookingForm() {
       [name]: newValue
     }));
 
-    if (name === 'startTime' || name === 'endTime') {
+    if (name === 'start_time' || name === 'end_time') {
       const newPrice = calculatePrice(
-        name === 'startTime' ? value : bookingData.startTime,
-        name === 'endTime' ? value : bookingData.endTime
+        name === 'start_time' ? value : bookingData.start_time,
+        name === 'end_time' ? value : bookingData.end_time
       );
       setTotalPrice(newPrice);
     }
@@ -80,9 +83,14 @@ export default function BookingForm() {
     <div className="booking_container">
       <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
       <form onSubmit={handleSubmit}>
-        {step === 1 && <BookingStep1 bookingData={bookingData} handleInputChange={handleInputChange} />}
+        {step === 1 && 
+        (<BookingStep1
+          bookingData={bookingData}
+          handleInputChange={handleInputChange}
+          usageUnit={usageUnit}
+         />)}
         {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} />}
+        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo.price} intprice={bookingInfo.intprice} spaceName={bookingData.name} />}
         {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
         
         <div className="booking_next-button">

@@ -12,8 +12,8 @@ export const CONSTANTS = {
 //  초기 상태 정의
 export const initialBookingData = {
     date: '',
-    startTime: '',
-    endTime: '',
+    start_time: '',
+    end_time: '',
     numberOfPeople: 1,
     requirements: '',
     name: '',
