@@ -134,7 +134,7 @@ function App() {
                 <Nav.Link as={Link} to="/contact">문의하기</Nav.Link>
               </Nav>
               
-              <Nav className="ms-auto">
+              <Nav className="ms-auto-theme">
                 <ThemeToggle />
                 {/* {isAuthenticated && <NotificationBell notifications={notifications} />} */}
                 

@@ -84,10 +84,14 @@ html, body {
   padding: 0.5rem 0;
   transition: all 0.3s ease;
 }
-.theme-toggle{
-  margin-right: 10px;
-  padding-bottom: 10px;
+
+/* 테마 토글 컨테이너 */
+.theme-toggle {
+  display: flex !important;
+  align-items: center !important;
+  /* margin: 0 !important; */
 }
+
 .navbar.scrolled {
   background: rgba(255, 255, 255, 0.95) !important;
   box-shadow: var(--shadow-md);
@@ -171,13 +175,26 @@ html, body {
   transform: translateX(5px);
 }
 
-/* 로그인 버튼 스타일 */
+
+
+/* 로그인 버튼 컨테이너 */
 .login-btn {
+  display: flex;
+  align-items: center;
   padding: 0.5rem;
   border-radius: var(--radius-md);
   transition: all 0.3s ease;
+  min-width: 100px;
 }
 
+
+/* 사용자 버튼 영역 */
+.user-btn {
+  display: flex;
+  align-items: center;
+  min-width: 100px;
+  margin-left: 0.5rem;
+}
 .user-btn button {
   background: var(--gradient-primary);
   color: white;
@@ -186,6 +203,8 @@ html, body {
   border: none;
   font-weight: 600;
   transition: all 0.3s ease;
+  width: 100%; /* 버튼의 너비를 컨테이너에 맞춤  */
+  text-align: center;
 }
 
 .user-btn button:hover {
@@ -216,6 +235,11 @@ html, body {
   background: rgba(115, 113, 252, 0.05);
   color: var(--primary);
 }
+
+.user-btn .nav-link {
+  padding: 0.75rem 1.5rem !important;
+}
+
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
