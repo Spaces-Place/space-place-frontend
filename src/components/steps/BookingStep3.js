@@ -21,7 +21,6 @@ const BookingStep3 = ({ bookingData, handleInputChange, price }) => {
         // 전달받은 시간당 가격 사용
        setCalculatedPrice(diffHours * priceNumber);
 
-  
       }
     };
 

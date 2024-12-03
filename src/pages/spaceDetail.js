@@ -100,7 +100,6 @@ export default function SpaceDetail({type: propType}) {
                 spacetype: spaceData.space_type,
                 spaceId: spaceData.space_id,
                 name: spaceData.space_name,
-                intprice: spaceData.unit_price.toLocaleString(),
                 price: `${spaceData.unit_price.toLocaleString()}원 / ${spaceData.usage_unit}`,
                 usageUnit: spaceData.usage_unit
             }

@@ -55,13 +55,25 @@ export default function BookingForm() {
       try {
         setPaymentProcessing(true);
         if (bookingData.paymentMethod === 'kakao') {
-          const response = await initiateKakaoPayment(bookingData, totalPrice, bookingInfo.spaceId);
-          // 카카오페이 결제창으로 바로 이동
+          // 날짜와 시간을 합쳐서 전달
+          const paymentData = {
+            date: new Date(bookingData.start_time).toISOString().split('T')[0], // YYYY-MM-DD 형식
+            startTime: new Date(bookingData.start_time).toISOString(),
+            endTime: new Date(bookingData.end_time).toISOString(),
+            name: bookingData.name,
+            phone: bookingData.phone,
+            email: bookingData.email
+          };
+  
+          const response = await initiateKakaoPayment(
+            paymentData,
+            totalPrice,
+            bookingInfo.spaceId
+          );
+  
           if (response.next_redirect_pc_url) {
             window.location.href = response.next_redirect_pc_url;
           }
-        } else {
-          alert('현재 카카오페이만 지원됩니다.');
         }
       } catch (error) {
         alert('결제 처리 중 오류가 발생했습니다.');
@@ -90,7 +102,7 @@ export default function BookingForm() {
           usageUnit={usageUnit}
          />)}
         {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo.price} intprice={bookingInfo.intprice} spaceName={bookingData.name} />}
+        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo.price} spaceName={bookingData.name} />}
         {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
         
         <div className="booking_next-button">
