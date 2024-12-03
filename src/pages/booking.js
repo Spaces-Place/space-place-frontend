@@ -82,6 +82,7 @@ export default function BookingForm() {
           if (response.next_redirect_pc_url) {
             window.location.href = response.next_redirect_pc_url;
           }
+          console.log('booking.js : ', response)
         }
       } catch (error) {
         alert('결제 처리 중 오류가 발생했습니다.');
