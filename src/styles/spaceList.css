@@ -1,9 +1,4 @@
 /* SpaceList.css */
-.spaceList-header {
-  height: 100px;
-  background: linear-gradient(135deg, #f6f8ff 0%, #ffffff 100%);
-}
-
 .list-tablebox {
   margin: 30px auto;
   width: 90%;
