@@ -16,39 +16,13 @@ export default function SpaceList({ type: propType }) {
 
   const itemsPerPage = 10;
   const URL = process.env.REACT_APP_SPACE_API;
-  const S3_BUCKET_URL = process.env.REACT_APP_S3_BUCKET_URL || "https://space-place-bucket.s3.amazonaws.com";
 
-  const getFileExtension = (originalFilename) => {
-    if(!originalFilename) return '';
-    const match = originalFilename.match(/\.([^.]+)$/);
-    return match ? match[1].toLowerCase() : ''; 
-  };
-  
-  const constructImageUrl = (vendorId, spaceId, image) => {
-    if (!vendorId || !spaceId || !image?.filename) {
-      return "/images/default-image.png";
-    }
-    
-    const extension = getFileExtension(image.original_filename);
-    const fullFilename = image.filename.includes('.') ? 
-      image.filename : 
-      `${image.filename}.${extension}`;
-  
-    return `${S3_BUCKET_URL}/${vendorId}/${spaceId}/${fullFilename}`;
-  };
-  
   const getImageUrl = (space) => {
     try {
-      if (!space?.images || !Array.isArray(space.images) || space.images.length === 0) {
+      if (!space?.thumbnail) {
         return '/images/default-image.png';
       }
-  
-      const firstImage = space.images[0];
-      if (!firstImage?.filename) {
-        return '/images/default-image.png';
-      }
-  
-      return constructImageUrl(space.vendor_id, space.space_id, firstImage);
+      return space.thumbnail;
     } catch (error) {
       console.error('Error in getImageUrl:', error);
       return '/images/default-image.png';
@@ -81,7 +55,6 @@ export default function SpaceList({ type: propType }) {
     }
   };
 
- 
   const handleItemClick = (spaceId) => {
     navigate(`/space/${type}/${spaceId}`);
   };
@@ -104,15 +77,15 @@ export default function SpaceList({ type: propType }) {
                 <div className="list-with-box">
                   <div className="list-space-name">{space.name}</div>
                   <div className="list-space-imagebox">
-                  <img 
-                    src={getImageUrl(space)}
-                    alt={space?.name || space?.space_name || '공간 이미지'}
-                    onError={(e) => {
-                      console.log('Image load failed, falling back to default');
-                      e.target.onerror = null;
-                      e.target.src = '/images/default-image.png';
-                    }}
-                    className="space-image"
+                    <img 
+                      src={getImageUrl(space)}
+                      alt={space?.name || '공간 이미지'}
+                      onError={(e) => {
+                        console.log('Image load failed, falling back to default');
+                        e.target.onerror = null;
+                        e.target.src = '/images/default-image.png';
+                      }}
+                      className="space-image"
                     />
                   </div>
                   <div className="list-space-info">

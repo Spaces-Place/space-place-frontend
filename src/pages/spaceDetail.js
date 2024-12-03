@@ -17,7 +17,7 @@ export default function SpaceDetail({type: propType}) {
     const [showContact, setShowContact] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [coordinates, setCoordinates] = useState(null);
-    const URL = process.env.REACT_APP_SPACE_API; 
+    const URL = process.env.REACT_APP_SPACE_API;
 
     const convertAddressToCoords = (address) => {
         return new Promise((resolve, reject) => {
@@ -39,8 +39,6 @@ export default function SpaceDetail({type: propType}) {
             });
         });
     };
-
-
 
     useEffect(() => {
         const fetchSpaceDetail = async () => {
@@ -75,7 +73,6 @@ export default function SpaceDetail({type: propType}) {
             } catch (error) {
                 console.error("Error fetching space detail:", error);
                 setIsLoading(false);
-                // 에러 처리 추가
                 alert(error.response?.data?.message || error.message || '공간 정보를 불러오는데 실패했습니다.');
             }
         };
@@ -85,10 +82,8 @@ export default function SpaceDetail({type: propType}) {
         }
     }, [id, propType, URL]);
 
-
-
     if(isLoading){
-        return <div>로딩중......ㅣ</div>
+        return <div>로딩중...</div>
     }
 
     if(!spaceData){
@@ -100,7 +95,7 @@ export default function SpaceDetail({type: propType}) {
             state: {
                 spacetype: spaceData.space_type,
                 spaceId: spaceData.space_id,
-                name: spaceData.space_name,  // name -> space_name으로 수정
+                name: spaceData.space_name,
                 price: `${spaceData.unit_price.toLocaleString()}원 / ${spaceData.usage_unit}`
             }
         });
@@ -138,17 +133,17 @@ export default function SpaceDetail({type: propType}) {
             </ul>
           </div>
         );
-      };
+    };
 
-      const renderImage = (src, alt) => (
+    const renderImage = (imageUrl, alt) => (
         <img 
-            src={src}
+            src={imageUrl}
             alt={alt}
             className="detail-img"
             style={{width: '100%', height: 'auto', maxHeight: "250px"}}
             onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = "/default-image.png";
+                e.target.src = "/images/default-image.png";
             }}
         />
     );
@@ -159,7 +154,7 @@ export default function SpaceDetail({type: propType}) {
         <div className={`detail-space-big-container ${spaceData.space_type}-theme`}>
             <div className="space-detail-container">
                 <div className="detail-space-header">
-                    <h1>{spaceData.space_name}</h1>
+                    <h1>{spaceData.name || spaceData.space_name}</h1>
                     <p className="detail-location">{spaceData.location.sido}</p>
                 </div>
     
@@ -181,8 +176,8 @@ export default function SpaceDetail({type: propType}) {
                                     {({ isActive }) => (
                                         <div className={`transition-all duration-300 ${isActive ? 'scale-110' : 'scale-90 opacity-50'}`}>
                                             {renderImage(
-                                                img.url || img.filename,
-                                                `${spaceData.space_name} 이미지 ${index + 1}`
+                                                img.thumbnail || img.url || '/images/default-image.png',
+                                                `${spaceData.name || spaceData.space_name} 이미지 ${index + 1}`
                                             )}
                                         </div>
                                     )}
@@ -190,11 +185,10 @@ export default function SpaceDetail({type: propType}) {
                             ))}
                         </Swiper>
                     ) : (
-                        // 이미지가 없을 경우 기본 이미지 표시
                         <div className="no-images">
                             {renderImage(
-                                "/default-image.png",
-                                `${spaceData.space_name} 기본 이미지`
+                                "/images/default-image.png",
+                                `${spaceData.name || spaceData.space_name} 기본 이미지`
                             )}
                         </div>
                     )}
@@ -222,7 +216,7 @@ export default function SpaceDetail({type: propType}) {
                     </div>
     
                     <div className="detail-info-section">
-                        <h2>{spaceData.space_name} 소개</h2>
+                        <h2>{spaceData.name || spaceData.space_name} 소개</h2>
                         <p>{spaceData.content}</p>
                     </div>
                     {spaceData.amenities && (
@@ -244,7 +238,7 @@ export default function SpaceDetail({type: propType}) {
                             >
                                 <MapMarker 
                                     position={coordinates}
-                                    name={spaceData.space_name}
+                                    name={spaceData.name || spaceData.space_name}
                                 />
                             </Map>
                         )}
