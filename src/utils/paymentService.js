@@ -25,13 +25,17 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
   // requestData를 try 블록 밖으로 이동
   const requestData = {
     space_id: spaceId,
-    use_date: bookingData.date,
-    start_time: bookingData.startTime,
-    end_time: bookingData.endTime,
     name: bookingData.name,
     phone: bookingData.phone,
-    email: bookingData.email
+    email: bookingData.email,
+    ...(bookingData.date 
+      ? { use_date: bookingData.date }  // 일단위 예약
+      : {  // 시간단위 예약
+          start_time: bookingData.start_time,
+          end_time: bookingData.end_time
+        })
   };
+
 
   try {
     // 데이터 유효성 사전 체크
@@ -58,7 +62,7 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
       response_data: error.response?.data,
       status: error.response?.status,
       serverMessage: error.response?.data?.message || error.response?.data?.detail,
-      requestData: requestData  // 이제 접근 가능
+      requestData: requestData 
     });
     throw error;
   }

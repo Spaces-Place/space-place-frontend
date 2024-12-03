@@ -56,14 +56,22 @@ export default function BookingForm() {
         setPaymentProcessing(true);
         if (bookingData.paymentMethod === 'kakao') {
           // 날짜와 시간을 합쳐서 전달
-          const paymentData = {
-            date: new Date(bookingData.start_time).toISOString().split('T')[0], // YYYY-MM-DD 형식
-            startTime: new Date(bookingData.start_time).toISOString(),
-            endTime: new Date(bookingData.end_time).toISOString(),
-            name: bookingData.name,
-            phone: bookingData.phone,
-            email: bookingData.email
-          };
+          const paymentData = usageUnit === 'DAY' 
+          ? {
+              // 일단위 예약
+              date: bookingData.date,
+              name: bookingData.name,
+              phone: bookingData.phone,
+              email: bookingData.email
+            }
+          : {
+              // 시간단위 예약
+              start_time: bookingData.start_time,
+              end_time: bookingData.end_time,
+              name: bookingData.name,
+              phone: bookingData.phone,
+              email: bookingData.email
+            };
   
           const response = await initiateKakaoPayment(
             paymentData,
