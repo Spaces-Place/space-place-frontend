@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Pause } from 'lucide-react';
 import '../styles/mainpage.css';
+import ItemType from '../constants/type/ItemType';
 
 const slides = [
   {
@@ -41,6 +42,8 @@ export default function ImageCarousel() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [slideDirection, setSlideDirection] = useState('right');
 
+  const categoryCount = ItemType.length;
+
   useEffect(() => {
     let interval;
     if (isPlaying) {
@@ -77,7 +80,7 @@ export default function ImageCarousel() {
         </p>
         <div className="hero-stats">
           <div className="stat-item">
-            <span className="stat-number">10+</span>
+            <span className="stat-number">{categoryCount}+</span>
             <span className="stat-label">공간 카테고리</span>
           </div>
           <div className="stat-item">
