@@ -22,23 +22,28 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
     throw new Error('로그인이 필요합니다.');
   }
 
-  // requestData를 try 블록 밖으로 이동
+  // 시간 형식 변환 함수
+  const formatDateTime = (dateTimeStr) => {
+    const date = new Date(dateTimeStr);
+    return date.toISOString()
+      .replace('T', ' ')
+      .split('.')[0];  // "2024-11-30 11:30:00" 형식으로 변환
+  };
+
   const requestData = {
     space_id: spaceId,
     name: bookingData.name,
     phone: bookingData.phone,
     email: bookingData.email,
     ...(bookingData.date 
-      ? { use_date: bookingData.date }  // 일단위 예약
-      : {  // 시간단위 예약
-          start_time: bookingData.start_time,
-          end_time: bookingData.end_time
+      ? { use_date: bookingData.date }
+      : {
+          start_time: formatDateTime(bookingData.start_time),
+          end_time: formatDateTime(bookingData.end_time)
         })
   };
 
-
   try {
-    // 데이터 유효성 사전 체크
     console.log('Request Data:', {
       ...requestData,
       spaceId_type: typeof spaceId,
@@ -62,7 +67,7 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
       response_data: error.response?.data,
       status: error.response?.status,
       serverMessage: error.response?.data?.message || error.response?.data?.detail,
-      requestData: requestData 
+      requestData: requestData
     });
     throw error;
   }

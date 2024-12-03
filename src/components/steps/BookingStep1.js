@@ -8,6 +8,7 @@ import { useState } from "react";
 // Step 컴포넌트들
 export const BookingStep1 = ({ bookingData, handleInputChange, spaceType, usageUnit }) => {
 
+  
 
   return(
   <div className="booking_step">

@@ -12,7 +12,8 @@ const BookingStep3 = ({ bookingData, handleInputChange, price }) => {
       if (bookingData.start_time && bookingData.end_time) {
         const start = new Date(bookingData.start_time);
         const end = new Date(bookingData.end_time);
-        
+        console.log('start: ', start)
+        console.log('end: ', end)
         const priceNumber = parseInt(price.replace(/[^0-9]/g, ''));
 
         // 시간 차이를 시간 단위로 계산
