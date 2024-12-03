@@ -460,6 +460,10 @@
     margin-top: 0.5rem;
 }
 
+  .hide-minutes::-webkit-datetime-edit-text:last-of-type {
+    display: none;
+  }
+
 /* 반응형 조정 */
 @media (max-width: 768px) {
     .booking_step-numbers {

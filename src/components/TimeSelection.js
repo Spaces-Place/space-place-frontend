@@ -1,20 +1,5 @@
-export const TimeSelect = ({ label, name, value, onChange, options }) => (
-    <div>
-      <label className={`step1-${name}-label`}>{label}</label>
-      <select 
-        name={name}
-        value={value}
-        onChange={onChange}
-        className={`step1-${name}-select`}
-      >
-        <option value="">선택해주세요</option>
-        {options.map(({ value, label }) => (
-          <option key={value} value={value}>{label}</option>
-        ))}
-      </select>
-    </div>
-  );
-  
+// import DateTimeField from "react-bootstrap-datetimepicker"
+
 
   export const TimeSelection = ({ bookingData, handleInputChange, timeOptions }) => (
     <div className="booking_time-selection">
@@ -34,6 +19,7 @@ export const TimeSelect = ({ label, name, value, onChange, options }) => (
       </select>
       
       <label className="booking_time-label">종료 시간</label>
+      {/* <DateTimeField /> */}
       <select
         name="endTime"
         value={bookingData.endTime}

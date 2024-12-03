@@ -29,7 +29,9 @@ export default function SpaceDetail({type: propType}) {
             const geocoder = new window.kakao.maps.services.Geocoder();
             geocoder.addressSearch(address, (result, status) => {
                 if (status === window.kakao.maps.services.Status.OK) {
-                    resolve({
+                    resolve(
+                        
+                        {
                         lat: Number(result[0].y),
                         lng: Number(result[0].x)
                     });
@@ -82,6 +84,7 @@ export default function SpaceDetail({type: propType}) {
         }
     }, [id, propType, URL]);
 
+
     if(isLoading){
         return <div>로딩중...</div>
     }
@@ -89,6 +92,7 @@ export default function SpaceDetail({type: propType}) {
     if(!spaceData){
         return<div>공간 정보를 찾을 수 없습니다.</div>
     }
+    
 
     const handleBooking = () => {
         navigate('/booking', {
@@ -96,7 +100,9 @@ export default function SpaceDetail({type: propType}) {
                 spacetype: spaceData.space_type,
                 spaceId: spaceData.space_id,
                 name: spaceData.space_name,
-                price: `${spaceData.unit_price.toLocaleString()}원 / ${spaceData.usage_unit}`
+                intprice: spaceData.unit_price.toLocaleString(),
+                price: `${spaceData.unit_price.toLocaleString()}원 / ${spaceData.usage_unit}`,
+                usageUnit: spaceData.usage_unit
             }
         });
     };
