@@ -1,10 +1,10 @@
+// SpaceList.js
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/spaceList.css";
 import axios from "axios";
 
 export default function SpaceList({ type: propType }) {
-
   const navigate = useNavigate();
   const { type: paramType } = useParams();
   const type = propType || paramType;
@@ -16,9 +16,44 @@ export default function SpaceList({ type: propType }) {
 
   const itemsPerPage = 10;
   const URL = process.env.REACT_APP_SPACE_API;
+  const S3_BUCKET_URL = process.env.REACT_APP_S3_BUCKET_URL || "https://space-place-bucket.s3.amazonaws.com";
 
-  console.log('space-api : ',  URL);
-
+  const getFileExtension = (originalFilename) => {
+    if(!originalFilename) return '';
+    const match = originalFilename.match(/\.([^.]+)$/);
+    return match ? match[1].toLowerCase() : ''; 
+  };
+  
+  const constructImageUrl = (vendorId, spaceId, image) => {
+    if (!vendorId || !spaceId || !image?.filename) {
+      return "/images/default-image.png";
+    }
+    
+    const extension = getFileExtension(image.original_filename);
+    const fullFilename = image.filename.includes('.') ? 
+      image.filename : 
+      `${image.filename}.${extension}`;
+  
+    return `${S3_BUCKET_URL}/${vendorId}/${spaceId}/${fullFilename}`;
+  };
+  
+  const getImageUrl = (space) => {
+    try {
+      if (!space?.images || !Array.isArray(space.images) || space.images.length === 0) {
+        return '/images/default-image.png';
+      }
+  
+      const firstImage = space.images[0];
+      if (!firstImage?.filename) {
+        return '/images/default-image.png';
+      }
+  
+      return constructImageUrl(space.vendor_id, space.space_id, firstImage);
+    } catch (error) {
+      console.error('Error in getImageUrl:', error);
+      return '/images/default-image.png';
+    }
+  };
 
   useEffect(() => {
     fetchSpaces();
@@ -35,7 +70,7 @@ export default function SpaceList({ type: propType }) {
       }
   
       const response = await axios.get(`${URL}${endpoint}`);
-      console.log('Received spaces data:', response.data);  // 데이터 구조 확인
+      console.log('Received spaces data:', response.data);
       setSpaces(response.data);
       setError(null);
     } catch (err) {
@@ -46,11 +81,10 @@ export default function SpaceList({ type: propType }) {
     }
   };
 
-
+ 
   const handleItemClick = (spaceId) => {
-    console.log('Clicking space with ID:', spaceId);  // ObjectId 확인
     navigate(`/space/${type}/${spaceId}`);
-};
+  };
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
@@ -68,12 +102,17 @@ export default function SpaceList({ type: propType }) {
                 onClick={() => handleItemClick(space.space_id)}
               >
                 <div className="list-with-box">
-                  <div className="list-space-name">{space.space_name}</div>
+                  <div className="list-space-name">{space.name}</div>
                   <div className="list-space-imagebox">
-                    {/* 임시로 기본 이미지 사용 또는 이미지 섹션 숨김 */}
-                    <img 
-                      src="/default-image.png"  // 기본 이미지 경로
-                      alt={space.space_name}
+                  <img 
+                    src={getImageUrl(space)}
+                    alt={space?.name || space?.space_name || '공간 이미지'}
+                    onError={(e) => {
+                      console.log('Image load failed, falling back to default');
+                      e.target.onerror = null;
+                      e.target.src = '/images/default-image.png';
+                    }}
+                    className="space-image"
                     />
                   </div>
                   <div className="list-space-info">

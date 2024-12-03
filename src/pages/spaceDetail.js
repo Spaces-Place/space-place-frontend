@@ -140,6 +140,19 @@ export default function SpaceDetail({type: propType}) {
         );
       };
 
+      const renderImage = (src, alt) => (
+        <img 
+            src={src}
+            alt={alt}
+            className="detail-img"
+            style={{width: '100%', height: 'auto', maxHeight: "250px"}}
+            onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/default-image.png";
+            }}
+        />
+    );
+
     return(
         <>
         <div className="detail-header"></div>
@@ -167,26 +180,22 @@ export default function SpaceDetail({type: propType}) {
                                 <SwiperSlide key={index}>
                                     {({ isActive }) => (
                                         <div className={`transition-all duration-300 ${isActive ? 'scale-110' : 'scale-90 opacity-50'}`}>
-                                            <img 
-                                                src={img.url || img.filename}
-                                                alt={`${spaceData.space_name} 이미지 ${index + 1}`}
-                                                className="detail-img"
-                                                style={{width: '100%', height: 'auto', maxHeight: "250px"}}
-                                            />
+                                            {renderImage(
+                                                img.url || img.filename,
+                                                `${spaceData.space_name} 이미지 ${index + 1}`
+                                            )}
                                         </div>
                                     )}
                                 </SwiperSlide>
                             ))}
                         </Swiper>
                     ) : (
-                        // 이미지가 없을 경우 기본 이미지나 메시지 표시
+                        // 이미지가 없을 경우 기본 이미지 표시
                         <div className="no-images">
-                            <img 
-                                src="/default-image.png"
-                                alt="기본 이미지"
-                                className="detail-img"
-                                style={{width: '100%', height: 'auto', maxHeight: "250px"}}
-                            />
+                            {renderImage(
+                                "/default-image.png",
+                                `${spaceData.space_name} 기본 이미지`
+                            )}
                         </div>
                     )}
                 </div>

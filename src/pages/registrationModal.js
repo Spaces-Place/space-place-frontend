@@ -453,13 +453,15 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
                         {/* 이미지 업로드 */}
                         <div className="registration_form-group-image">
-                            <label>이미지 업로드</label>
+                            <label htmlFor='file-input' style={{cursor: 'pointer'}}>이미지 업로드(썸네일: 첫번째)</label>
                             <input
+                                id="file-input"
                                 type="file"
                                 multiple
                                 accept="image/*"
                                 onChange={handleImageChange}
                                 required
+                                style={{display: 'none'}}
                                 className="registration_image-input"
                             />
                             {formData.images.length > 0 && (
