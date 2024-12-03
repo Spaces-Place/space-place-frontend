@@ -9,7 +9,7 @@ export const BookingStep4 = ({ bookingData, bookingInfo, totalPrice }) => (
         <h3 className="booking_step4-booking-info">예약정보</h3>
         <p>공간: {bookingInfo.title}</p>
         <p>날짜: {bookingData.date}</p>
-        <p>시간: {bookingData.startTime} ~ {bookingData.endTime}</p>
+        <p>시간: {bookingData.start_Time} ~ {bookingData.end_Time}</p>
         <p>인원: {bookingData.numberOfPeople}명</p>
         {bookingData.requirements && (
           <p>요청사항: {bookingData.requirements}</p>

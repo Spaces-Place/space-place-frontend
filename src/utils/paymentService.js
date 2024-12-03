@@ -22,15 +22,18 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
     throw new Error('로그인이 필요합니다.');
   }
 
-  try {
-    // 요청 데이터 구성
-    const requestData = {
-      space_id: spaceId,
-      use_date: bookingData.date,
-      start_time: bookingData.startTime,
-      end_time: bookingData.endTime
-    };
+  // requestData를 try 블록 밖으로 이동
+  const requestData = {
+    space_id: spaceId,
+    use_date: bookingData.date,
+    start_time: bookingData.startTime,
+    end_time: bookingData.endTime,
+    name: bookingData.name,
+    phone: bookingData.phone,
+    email: bookingData.email
+  };
 
+  try {
     // 데이터 유효성 사전 체크
     console.log('Request Data:', {
       ...requestData,
@@ -49,18 +52,13 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
     }
     
     return response.data;
-  }  catch (error) {
+  } catch (error) {
     console.error('Server Error Details:', {
       message: error.message,
       response_data: error.response?.data,
       status: error.response?.status,
       serverMessage: error.response?.data?.message || error.response?.data?.detail,
-      requestData: {
-        space_id: spaceId,
-        use_date: bookingData.date,
-        start_time: bookingData.startTime,
-        end_time: bookingData.endTime
-      }
+      requestData: requestData  // 이제 접근 가능
     });
     throw error;
   }
