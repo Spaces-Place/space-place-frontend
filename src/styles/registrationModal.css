@@ -68,6 +68,26 @@
     margin: 1rem 0;
 }
 
+.registration_form-group .address-wrap .input-group{
+    flex-wrap: nowrap;
+}
+
+.registration_form-group .address-wrap .input-group .search-btn{
+    font-size: 0.7rem;
+}
+
+.registration_form-group button {
+    height: 3rem;
+    margin: 0.5rem 0.5rem;
+    width: 100px;
+    padding: 0 1rem;
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
 .registration_form-group input {
     height: 3rem;
     margin: 0.5rem 0.5rem;
