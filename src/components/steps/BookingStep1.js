@@ -22,7 +22,7 @@ export const BookingStep1 = ({ bookingData, handleInputChange, spaceType, usageU
             value={bookingData.date}
             onChange={handleInputChange}
             className="booking_step1-input-date hide-minutes"
-            min={new Date().toISOString().split('T')[0]}
+            min={new Date().toISOString().split(' ')[0]}
           />
           </div>
       :(
@@ -45,7 +45,7 @@ export const BookingStep1 = ({ bookingData, handleInputChange, spaceType, usageU
           });
         }}
         className="booking_step1-input-date hide-minutes"
-        min={new Date().toISOString().split('T')[0]}
+        min={new Date().toISOString().split(' ')[0]}
         step="3600"
       />
     </div>
