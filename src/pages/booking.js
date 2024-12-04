@@ -42,52 +42,66 @@ export default function BookingForm() {
 
 
   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  export const handlePaymentResult = async (searchParams) => {
+    const orderNumber = searchParams.get('order_number');
+    const pgToken = searchParams.get('pg_token');
+    const token = cookies.get('access_token');
     
-    if (step < 3) {
-      setStep(prev => prev + 1);
-    } 
-    else if (step === 3) {
-      if (!bookingData.agreement) {
-        alert('예약 정책에 동의해주세요.');
-        return;
+    if (!token) {
+      throw new Error('로그인이 필요합니다.');
+    }
+  
+    if (!orderNumber || !pgToken) {
+      throw new Error('결제 정보가 올바르지 않습니다.');
+    }
+  
+    try {
+      const response = await payment_api.get('/kakao/approval', {
+        params: { 
+          order_number: orderNumber, 
+          pg_token: pgToken 
+        },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        // 타임아웃 설정
+        timeout: 10000,
+        // 재시도 설정
+        retry: 3,
+        retryDelay: 1000
+      });
+      
+      if (response.data) {
+        return response.data;
+      } else {
+        throw new Error('결제 승인 응답이 올바르지 않습니다.');
       }
+    } catch (error) {
+      console.error('Payment result handling failed:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
   
-      try {
-        setPaymentProcessing(true);
-        if (bookingData.paymentMethod === 'kakao') {
-          const paymentData = usageUnit === 'DAY' 
-            ? {
-                date: bookingData.date,
-                user_name: bookingData.name,
-                phone: bookingData.phone,
-                email: bookingData.email
-              }
-            : {
-                start_time: bookingData.start_time,
-                end_time: bookingData.end_time,
-                user_name: bookingData.name,
-                phone: bookingData.phone,
-                email: bookingData.email
-              };
-  
-          const response = await initiateKakaoPayment(
-            paymentData,
-            totalPrice,
-            bookingInfo.spaceId
-          );
-  
-          if (response.next_redirect_pc_url) {
-            // 팝업 대신 현재 창에서 리다이렉트
-            window.location.href = response.next_redirect_pc_url;
-          }
+      // 에러 응답 구체화
+      if (error.response) {
+        // 서버에서 응답이 왔지만 에러인 경우
+        if (error.response.status === 401) {
+          throw new Error('로그인이 필요합니다.');
+        } else if (error.response.status === 400) {
+          throw new Error(error.response.data.detail || '잘못된 결제 요청입니다.');
+        } else if (error.response.status === 500) {
+          throw new Error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
-      } catch (error) {
-        alert('결제 처리 중 오류가 발생했습니다.');
-        console.error('Payment error:', error);
-        setPaymentProcessing(false);
+      } else if (error.request) {
+        // 요청은 보냈지만 응답을 받지 못한 경우
+        throw new Error('서버 응답이 없습니다. 네트워크 연결을 확인해주세요.');
       }
+      
+      // 기타 에러
+      throw new Error('결제 처리 중 오류가 발생했습니다.');
     }
   };
 
