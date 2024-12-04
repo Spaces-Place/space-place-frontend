@@ -77,27 +77,34 @@ export const handlePaymentApproval = async (orderNumber, pgToken) => {
   }
 
   try {
+    // URL 경로 수정
     const response = await payment_api.get(
-      `/kakao/approval`, {
+      '/kakao/approval', {
         params: {
           order_number: orderNumber,
           pg_token: pgToken
         },
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       }
     );
 
-    return {
-      success: true,
-      data: response.data
-    };
+    // 성공 여부를 명확하게 확인
+    if (response.data) {
+      return {
+        success: true,
+        data: response.data
+      };
+    } else {
+      throw new Error('결제 승인에 실패했습니다.');
+    }
   } catch (error) {
     console.error('Payment approval error:', error);
     return {
       success: false,
-      error: error.message
+      error: error.message || '결제 승인 중 오류가 발생했습니다.'
     };
   }
 };
