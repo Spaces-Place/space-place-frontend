@@ -1,22 +1,23 @@
 // PaymentApproval.js
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const PaymentApproval = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    // 부모 창으로 메시지 전송
     if (window.opener) {
+      const currentUrl = `${window.location.origin}/api/v1/payments${location.pathname}${location.search}`;
       window.opener.postMessage(
         {
           type: 'KAKAO_PAYMENT_SUCCESS',
-          url: window.location.href
+          url: currentUrl
         },
-        '*'
+        window.location.origin
       );
-      // 팝업 창 닫기
       window.close();
     }
-  }, []);
+  }, [location]);
 
   return (
     <div className="payment-approval">
