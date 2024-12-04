@@ -39,6 +39,25 @@ spaceApi.interceptors.request.use(
     }
 );
 
+export const getNearbySpaces = async (latitude, longitude, radius) => {
+    try{
+        const response = await spaceApi.get(`/nearby`, {
+            params: {
+                latitude,
+                longitude,
+                radius
+            }
+        });
+        return response.data;
+    }catch(error){
+        console.error('Nearby spaces fetch error:', error);
+        if (error.response?.data) {
+            throw new Error(error.response.data.detail || '주변 공간 검색 중 오류가 발생했습니다.');
+        }
+        throw error;
+    }
+}
+
 export const createSpace = async (formData) => {
     try {
         const response = await spaceApi.post('', formData, {

@@ -1,0 +1,196 @@
+.mymap-container {
+    margin: 30px auto;
+    width: 90%;
+    max-width: 1400px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(115, 113, 252, 0.08);
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    position: relative;
+    height: 800px;
+  }
+  
+  .mymap-controls {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    z-index: 10;
+  }
+  
+  .mymap-controls-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .mymap-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    color: #636E72;
+    box-shadow: 0 4px 12px rgba(115, 113, 252, 0.1);
+  }
+  
+  .mymap-button-blue {
+    background: linear-gradient(135deg, #7371FC 0%, #A594F9 100%);
+    color: white;
+  }
+  
+  .mymap-button-blue:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(115, 113, 252, 0.2);
+  }
+  
+  .mymap-button-green {
+    background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+    color: white;
+  }
+  
+  .mymap-button-green:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(34, 197, 94, 0.2);
+  }
+  
+  .mymap-radius-container {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(115, 113, 252, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    align-items: center;
+  }
+  
+  .mymap-radius-label {
+    color: #636E72;
+    font-weight: 600;
+  }
+  
+  .mymap-radius-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .mymap-radius-button-active {
+    background: linear-gradient(135deg, #7371FC 0%, #A594F9 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(115, 113, 252, 0.2);
+  }
+  
+  .mymap-radius-button-inactive {
+    background: white;
+    color: #636E72;
+  }
+  
+  .mymap-radius-button-inactive:hover {
+    background: rgba(115, 113, 252, 0.1);
+    color: #7371FC;
+  }
+  
+  .mymap-address {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(115, 113, 252, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    color: #2D3436;
+    font-weight: 500;
+    z-index: 500;
+  }
+  
+  .mymap-info {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 24px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(115, 113, 252, 0.08);
+    border: 1px solid rgba(115, 113, 252, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 320px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .mymap-info:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(115, 113, 252, 0.15);
+  }
+  
+  .mymap-info-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #7371FC 0%, #A594F9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .mymap-info-text {
+    color: #636E72;
+    margin-bottom: 8px;
+    line-height: 1.6;
+    font-size: 0.95em;
+  }
+  
+  .mymap-info-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #636E72;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    padding: 4px;
+  }
+  
+  .mymap-info-close:hover {
+    color: #7371FC;
+    transform: rotate(90deg);
+  }
+  
+  @media (max-width: 768px) {
+    .mymap-container {
+      width: 95%;
+      padding: 20px;
+      margin: 15px auto;
+      height: 600px;
+    }
+  
+    .mymap-controls {
+      bottom: 16px;
+      left: 16px;
+    }
+  
+    .mymap-button {
+      padding: 8px 16px;
+      font-size: 0.9em;
+    }
+  
+    .mymap-radius-container {
+      padding: 8px 12px;
+    }
+  
+    .mymap-info {
+      max-width: 280px;
+      padding: 16px;
+    }
+  }
