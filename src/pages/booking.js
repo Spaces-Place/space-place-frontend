@@ -1,5 +1,4 @@
-// BookingForm.js
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { calculatePrice } from '../utils/timeUtils';
 import { CONSTANTS, initialBookingData } from '../constants/bookingIndex';
@@ -9,33 +8,36 @@ import { BookingStep2 } from '../components/steps/BookingStep2';
 import BookingStep3 from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
 import { initiateKakaoPayment } from '../utils/paymentService';
+import { useSelector, useDispatch } from 'react-redux';
+import { saveBookingData, updateBookingData, setBookingInfo, setTotalPrice, setStep } from '../store/bookingSlice';
 import "../styles/booking.css";
 
 export default function BookingForm() {
   const location = useLocation();
-  const bookingInfo = location.state || {};
-  const usageUnit = bookingInfo.usageUnit;
+  const dispatch = useDispatch();
+  
+  const { step, bookingData, bookingInfo, totalPrice, usageUnit } = useSelector(state => state.booking);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
 
-  const [step, setStep] = useState(1);
-  const [bookingData, setBookingData] = useState(initialBookingData);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [paymentProcessing, setPaymentProcessing] = useState(false);  
+  // location.state에서 받은 bookingInfo를 Redux store에 저장
+  useEffect(() => {
+    if (location.state) {
+      dispatch(setBookingInfo(location.state));
+    }
+  }, [location.state, dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     
-    setBookingData(prev => ({
-      ...prev,
-      [name]: newValue
-    }));
+    dispatch(updateBookingData({ name, value: newValue }));
 
     if (name === 'start_time' || name === 'end_time') {
       const newPrice = calculatePrice(
         name === 'start_time' ? value : bookingData.start_time,
         name === 'end_time' ? value : bookingData.end_time
       );
-      setTotalPrice(newPrice);
+      dispatch(setTotalPrice(newPrice));
     }
   };
 
@@ -43,7 +45,13 @@ export default function BookingForm() {
     e.preventDefault();
     
     if (step < 3) {
-      setStep(prev => prev + 1);
+      dispatch(setStep(step + 1));
+      dispatch(saveBookingData({
+        bookingData,
+        bookingInfo,
+        totalPrice,
+        usageUnit
+      }));
     } 
     else if (step === 3) {
       if (!bookingData.agreement) {
@@ -88,11 +96,10 @@ export default function BookingForm() {
   };
 
   useEffect(() => {
-    const paymentSuccess = location.state?.paymentSuccess;
-    if (paymentSuccess) {
-      setStep(4);
+    if (location.state?.paymentSuccess) {
+      dispatch(setStep(4));
     }
-  }, [location]);
+  }, [location, dispatch]);
  
   return (
     <div className="booking_container">
@@ -105,14 +112,14 @@ export default function BookingForm() {
           usageUnit={usageUnit}
          />)}
         {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo.price} spaceName={bookingData.name} />}
+        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo?.price} spaceName={bookingData.name} />}
         {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
         
         <div className="booking_next-button">
           {step > 1 && step < 4 && (
             <button 
               type="button" 
-              onClick={() => setStep(prev => prev - 1)} 
+              onClick={() => dispatch(setStep(step - 1))}
               className="booking_before"
               disabled={paymentProcessing}
             >
