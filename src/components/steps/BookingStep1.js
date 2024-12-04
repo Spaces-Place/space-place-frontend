@@ -4,7 +4,6 @@ import {RequirementsInput} from "../RequirmentsInput";
 import {generateTimeOptions} from "../../utils/timeUtils";
 import { useState } from "react";
 
-
 // Step 컴포넌트들
 export const BookingStep1 = ({ bookingData, handleInputChange, spaceType, usageUnit }) => {
 
