@@ -22,7 +22,7 @@ import SearchResults from './pages/searchResults';
 import NotFound from './pages/notFound';
 import Contact from './pages/contact';
 import Settings from './pages/Settings';
-import PaymentApproval from './pages/PaymentApproval';
+import PaymentResult from './pages/PaymentResult';
 
 // 컨텍스트 및 상수
 import { AuthContext } from './utils/AuthContext';
@@ -35,7 +35,6 @@ import ScrollToTop from './components/ScrollToTop';
 import LoadingSpinner from './components/LoadingSpinner';
 import SearchBar from './components/SearchBar';
 import ThemeToggle from './components/ThemeToggle';
-import PaymentResult from './pages/PaymentResult';
 
 // 보호된 라우트 컴포넌트
 const PrivateRoute = ({ children, requiredRole }) => {
@@ -195,7 +194,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/mappage" element={<MyMapPage />} />
         <Route path="/search" element={<SearchResults query={searchQuery} />} />
-        <Route path="/payments/kakao/approval" element={<PaymentApproval />} />
+        <Route path="/booking" element={<Booking />} />
+        <Route path="booking/success" element={<PaymentResult />} />
 
         {/* 공간 관련 라우트 */}
         {ItemType.map(({type}) => (
@@ -216,32 +216,9 @@ function App() {
             <OwnerMypage />
           </PrivateRoute>
         } />
-        <Route path="/booking" element={
-          <PrivateRoute>
-            <Booking />
-          </PrivateRoute>
-        } />
+        
         <Route path="/settings" element={
-          <PrivateRoute>
             <Settings />
-          </PrivateRoute>
-        } />
-
-        {/* 결제 결과 처리 라우트 */}
-        <Route path="/payment/success" element={
-          <PrivateRoute>
-            <PaymentResult type="success" />
-          </PrivateRoute>
-        } />
-        <Route path="/payment/cancel" element={
-          <PrivateRoute>
-            <PaymentResult type="cancel" />
-          </PrivateRoute>
-        } />
-        <Route path="/payment/fail" element={
-          <PrivateRoute>
-            <PaymentResult type="fail" />
-          </PrivateRoute>
         } />
 
         {/* 404 페이지 */}
