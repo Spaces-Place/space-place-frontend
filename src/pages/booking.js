@@ -9,6 +9,7 @@ import { BookingStep2 } from '../components/steps/BookingStep2';
 import BookingStep3 from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
 import { initiateKakaoPayment } from '../utils/paymentService';
+import "../styles/booking.css";
 
 export default function BookingForm() {
   const location = useLocation();
