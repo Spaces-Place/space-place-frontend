@@ -22,6 +22,7 @@ import SearchResults from './pages/searchResults';
 import NotFound from './pages/notFound';
 import Contact from './pages/contact';
 import Settings from './pages/Settings';
+import PaymentApproval from './pages/PaymentApproval';
 
 // 컨텍스트 및 상수
 import { AuthContext } from './utils/AuthContext';
@@ -194,6 +195,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/mappage" element={<MyMapPage />} />
         <Route path="/search" element={<SearchResults query={searchQuery} />} />
+        <Route path="/payments/kakao/approval" element={<PaymentApproval />} />
 
         {/* 공간 관련 라우트 */}
         {ItemType.map(({type}) => (
