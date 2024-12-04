@@ -60,7 +60,7 @@ export default function BookingForm() {
           ? {
               // 일단위 예약
               date: bookingData.date,
-              name: bookingData.name,
+              user_name: bookingData.name,
               phone: bookingData.phone,
               email: bookingData.email
             }
@@ -68,7 +68,7 @@ export default function BookingForm() {
               // 시간단위 예약
               start_time: bookingData.start_time,
               end_time: bookingData.end_time,
-              name: bookingData.name,
+              user_name: bookingData.name,
               phone: bookingData.phone,
               email: bookingData.email
             };
