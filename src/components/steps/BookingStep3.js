@@ -33,6 +33,8 @@ const BookingStep3 = ({ bookingData, handleInputChange, price }) => {
     return <div>로딩 중...</div>;
   }
 
+  console.log(bookingData)
+
   return (
     <div className="booking_step">
       <h2 className="booking_step3-info">결제 정보</h2>
