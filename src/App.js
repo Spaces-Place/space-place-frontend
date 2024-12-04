@@ -195,7 +195,7 @@ function App() {
         <Route path="/mappage" element={<MyMapPage />} />
         <Route path="/search" element={<SearchResults query={searchQuery} />} />
         <Route path="/booking" element={<Booking />} />
-        <Route path="booking/success" element={<PaymentResult />} />
+        <Route path="/booking/success" element={<PaymentResult />} />
 
         {/* 공간 관련 라우트 */}
         {ItemType.map(({type}) => (
