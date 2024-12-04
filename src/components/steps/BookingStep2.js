@@ -1,10 +1,7 @@
 import { PAYMENT_METHODS } from "../../constants/bookingIndex";
 
 // Step 2: 예약자 정보
-export const BookingStep2 = ({ bookingData, handleInputChange }) => {
-  
-  console.log(bookingData)
-  return(
+export const BookingStep2 = ({ bookingData, handleInputChange }) => (
   <div className="booking_step">
     <h2 className="booking_step2-info">예약자 정보</h2>
     <div className="booking_step2-box">
@@ -40,5 +37,4 @@ export const BookingStep2 = ({ bookingData, handleInputChange }) => {
       </div>
     </div>
   </div>
-)
-};
+);

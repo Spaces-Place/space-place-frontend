@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+// BookingForm.js
+import { useState, useEffect  } from "react";
 import { useLocation } from 'react-router-dom';
 import { calculatePrice } from '../utils/timeUtils';
 import { CONSTANTS, initialBookingData } from '../constants/bookingIndex';
@@ -8,68 +9,41 @@ import { BookingStep2 } from '../components/steps/BookingStep2';
 import BookingStep3 from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
 import { initiateKakaoPayment } from '../utils/paymentService';
-import { useSelector, useDispatch } from 'react-redux';
-import { saveBookingData, updateBookingData, setBookingInfo, setTotalPrice, setStep } from '../store/bookingSlice';
 import "../styles/booking.css";
 
 export default function BookingForm() {
   const location = useLocation();
-  const dispatch = useDispatch();
-  
-  const { step, bookingData, bookingInfo, totalPrice, usageUnit } = useSelector(state => state.booking);
-  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const bookingInfo = location.state || {};
+  const usageUnit = bookingInfo.usageUnit;
 
-  // location.state에서 받은 bookingInfo를 Redux store에 저장
-  useEffect(() => {
-    if (location.state?.paymentSuccess) {
-      // 기존 데이터를 유지하면서 결제 성공 정보만 추가
-      dispatch(saveBookingData({
-        bookingData,
-        bookingInfo: {
-          ...bookingInfo,
-          orderNumber: location.state.orderNumber,
-          paymentSuccess: true
-        },
-        totalPrice,
-        usageUnit
-      }));
-      dispatch(setStep(4));
+  const [step, setStep] = useState(1);
+  const [bookingData, setBookingData] = useState(initialBookingData);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);  
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    
+    setBookingData(prev => ({
+      ...prev,
+      [name]: newValue
+    }));
+
+    if (name === 'start_time' || name === 'end_time') {
+      const newPrice = calculatePrice(
+        name === 'start_time' ? value : bookingData.start_time,
+        name === 'end_time' ? value : bookingData.end_time
+      );
+      setTotalPrice(newPrice);
     }
-  }, [location.state, dispatch, bookingData, bookingInfo, totalPrice, usageUnit]);
-
-
-// BookingForm.js의 handleInputChange 수정
-const handleInputChange = (e) => {
-  const { name, value, type, checked } = e.target;
-  const newValue = type === 'checkbox' ? checked : value;
-  
-  dispatch(updateBookingData({ name, value: newValue }));
-
-  if (name === 'start_time' || name === 'end_time') {
-    // 시작 시간이나 종료 시간이 변경될 때마다 가격 재계산
-    if (bookingData.start_time && bookingData.end_time) {
-      const start = new Date(name === 'start_time' ? value : bookingData.start_time);
-      const end = new Date(name === 'end_time' ? value : bookingData.end_time);
-      const diffHours = (end - start) / (1000 * 60 * 60);
-      const priceNumber = parseInt(bookingInfo.price.replace(/[^0-9]/g, ''));
-      const newPrice = diffHours * priceNumber;
-      
-      dispatch(setTotalPrice(newPrice));
-    }
-  }
-};
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (step < 3) {
-      dispatch(setStep(step + 1));
-      dispatch(saveBookingData({
-        bookingData,
-        bookingInfo,
-        totalPrice,
-        usageUnit
-      }));
+      setStep(prev => prev + 1);
     } 
     else if (step === 3) {
       if (!bookingData.agreement) {
@@ -114,10 +88,11 @@ const handleInputChange = (e) => {
   };
 
   useEffect(() => {
-    if (location.state?.paymentSuccess) {
-      dispatch(setStep(4));
+    const paymentSuccess = location.state?.paymentSuccess;
+    if (paymentSuccess) {
+      setStep(4);
     }
-  }, [location, dispatch]);
+  }, [location]);
  
   return (
     <div className="booking_container">
@@ -129,31 +104,15 @@ const handleInputChange = (e) => {
           handleInputChange={handleInputChange}
           usageUnit={usageUnit}
          />)}
-        {step === 2 &&
-         <BookingStep2 
-           bookingData={bookingData} 
-           handleInputChange={handleInputChange} />}
-        {step === 3 && 
-          <BookingStep3 
-            bookingData={bookingData} 
-            handleInputChange={handleInputChange} 
-            totalPrice={totalPrice} 
-            spaceName={bookingData.name} 
-          />
-        }
-        {step === 4 && 
-          <BookingStep4 
-            bookingData={bookingData}
-            bookingInfo={bookingInfo}
-            totalPrice={totalPrice}
-          />
-        }
+        {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
+        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo.price} spaceName={bookingData.name} />}
+        {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} price={bookingInfo.price} />}
         
         <div className="booking_next-button">
           {step > 1 && step < 4 && (
             <button 
               type="button" 
-              onClick={() => dispatch(setStep(step - 1))}
+              onClick={() => setStep(prev => prev - 1)} 
               className="booking_before"
               disabled={paymentProcessing}
             >

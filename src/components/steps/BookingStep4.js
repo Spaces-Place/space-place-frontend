@@ -1,17 +1,9 @@
 import { PAYMENT_METHODS } from "../../constants/bookingIndex";
-import { useSelector } from 'react-redux';
 
-export const BookingStep4 = () => {
-  // Redux store에서 모든 예약 데이터 가져오기
-  const { bookingData, bookingInfo, totalPrice } = useSelector(state => state.booking);
-
+export const BookingStep4 = ({ bookingData, bookingInfo, price }) => {
   // 시간 포맷팅 함수
   const formatTime = (timeString) => {
-    if (!timeString) return '-';
-    const date = new Date(timeString);
-    return date.toLocaleString('ko-KR', {
-      month: 'long',
-      day: 'numeric',
+    return new Date(timeString).toLocaleTimeString('ko-KR', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
@@ -20,39 +12,28 @@ export const BookingStep4 = () => {
 
   return (
     <div className="booking_step">
-      <h2 className="booking_step4-text">예약이 완료되었습니다</h2>
+      <h2 className="booking_step4-text">예약 확인</h2>
       <div className="booking_step4-round">
-        <div className="booking_step4-section">
-          <h3 className="booking_step4-booking-info">예약 정보</h3>
-          <div className="booking_step4-content">
-            <p>주문번호: {bookingInfo?.orderNumber || '-'}</p>
-            <p>날짜: {bookingData?.date || '-'}</p>
-            {bookingData?.start_time && (
-              <p>시간: {formatTime(bookingData?.start_time)} ~ {formatTime(bookingData?.end_time)}</p>
-            )}
-            <p>인원: {bookingData?.numberOfPeople}명</p>
-            {bookingData?.requirements && (
-              <p>요청사항: {bookingData?.requirements}</p>
-            )}
-          </div>
+        <div>
+          <h3 className="booking_step4-booking-info">예약정보</h3>
+          <p>공간: {bookingInfo.title}</p>
+          <p>날짜: {bookingData.date}</p>
+          <p>시간: {formatTime(bookingData.start_time)} ~ {formatTime(bookingData.end_time)}</p>
+          <p>인원: {bookingData.numberOfPeople}명</p>
+          {bookingData.requirements && (
+            <p>요청사항: {bookingData.requirements}</p>
+          )}
         </div>
-
-        <div className="booking_step4-section">
+        <div>
           <h3 className="booking_step4-booking-people">예약자 정보</h3>
-          <div className="booking_step4-content">
-            <p>이름: {bookingData?.name}</p>
-            <p>연락처: {bookingData?.phone}</p>
-            <p>이메일: {bookingData?.email}</p>
-          </div>
+          <p>이름: {bookingData.name}</p>
+          <p>연락처: {bookingData.phone}</p>
+          <p>이메일: {bookingData.email}</p>
         </div>
-
-        <div className="booking_step4-section">
+        <div>
           <h3 className="booking_step4-booking-payment">결제 정보</h3>
-          <div className="booking_step4-content">
-            <p>결제 금액: {totalPrice?.toLocaleString()}원</p>
-            <p>결제 수단: {PAYMENT_METHODS[bookingData?.paymentMethod]}</p>
-            <p>결제 상태: 결제 완료</p>
-          </div>
+          <p>결제 금액: {price.toLocaleString()}원</p>
+          <p>결제 수단: {PAYMENT_METHODS[bookingData.paymentMethod]}</p>
         </div>
       </div>
     </div>
