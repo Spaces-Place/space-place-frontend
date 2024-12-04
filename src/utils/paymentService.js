@@ -70,6 +70,47 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
   }
 };
 
+export const handlePaymentApproval = async (popupUrl) => {
+  const token = cookies.get('access_token');
+  if (!token){
+    throw new Error('로그인이 필요합니다.')
+  }
+
+  try{
+    const url = new URL(popupUrl);
+    const orderNumber = url.searchParams.get('order_number');
+    const pgToken = url.searchParams.get('pg_token');
+
+
+    if(!orderNumber || !pgToken){
+      throw new Error('Invalid payment response')
+    }
+
+        // 백엔드로 승인 요청
+        const response = await payment_api.get(
+          `/kakao/approval?order_number=${orderNumber}&pg_token=${pgToken}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+    
+        return {
+          success: true,
+          data: response.data
+        };
+      } catch (error) {
+        console.error('Payment approval error:', error);
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    };
+
+
+
 export const checkPaymentStatus = async (tid) => {
   const token = cookies.get('access_token');
   try {

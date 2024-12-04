@@ -8,7 +8,7 @@ import { BookingStep1 } from '../components/steps/BookingStep1';
 import { BookingStep2 } from '../components/steps/BookingStep2';
 import BookingStep3 from '../components/steps/BookingStep3';
 import { BookingStep4 } from '../components/steps/BookingStep4';
-import { handlePayment, initiateKakaoPayment  } from '../utils/paymentService';
+import { handlePayment, initiateKakaoPayment, handlePaymentApproval  } from '../utils/paymentService';
 
 export default function BookingForm() {
   const location = useLocation();
@@ -90,37 +90,59 @@ export default function BookingForm() {
               `width=${width},height=${height},left=${left},top=${top}`
             );
   
-            // 팝업창 닫힘 감지
-            const checkPopupClosed = setInterval(() => {
+            // URL 변경 감지를 위한 인터벌 설정
+          const checkPopup = setInterval(() => {
+            try {
+              // 팝업이 닫혔는지 확인
               if (popup.closed) {
-                clearInterval(checkPopupClosed);
-                
-                // 결제 상태 확인
-                checkPaymentStatus(response.tid)
-                  .then(status => {
-                    if (status.success) {
-                      setStep(4); // 결제 성공 시 step 4로 이동
-                    } else {
-                      alert('결제가 취소되었거나 실패했습니다.');
-                    }
-                  })
-                  .catch(error => {
-                    console.error('Payment status check failed:', error);
-                    alert('결제 상태 확인 중 오류가 발생했습니다.');
-                  });
+                clearInterval(checkPopup);
+                return;
               }
-            }, 500);
-          }
+
+              // approval, cancel, fail URL인지 확인
+              if (popup.location.href.includes('/payments/kakao/approval') ||
+                  popup.location.href.includes('/payments/kakao/cancel') ||
+                  popup.location.href.includes('/payments/kakao/fail')) {
+                
+                const currentUrl = popup.location.href;
+                popup.close();
+                clearInterval(checkPopup);
+
+                // 결제 승인 처리
+                if (currentUrl.includes('/payments/kakao/approval')) {
+                  handlePaymentApproval(currentUrl)
+                    .then(result => {
+                      if (result.success) {
+                        setStep(4); // 성공 시 step 4로 이동
+                      } else {
+                        alert('결제 처리 중 오류가 발생했습니다.');
+                      }
+                    });
+                } else {
+                  // 취소나 실패의 경우
+                  alert('결제가 취소되었거나 실패했습니다.');
+                }
+              }
+            } catch (e) {
+              // CORS 에러 무시 (다른 도메인 탐지 시 에러 발생)
+              if (e.name === 'SecurityError') {
+                return;
+              }
+            }
+          }, 500);
         }
-      } catch (error) {
-        alert('결제 처리 중 오류가 발생했습니다.');
-        console.error('Payment error:', error);
-      } finally {
-        setPaymentProcessing(false);
       }
+    } catch (error) {
+      alert('결제 처리 중 오류가 발생했습니다.');
+      console.error('Payment error:', error);
+    } finally {
+      setPaymentProcessing(false);
     }
-  };
-  
+  }
+};
+
+
+
   // 결제 상태 확인 함수
   const checkPaymentStatus = async (tid) => {
     try {
