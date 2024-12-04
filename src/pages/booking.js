@@ -37,20 +37,27 @@ export default function BookingForm() {
     }
   }, [location.state, dispatch, bookingData, bookingInfo, totalPrice, usageUnit]);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    
-    dispatch(updateBookingData({ name, value: newValue }));
 
-    if (name === 'start_time' || name === 'end_time') {
-      const newPrice = calculatePrice(
-        name === 'start_time' ? value : bookingData.start_time,
-        name === 'end_time' ? value : bookingData.end_time
-      );
+// BookingForm.js의 handleInputChange 수정
+const handleInputChange = (e) => {
+  const { name, value, type, checked } = e.target;
+  const newValue = type === 'checkbox' ? checked : value;
+  
+  dispatch(updateBookingData({ name, value: newValue }));
+
+  if (name === 'start_time' || name === 'end_time') {
+    // 시작 시간이나 종료 시간이 변경될 때마다 가격 재계산
+    if (bookingData.start_time && bookingData.end_time) {
+      const start = new Date(name === 'start_time' ? value : bookingData.start_time);
+      const end = new Date(name === 'end_time' ? value : bookingData.end_time);
+      const diffHours = (end - start) / (1000 * 60 * 60);
+      const priceNumber = parseInt(bookingInfo.price.replace(/[^0-9]/g, ''));
+      const newPrice = diffHours * priceNumber;
+      
       dispatch(setTotalPrice(newPrice));
     }
-  };
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,9 +129,25 @@ export default function BookingForm() {
           handleInputChange={handleInputChange}
           usageUnit={usageUnit}
          />)}
-        {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo?.price} spaceName={bookingData.name} />}
-        {step === 4 && <BookingStep4  />}
+        {step === 2 &&
+         <BookingStep2 
+           bookingData={bookingData} 
+           handleInputChange={handleInputChange} />}
+        {step === 3 && 
+          <BookingStep3 
+            bookingData={bookingData} 
+            handleInputChange={handleInputChange} 
+            totalPrice={totalPrice} 
+            spaceName={bookingData.name} 
+          />
+        }
+        {step === 4 && 
+          <BookingStep4 
+            bookingData={bookingData}
+            bookingInfo={bookingInfo}
+            totalPrice={totalPrice}
+          />
+        }
         
         <div className="booking_next-button">
           {step > 1 && step < 4 && (
