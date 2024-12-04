@@ -1,10 +1,11 @@
+// paymentService.js
+
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 
 const PAYMENT_API_URL = process.env.REACT_APP_PYMENTS_API;
 const cookies = new Cookies();
 
-// payment API 전용 인스턴스 생성
 const payment_api = axios.create({
   baseURL: PAYMENT_API_URL,
   headers: {
@@ -22,12 +23,11 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
     throw new Error('로그인이 필요합니다.');
   }
 
-  // 시간 형식 변환 함수
   const formatDateTime = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
     return date.toISOString()
       .replace('T', ' ')
-      .split('.')[0];  // "2024-11-30 11:30:00" 형식으로 변환
+      .split('.')[0];
   };
 
   const requestData = {
@@ -56,10 +56,7 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
       }
     });
 
-    if (response.data.next_redirect_pc_url) {
-      window.location.href = response.data.next_redirect_pc_url;
-    }
-    
+    // window.location.href 직접 설정하지 않고 응답만 반환
     return response.data;
   } catch (error) {
     console.error('Server Error Details:', {
@@ -69,6 +66,21 @@ export const initiateKakaoPayment = async (bookingData, totalPrice, spaceId) => 
       serverMessage: error.response?.data?.message || error.response?.data?.detail,
       requestData: requestData
     });
+    throw error;
+  }
+};
+
+export const checkPaymentStatus = async (tid) => {
+  const token = cookies.get('access_token');
+  try {
+    const response = await payment_api.get(`/kakao/status/${tid}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Payment status check failed:', error);
     throw error;
   }
 };
