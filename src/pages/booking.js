@@ -43,35 +43,32 @@ export default function BookingForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (step < 3) { // 1,2단계는 그냥 다음으로
+    if (step < 3) {
       setStep(prev => prev + 1);
     } 
-    else if (step === 3) { // 3단계에서 결제 처리
+    else if (step === 3) {
       if (!bookingData.agreement) {
         alert('예약 정책에 동의해주세요.');
         return;
       }
- 
+  
       try {
         setPaymentProcessing(true);
         if (bookingData.paymentMethod === 'kakao') {
-          // 날짜와 시간을 합쳐서 전달
           const paymentData = usageUnit === 'DAY' 
-          ? {
-              // 일단위 예약
-              date: bookingData.date,
-              user_name: bookingData.name,
-              phone: bookingData.phone,
-              email: bookingData.email
-            }
-          : {
-              // 시간단위 예약
-              start_time: bookingData.start_time,
-              end_time: bookingData.end_time,
-              user_name: bookingData.name,
-              phone: bookingData.phone,
-              email: bookingData.email
-            };
+            ? {
+                date: bookingData.date,
+                user_name: bookingData.name,
+                phone: bookingData.phone,
+                email: bookingData.email
+              }
+            : {
+                start_time: bookingData.start_time,
+                end_time: bookingData.end_time,
+                user_name: bookingData.name,
+                phone: bookingData.phone,
+                email: bookingData.email
+              };
   
           const response = await initiateKakaoPayment(
             paymentData,
@@ -80,9 +77,40 @@ export default function BookingForm() {
           );
   
           if (response.next_redirect_pc_url) {
-            window.location.href = response.next_redirect_pc_url;
+            // 팝업창 크기와 위치 설정
+            const width = 450;
+            const height = 650;
+            const left = window.screen.width / 2 - width / 2;
+            const top = window.screen.height / 2 - height / 2;
+  
+            // 팝업창 열기
+            const popup = window.open(
+              response.next_redirect_pc_url,
+              'KakaoPay',
+              `width=${width},height=${height},left=${left},top=${top}`
+            );
+  
+            // 팝업창 닫힘 감지
+            const checkPopupClosed = setInterval(() => {
+              if (popup.closed) {
+                clearInterval(checkPopupClosed);
+                
+                // 결제 상태 확인
+                checkPaymentStatus(response.tid)
+                  .then(status => {
+                    if (status.success) {
+                      setStep(4); // 결제 성공 시 step 4로 이동
+                    } else {
+                      alert('결제가 취소되었거나 실패했습니다.');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Payment status check failed:', error);
+                    alert('결제 상태 확인 중 오류가 발생했습니다.');
+                  });
+              }
+            }, 500);
           }
-          console.log('booking.js : ', response)
         }
       } catch (error) {
         alert('결제 처리 중 오류가 발생했습니다.');
@@ -90,6 +118,17 @@ export default function BookingForm() {
       } finally {
         setPaymentProcessing(false);
       }
+    }
+  };
+  
+  // 결제 상태 확인 함수
+  const checkPaymentStatus = async (tid) => {
+    try {
+      const response = await fetch(`/api/payments/status/${tid}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error('Payment status check failed');
     }
   };
 
