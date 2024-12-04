@@ -1,11 +1,18 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet';
-import { BrowserRouter as Router, Routes, Route, Link, NavLink, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  NavLink,
+  Navigate,
+} from 'react-router-dom';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'
+import './App.css';
 
 // 페이지 컴포넌트
 import LoginModal from './pages/login';
@@ -39,16 +46,16 @@ import ThemeToggle from './components/ThemeToggle';
 // 보호된 라우트 컴포넌트
 const PrivateRoute = ({ children, requiredRole }) => {
   const { user, isAuthenticated } = useContext(AuthContext);
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
-  
+
   if (requiredRole && user?.type !== requiredRole) {
     toast.error('접근 권한이 없습니다.');
     return <Navigate to="/" replace />;
   }
-  
+
   return children;
 };
 
@@ -92,8 +99,7 @@ function App() {
     toast.info('로그아웃되었습니다.');
     setTimeout(() => {
       window.location.href = '/';
-    }, 2000)
-   
+    }, 2000);
   };
 
   const handleSearch = async (query) => {
@@ -107,11 +113,11 @@ function App() {
 
   return (
     <div className={`App ${theme}`}>
-  <Helmet>
-  <title>Space Place</title>
-  <link rel="shortcut icon" href="/helmet.png" />
-  <link rel="icon" type="image/png" href="/helmet.png" />
-</Helmet>
+      <Helmet>
+        <title>Space Place</title>
+        <link rel="shortcut icon" href="/helmet.png" />
+        <link rel="icon" type="image/png" href="/helmet.png" />
+      </Helmet>
       <header className="App-header">
         <Navbar collapseOnSelect expand="lg" className="nav-container">
           <Container className="nav-container">
@@ -119,46 +125,63 @@ function App() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link as={Link} to="/intro">공간소개</Nav.Link>
-                <Nav.Link as={Link} to="/mappage">지도로보자</Nav.Link>
-                <NavDropdown title="공간목록" id="collapsible-nav-dropdown" className="no-dropdown-arrow">
-                  {ItemType.map(({type, title, to}) => (
-                    <NavDropdown.Item
-                      key={type}
-                      as={Link}
-                      to={to}
-                      type={type}
-                    >{title}</NavDropdown.Item>
+                <Nav.Link as={Link} to="/intro">
+                  공간소개
+                </Nav.Link>
+                <Nav.Link as={Link} to="/mappage">
+                  지도로보자
+                </Nav.Link>
+                <NavDropdown
+                  title="공간목록"
+                  id="collapsible-nav-dropdown"
+                  className="no-dropdown-arrow"
+                >
+                  {ItemType.map(({ type, title, to }) => (
+                    <NavDropdown.Item key={type} as={Link} to={to} type={type}>
+                      {title}
+                    </NavDropdown.Item>
                   ))}
                 </NavDropdown>
-                <Nav.Link as={Link} to="/contact">문의하기</Nav.Link>
+                <Nav.Link as={Link} to="/contact">
+                  문의하기
+                </Nav.Link>
               </Nav>
-              
+
               <Nav className="ms-auto-theme">
                 <ThemeToggle />
                 {/* {isAuthenticated && <NotificationBell notifications={notifications} />} */}
-                
+
                 <div className="user-btn">
                   {isAuthenticated ? (
                     <div className="login-btn">
-                      <NavDropdown 
-                        title={user?.userid || 'User'} 
+                      <NavDropdown
+                        title={user?.userid || 'User'}
                         id="user-dropdown"
                         align="end"
                       >
                         {user?.type === 'consumer' && (
-                          <NavDropdown.Item as={Link} to="/mypage">마이페이지</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/mypage">
+                            마이페이지
+                          </NavDropdown.Item>
                         )}
                         {user?.type === 'vendor' && (
-                          <NavDropdown.Item as={Link} to="/ownerpage">점주페이지</NavDropdown.Item>
+                          <NavDropdown.Item as={Link} to="/ownerpage">
+                            점주페이지
+                          </NavDropdown.Item>
                         )}
-                        <NavDropdown.Item as={Link} to="/settings">설정</NavDropdown.Item>
+                        <NavDropdown.Item as={Link} to="/settings">
+                          설정
+                        </NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item onClick={handleLogout}>로그아웃</NavDropdown.Item>
+                        <NavDropdown.Item onClick={handleLogout}>
+                          로그아웃
+                        </NavDropdown.Item>
                       </NavDropdown>
                     </div>
                   ) : (
-                    <button onClick={() => setIsLoginModalOpen(true)}>로그인</button>
+                    <button onClick={() => setIsLoginModalOpen(true)}>
+                      로그인
+                    </button>
                   )}
                 </div>
               </Nav>
@@ -169,24 +192,24 @@ function App() {
 
       <ScrollToTop />
 
-      <LoginModal 
+      <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLogin}
       />
 
-<Routes>
-        <Route 
-          path="/" 
+      <Routes>
+        <Route
+          path="/"
           element={
             <>
               <ImageCarousel />
               <div className="p-4">
-              <SearchBar onSearch={handleSearch} />
+                <SearchBar onSearch={handleSearch} />
                 <CategorySection />
               </div>
             </>
-          } 
+          }
         />
 
         {/* 공개 라우트 */}
@@ -198,34 +221,46 @@ function App() {
         <Route path="/booking/success" element={<PaymentResult />} />
 
         {/* 공간 관련 라우트 */}
-        {ItemType.map(({type}) => (
-          <Route key={type} path={`/space/${type}`} element={<SpaceList type={type}/>} />
+        {ItemType.map(({ type }) => (
+          <Route
+            key={type}
+            path={`/space/${type}`}
+            element={<SpaceList type={type} />}
+          />
         ))}
-        {ItemType.map(({type}) => (
-          <Route key={`${type}-detail`} path={`/space/${type}/:id`} element={<SpaceDetail type={type}/>} />
+        {ItemType.map(({ type }) => (
+          <Route
+            key={`${type}-detail`}
+            path={`/space/${type}/:id`}
+            element={<SpaceDetail type={type} />}
+          />
         ))}
 
         {/* 보호된 라우트 */}
-        <Route path="/mypage" element={
-          <PrivateRoute requiredRole="consumer">
-            <RenterMypage />
-          </PrivateRoute>
-        } />
-        <Route path="/ownerpage" element={
-          <PrivateRoute requiredRole="vendor">
-            <OwnerMypage />
-          </PrivateRoute>
-        } />
-        
-        <Route path="/settings" element={
-            <Settings />
-        } />
+        <Route
+          path="/mypage"
+          element={
+            <PrivateRoute requiredRole="consumer">
+              <RenterMypage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ownerpage"
+          element={
+            <PrivateRoute requiredRole="vendor">
+              <OwnerMypage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="/settings" element={<Settings />} />
 
         {/* 404 페이지 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <ToastContainer 
+      <ToastContainer
         position="top-right"
         autoClose={2000}
         hideProgressBar={false}
@@ -235,7 +270,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        style={{ marginTop: "80px" }}  // 상단 여백 추가 (원하는 픽셀값으로 조정 가능)
+        style={{ marginTop: '80px' }} // 상단 여백 추가 (원하는 픽셀값으로 조정 가능)
       />
     </div>
   );
