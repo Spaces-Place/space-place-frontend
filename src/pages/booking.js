@@ -21,10 +21,21 @@ export default function BookingForm() {
 
   // location.state에서 받은 bookingInfo를 Redux store에 저장
   useEffect(() => {
-    if (location.state) {
-      dispatch(setBookingInfo(location.state));
+    if (location.state?.paymentSuccess) {
+      // 기존 데이터를 유지하면서 결제 성공 정보만 추가
+      dispatch(saveBookingData({
+        bookingData,
+        bookingInfo: {
+          ...bookingInfo,
+          orderNumber: location.state.orderNumber,
+          paymentSuccess: true
+        },
+        totalPrice,
+        usageUnit
+      }));
+      dispatch(setStep(4));
     }
-  }, [location.state, dispatch]);
+  }, [location.state, dispatch, bookingData, bookingInfo, totalPrice, usageUnit]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -113,7 +124,7 @@ export default function BookingForm() {
          />)}
         {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
         {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo?.price} spaceName={bookingData.name} />}
-        {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} totalPrice={totalPrice} />}
+        {step === 4 && <BookingStep4  />}
         
         <div className="booking_next-button">
           {step > 1 && step < 4 && (
