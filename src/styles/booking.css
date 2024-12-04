@@ -507,6 +507,41 @@
     }
 }
 
+.booking_payment-result {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+  
+  .booking_payment-container {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  .booking_payment-status.error {
+    color: #dc2626;
+  }
+  
+  .booking_payment-retry {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+  }
+  
+  .booking_payment-button {
+    padding: 0.5rem 1rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 0.25rem;
+  }
+  
+  .booking_payment-button:hover {
+    background-color: #2563eb;
+  }
+
 /* 애니메이션 */
 @keyframes slideIn {
     from {
