@@ -40,7 +40,11 @@ const PaymentResult = () => {
           navigate('/booking', {
             state: { 
               paymentSuccess: true,
-              orderNumber: orderNumber 
+              orderNumber: orderNumber,
+              bookingDetails: result.bookingDetails || {},
+              spaceId: result.spaceId,
+              spaceName: result.spaceName,
+              price: result.price
             }
           });
         }, 1500);
@@ -70,8 +74,11 @@ const PaymentResult = () => {
   };
 
   useEffect(() => {
-    processPayment();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const paymentSuccess = location.state?.paymentSuccess;
+    if (paymentSuccess) {
+      setStep(4);
+    }
+  }, [location]);
 
   return (
     <div className="booking_payment-result">
