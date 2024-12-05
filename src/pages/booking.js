@@ -54,20 +54,18 @@ export default function BookingForm() {
       try {
         setPaymentProcessing(true);
         if (bookingData.paymentMethod === 'kakao') {
-          const paymentData = usageUnit === 'DAY' 
-            ? {
-                date: bookingData.date,
-                user_name: bookingData.name,
-                phone: bookingData.phone,
-                email: bookingData.email
-              }
-            : {
-                start_time: bookingData.start_time,
-                end_time: bookingData.end_time,
-                user_name: bookingData.name,
-                phone: bookingData.phone,
-                email: bookingData.email
-              };
+          const paymentData = {
+            user_name: bookingData.name,
+            phone: bookingData.phone,
+            email: bookingData.email,
+            ...(usageUnit === 'DAY' 
+              ? { date: bookingData.date }
+              : { 
+                  start_time: bookingData.start_time,
+                  end_time: bookingData.end_time
+                }
+            )
+          };
   
           const response = await initiateKakaoPayment(
             paymentData,
@@ -76,6 +74,12 @@ export default function BookingForm() {
           );
   
           if (response.next_redirect_pc_url) {
+            // 현재의 bookingData를 세션 스토리지에 저장
+            sessionStorage.setItem('currentBookingData', JSON.stringify({
+              bookingData,
+              bookingInfo,
+              totalPrice
+            }));
             window.location.href = response.next_redirect_pc_url;
           }
         }
@@ -87,47 +91,76 @@ export default function BookingForm() {
     }
   };
 
-  useEffect(() => {
-    const paymentSuccess = location.state?.paymentSuccess;
-    if (paymentSuccess) {
-      setStep(4);
+
+ // 결제 성공 후 상태 처리
+ useEffect(() => {
+  if (location.state?.paymentSuccess) {
+    setStep(4);
+    // 결제 성공 후의 예약 데이터로 업데이트
+    if (location.state.bookingDetails) {
+      setBookingData(prev => ({
+        ...prev,
+        ...location.state.bookingDetails
+      }));
     }
-  }, [location]);
+  }
+}, [location.state]);
+
  
-  return (
-    <div className="booking_container">
-      <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
-      <form onSubmit={handleSubmit}>
-        {step === 1 && 
-        (<BookingStep1
+return (
+  <div className="booking_container">
+    <RenderStepIndicator currentStep={step} totalStep={CONSTANTS.STEPS} />
+    <form onSubmit={handleSubmit}>
+      {step === 1 && (
+        <BookingStep1
           bookingData={bookingData}
           handleInputChange={handleInputChange}
           usageUnit={usageUnit}
-         />)}
-        {step === 2 && <BookingStep2 bookingData={bookingData} handleInputChange={handleInputChange} />}
-        {step === 3 && <BookingStep3 bookingData={bookingData} handleInputChange={handleInputChange} totalPrice={totalPrice} price={bookingInfo.price} spaceName={bookingData.name} />}
-        {step === 4 && <BookingStep4 bookingData={bookingData} bookingInfo={bookingInfo} price={bookingInfo.price} />}
-        
-        <div className="booking_next-button">
-          {step > 1 && step < 4 && (
-            <button 
-              type="button" 
-              onClick={() => setStep(prev => prev - 1)} 
-              className="booking_before"
-              disabled={paymentProcessing}
-            >
-              이전
-            </button>
-          )}
+        />
+      )}
+      {step === 2 && (
+        <BookingStep2 
+          bookingData={bookingData} 
+          handleInputChange={handleInputChange} 
+        />
+      )}
+      {step === 3 && (
+        <BookingStep3 
+          bookingData={bookingData} 
+          handleInputChange={handleInputChange}
+          totalPrice={totalPrice}
+          price={bookingInfo.price}
+          spaceName={bookingInfo.title}
+        />
+      )}
+      {step === 4 && (
+        <BookingStep4 
+          bookingData={bookingData}
+          bookingInfo={bookingInfo}
+          price={totalPrice || bookingInfo.price}
+        />
+      )}
+      
+      <div className="booking_next-button">
+        {step > 1 && step < 4 && (
           <button 
-            type="submit" 
-            className="booking_submit"
+            type="button" 
+            onClick={() => setStep(prev => prev - 1)} 
+            className="booking_before"
             disabled={paymentProcessing}
           >
-            {step === 3 ? '결제하기' : (step === 4 ? '완료' : '다음')}
+            이전
           </button>
-        </div>
-      </form>
-    </div>
-  );
+        )}
+        <button 
+          type="submit" 
+          className="booking_submit"
+          disabled={paymentProcessing}
+        >
+          {step === 3 ? '결제하기' : (step === 4 ? '완료' : '다음')}
+        </button>
+      </div>
+    </form>
+  </div>
+);
 }
