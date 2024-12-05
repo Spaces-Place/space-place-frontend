@@ -42,6 +42,22 @@ export default function SpaceDetail({type: propType}) {
         });
     };
 
+
+
+    const getImagesUrl = (image) => {
+        try {
+          if (typeof image === 'string') {
+            return image;
+          }
+          return '/images/default-image.png';
+        } catch (error) {
+          console.error('Error in getImageUrl:', error);
+          return '/images/default-image.png';
+        }
+      };
+
+
+
     useEffect(() => {
         const fetchSpaceDetail = async () => {
             try {
@@ -142,7 +158,7 @@ export default function SpaceDetail({type: propType}) {
 
     const renderImage = (imageUrl, alt) => (
         <img 
-            src={imageUrl}
+            src={getImagesUrl(imageUrl)}
             alt={alt}
             className="detail-img"
             style={{width: '100%', height: 'auto', maxHeight: "250px"}}
@@ -181,7 +197,7 @@ export default function SpaceDetail({type: propType}) {
                                     {({ isActive }) => (
                                         <div className={`transition-all duration-300 ${isActive ? 'scale-110' : 'scale-90 opacity-50'}`}>
                                             {renderImage(
-                                                img.thumbnail || img.url || '/images/default-image.png',
+                                                img,
                                                 `${spaceData.name || spaceData.space_name} 이미지 ${index + 1}`
                                             )}
                                         </div>
@@ -192,7 +208,7 @@ export default function SpaceDetail({type: propType}) {
                     ) : (
                         <div className="no-images">
                             {renderImage(
-                                "/images/default-image.png",
+                                { url: "/images/default-image.png" },
                                 `${spaceData.name || spaceData.space_name} 기본 이미지`
                             )}
                         </div>
