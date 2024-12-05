@@ -155,7 +155,9 @@ return (
         <BookingStep4 
           bookingData={bookingData}
           bookingInfo={bookingInfo}
-          price={totalPrice || bookingInfo.price}
+          price={bookingInfo.price}
+          totalPrice={totalPrice}
+          spaceName={bookingInfo.title}
         />
       )}
       
