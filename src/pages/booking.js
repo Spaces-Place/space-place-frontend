@@ -78,7 +78,25 @@ export default function BookingForm() {
             sessionStorage.setItem('currentBookingData', JSON.stringify({
               bookingData,
               bookingInfo,
-              totalPrice
+              totalPrice,
+              spaceInfo: {
+                id: bookingInfo.spaceId,
+                title: bookingInfo.title,
+                usageUnit: usageUnit,
+                price: bookingInfo.price
+              },
+              reservationInfo: {
+                ...(usageUnit === 'DAY' 
+                  ? { date: bookingData.date }
+                  : {
+                      start_time: bookingData.start_time,
+                      end_time: bookingData.end_time
+                    }
+                ),
+                numberOfPeople: bookingData.numberOfPeople,
+                requirements: bookingData.requirements,
+                paymentMethod: bookingData.paymentMethod
+              }
             }));
             window.location.href = response.next_redirect_pc_url;
           }
