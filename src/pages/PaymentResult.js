@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { handlePaymentResult } from '../utils/paymentService';
 
+
 export default function PaymentResult() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -27,7 +28,11 @@ export default function PaymentResult() {
                 state: {
                   paymentSuccess: true,
                   orderNumber,
-                  bookingDetails: savedBookingData.bookingData,
+                  bookingData: {
+                    ...savedBookingData.bookingData,
+                    spaceInfo: savedBookingData.spaceInfo,
+                    reservationInfo: savedBookingData.reservationInfo
+                  },
                   bookingInfo: savedBookingData.bookingInfo,
                   price: savedBookingData.totalPrice,
                   ...result
