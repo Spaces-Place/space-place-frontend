@@ -10,6 +10,7 @@ export const BookingStep4 = ({ bookingData, bookingInfo, price }) => {
     });
   };
 
+  // reservationInfo와 spaceInfo를 bookingData, bookingInfo에서 분리
   const { spaceInfo, reservationInfo } = bookingData || {};
 
   return (
