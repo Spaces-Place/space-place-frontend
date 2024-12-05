@@ -199,31 +199,8 @@ function App() {
 
         {/* 결제 관련 라우트 */}
         <Route path="/booking/*">
-          <Route index element={
-            <PrivateRoute>
-              <Booking />
-            </PrivateRoute>
-          } />
-          <Route path="payment/result" element={
-            <PrivateRoute>
-              <PaymentResult />
-            </PrivateRoute>
-          } />
-          <Route path="payment/success" element={
-            <PrivateRoute>
-              <PaymentResult status="success" />
-            </PrivateRoute>
-          } />
-          <Route path="payment/fail" element={
-            <PrivateRoute>
-              <PaymentResult status="fail" />
-            </PrivateRoute>
-          } />
-          <Route path="payment/cancel" element={
-            <PrivateRoute>
-              <PaymentResult status="cancel" />
-            </PrivateRoute>
-          } />
+          <Route index element={<Booking /> } />
+          <Route path="success" element={<PaymentResult status="success" /> } />
         </Route>
 
         {/* 공간 관련 라우트 */}
