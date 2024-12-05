@@ -197,17 +197,33 @@ function App() {
         <Route path="/mappage" element={<MyMapPage />} />
         <Route path="/search" element={<SearchResults query={searchQuery} />} />
 
+        {/* 결제 관련 라우트 */}
         <Route path="/booking/*">
           <Route index element={
             <PrivateRoute>
               <Booking />
-            </PrivateRoute>} />
-              <Route path="payment" element={<PaymentResult />} />
-              <Route path="success" element={
-                <PrivateRoute>
-                  <PaymentResult status="success" />
-                </PrivateRoute>
-              } />
+            </PrivateRoute>
+          } />
+          <Route path="payment/result" element={
+            <PrivateRoute>
+              <PaymentResult />
+            </PrivateRoute>
+          } />
+          <Route path="payment/success" element={
+            <PrivateRoute>
+              <PaymentResult status="success" />
+            </PrivateRoute>
+          } />
+          <Route path="payment/fail" element={
+            <PrivateRoute>
+              <PaymentResult status="fail" />
+            </PrivateRoute>
+          } />
+          <Route path="payment/cancel" element={
+            <PrivateRoute>
+              <PaymentResult status="cancel" />
+            </PrivateRoute>
+          } />
         </Route>
 
         {/* 공간 관련 라우트 */}
