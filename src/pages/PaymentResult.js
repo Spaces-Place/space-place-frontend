@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { handlePaymentResult } from '../utils/paymentService';
 
 const PaymentResult = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [status, setStatus] = useState('결제 처리중...');
   const [isError, setIsError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -74,11 +75,8 @@ const PaymentResult = () => {
   };
 
   useEffect(() => {
-    const paymentSuccess = location.state?.paymentSuccess;
-    if (paymentSuccess) {
-      setStep(4);
-    }
-  }, [location]);
+    processPayment();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="booking_payment-result">
