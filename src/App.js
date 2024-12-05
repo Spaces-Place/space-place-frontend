@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { BrowserRouter as Router, Routes, Route, Link, NavLink, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, NavLink, Navigate, useLocation } from 'react-router-dom';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -39,9 +39,11 @@ import ThemeToggle from './components/ThemeToggle';
 // 보호된 라우트 컴포넌트
 const PrivateRoute = ({ children, requiredRole }) => {
   const { user, isAuthenticated } = useContext(AuthContext);
+  const location = useLocation();  // 추가
   
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    // 현재 URL을 state로 전달하여 로그인 후 돌아올 수 있도록 함
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
   
   if (requiredRole && user?.type !== requiredRole) {
@@ -194,8 +196,35 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/mappage" element={<MyMapPage />} />
         <Route path="/search" element={<SearchResults query={searchQuery} />} />
-        <Route path="/booking" element={<Booking />} />
-        <Route path="/booking/success" element={<PaymentResult />} />
+
+        {/* 결제 관련 라우트 */}
+        <Route path="/booking/*">
+          <Route index element={
+            <PrivateRoute>
+              <Booking />
+            </PrivateRoute>
+          } />
+          <Route path="payment/result" element={
+            <PrivateRoute>
+              <PaymentResult />
+            </PrivateRoute>
+          } />
+          <Route path="payment/success" element={
+            <PrivateRoute>
+              <PaymentResult status="success" />
+            </PrivateRoute>
+          } />
+          <Route path="payment/fail" element={
+            <PrivateRoute>
+              <PaymentResult status="fail" />
+            </PrivateRoute>
+          } />
+          <Route path="payment/cancel" element={
+            <PrivateRoute>
+              <PaymentResult status="cancel" />
+            </PrivateRoute>
+          } />
+        </Route>
 
         {/* 공간 관련 라우트 */}
         {ItemType.map(({type}) => (
