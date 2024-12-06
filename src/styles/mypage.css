@@ -1,12 +1,8 @@
 /* Mypage.css */
 .Mypagebox {
-    padding: 6rem 2rem 2rem;
+    padding: 3rem 2rem 2rem;
     background: linear-gradient(135deg, #f6f8ff 0%, #ffffff 100%);
     min-height: 100vh;
-}
-
-.mypage-header {
-    height: 50px;
 }
 
 .Mypage-Container {

@@ -1,9 +1,14 @@
 .owner-wrap {
   min-height: 100vh;
   background: var(--background);
-  padding: 6rem 2rem 2rem;
+  padding: 3rem 2rem 2rem;
 }
 
+.renter-Mypage-Container{
+  margin: 3rem auto;
+  max-width: 1000px;
+
+}
 .owner-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -21,6 +26,8 @@
   border: 1px solid rgba(115, 113, 252, 0.1);
   position: relative;
   overflow: hidden;
+  margin: 1rem auto;
+  max-width: 1200px;
 }
 
 .owner-info::before {
@@ -114,6 +121,13 @@
 }
 
 /* 예약 관리 섹션 */
+.owner-book-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+
 .owner-book-mgmt {
   background: var(--surface);
   padding: 2.5rem;
@@ -136,6 +150,7 @@
   padding: 0.5rem;
   border-radius: var(--radius-md);
 }
+
 
 .tab {
   padding: 0.75rem 1.5rem;
@@ -162,10 +177,73 @@
   font-size: 0.875rem;
 }
 
+/* 승인 버튼 */
+.confirm {
+  background: #00B894;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm:hover {
+  background: #00a383;
+  transform: translateY(-1px);
+}
+
+/* 거절 버튼 */
+.owner-reject {
+  background: #e74c3c;
+  color:  var(--surface);
+  border: 1px solid #e74c3c;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.owner-reject:hover {
+  background: red;
+  color: white;
+}
+
+/* 취소 버튼 */
+.owner-cancel {
+  background: transparent;
+  color: #c62828;
+  border: 1px solid #c62828;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.owner-cancel:hover {
+  background: #c62828;
+  color: white;
+}
+
+/* 버튼 상태 */
+.confirm:disabled,
+.owner-reject:disabled,
+.owner-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
 .s-confirm { background: #00B894; color: white; }
 .s-pending { background: #74B9FF; color: white; }
 .s-complete { background: #7371FC; color: white; }
-.s-cancel { background: #FF7675; color: white; }
+.s-cancel { background: #442d2d; color: white; }
 .s-active { background: #00B894; color: white; }
 .s-maint { background: #FDCB6E; color: white; }
 
@@ -235,6 +313,19 @@
   }
   
   .owner-fac-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .owner-book-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .confirm,
+  .owner-reject,
+  .owner-cancel {
     width: 100%;
   }
 }
