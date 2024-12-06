@@ -13,7 +13,7 @@ const UserInfomation = ({userInfo, loading, error}) => {
 
     return (
         <div className="userInfo">
-          <h2 className="user-title">마이페이지</h2>
+          <h2 className="user-title">내 정보</h2>
           <div className="mypage-info-grid">
             <div className="userID-label">ID</div>
             <div className="userID-value">{userInfo.user_id}</div>

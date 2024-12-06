@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import Calendar from 'react-calendar';
+import {Navigate} from "react-router-dom";
 import 'react-calendar/dist/Calendar.css';
 import '../styles/OwnerMypage.css';
 import { AuthContext } from "../utils/AuthContext";
@@ -16,34 +17,42 @@ export default function OwnerMypage() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-console.log(user);
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                setLoading(true);
-                if (!user || !user.userid) {
-                    throw new Error('사용자 정보가 없습니다');
-                }
-                console.log("Fetching info for user:", user.userid);
-                const info = await authService.getUserInfo(user.userid);
-                setUserInfo(info);
-                setError(null);
-            } catch (err) {
-                setError('사용자 정보를 불러오는데 실패했습니다.');
-                console.error('Error fetching user info:', err);
-                // 인증 관련 에러인 경우 로그아웃 처리
-                if (err.message.includes('인증') || err.message.includes('토큰')) {
-                    logout();
-                }
-            } finally {
-                setLoading(false);
+
+
+useEffect(() => {
+    const fetchUserInfo = async () => {
+        try {
+            if (!user?.userid) return;
+            
+            const info = await authService.getUserInfo(user.userid);
+            setUserInfo(info);
+
+            const basicUserInfo = {
+                userid : info.user_id,
+                type : info.type
+            };
+
+            localStorage.setItem('user', JSON.stringify({
+                ...basicUserInfo,
+                fullInfo: info
+            }))
+
+            setError(null);
+        } catch (err) {
+            console.error('Error fetching user info:', err);
+            setError('사용자 정보를 불러오는데 실패했습니다.');
+            if (err.message.includes('인증')) {
+                logout();
             }
-        };
-    
-        if (isAuthenticated && user?.userid) {
-            fetchUserInfo();
+        } finally {
+            setLoading(false);
         }
-    }, [user?.userid, isAuthenticated]);
+    };
+
+    if (isAuthenticated && user?.userid) {
+        fetchUserInfo();
+    }
+}, [user?.userid, isAuthenticated, logout]);
 
 
     // 시설 데이터 예시 (스키마 기반)
@@ -191,19 +200,20 @@ console.log(user);
     };
 
     return (
-        <div className="owner-wrap">
-            <div className="owner-header"></div>
-            <div className="owner-container">
-                <div className="owner-info">
-                    <h2 className="owner-title">관리자 페이지</h2>
-                    <UserInfomation 
-                        userInfo={userInfo}
-                        loading={loading}
-                        error={error}
-            />
-                </div>
+        <>
+        <div className="renter-Mypage-Container">
+        <UserInfomation 
+            userInfo={userInfo}
+            loading={loading}
+            error={error}
+        />
+        </div>
 
                 {/* 시설 관리 섹션 */}
+    <div className="owner-wrap">
+        <div className="owner-info">
+            <div className="owner-container">
+                <h2 className="owner-title">관리자 페이지</h2>
                 <div className="owner-fac-mgmt">
                     <h2>시설 관리</h2>
                     <button className="owner-add-btn" onClick={() => setIsModalOpen(true)}>
@@ -313,11 +323,13 @@ console.log(user);
                     </div>
                 </div>
             </div>
+            </div>
             
             <RegistrationModal 
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
         </div>
+        </>
     );
 }

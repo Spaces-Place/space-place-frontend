@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Navigate} from "react-router-dom";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/mypage.css';
@@ -9,7 +9,7 @@ import UserInfomation from "../components/UserInfo";
 
 export default function RenterMypage() {
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useContext(AuthContext);
+    const {user, isAuthenticated, logout} = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('all');
     const [date, setDate] = useState(new Date());
     const [userInfo, setUserInfo] = useState(null);
@@ -20,26 +20,40 @@ export default function RenterMypage() {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                setLoading(true);
-                console.log(user.userid);
+                if (!user?.userid) return;
+                
                 const info = await authService.getUserInfo(user.userid);
                 setUserInfo(info);
+
+                const basicUserInfo = {
+                    userid : info.user_id,
+                    type : info.type
+                };
+
+                localStorage.setItem('user', JSON.stringify({
+                    ...basicUserInfo,
+                    fullInfo: info
+                }))
+
                 setError(null);
-                console.log(info);
-                console.log(userInfo);
             } catch (err) {
-                setError('사용자 정보를 불러오는데 실패했습니다.');
                 console.error('Error fetching user info:', err);
+                setError('사용자 정보를 불러오는데 실패했습니다.');
+                if (err.message.includes('인증')) {
+                    logout();
+                }
             } finally {
                 setLoading(false);
             }
         };
-
-        if (user?.userid) {
+    
+        if (isAuthenticated && user?.userid) {
             fetchUserInfo();
         }
-    }, [user?.userid]);
+    }, [user?.userid, isAuthenticated, logout]);
     
+
+
     const bookingData = [
         {
             id: 1,
