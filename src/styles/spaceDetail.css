@@ -135,22 +135,24 @@ td {
 
 /* 편의시설 리스트 */
 .detail-contents-list, .detail-amenities-list {
-    display: grid;
+    display: inline-block;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 15px;
     list-style: none;
     padding: 0;
 }
 
-.detail-contents-list li, .detail-amenities-list li {
+.detail-info-list, .detail-info-list {
     background: #f8faff;
     padding: 12px 20px;
     border-radius: 15px;
+    margin-left: 10px;
     text-align: center;
     color: #7371FC;
     font-weight: 500;
     transition: all 0.3s ease;
     border: 1px solid rgba(115, 113, 252, 0.1);
+    display: inline-block;
 }
 
 .detail-contents-list li:hover, .detail-amenities-list li:hover {

@@ -127,8 +127,7 @@ export default function SpaceDetail({type: propType}) {
       
         return (
           <div className="detail-info-section">
-            <h2>편의 사항</h2>
-            <ul className="detail-amenities-list">
+            <div className="detail-amenities-list">
               {amenities.map((amenity, index) => {
                 try {
                   let displayAmenity;
@@ -145,13 +144,13 @@ export default function SpaceDetail({type: propType}) {
                     displayAmenity = String(amenity);
                   }
                   
-                  return <li key={index}>{displayAmenity}</li>;
+                  return <div className="detail-info-list" key={index}>{displayAmenity}</div>;
                 } catch (err) {
                   console.error('Amenity 표시 오류:', err);
                   return null;
                 }
               }).filter(Boolean)}
-            </ul>
+            </div>
           </div>
         );
     };
@@ -243,9 +242,9 @@ export default function SpaceDetail({type: propType}) {
                     {spaceData.amenities && (
                         <div className="detail-info-section">
                             <h2>편의 사항</h2>
-                            <ul className="detail-amenities-list">
+                            <div className="detail-amenities-list">
                             {spaceData.amenities && renderDetailAmenities(spaceData.amenities)}
-                            </ul>
+                            </div>
                         </div>
                     )}
     
