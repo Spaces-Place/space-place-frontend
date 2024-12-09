@@ -13,6 +13,7 @@ export default function SpaceList({ type: propType }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const itemsPerPage = 12;
   const URL = process.env.REACT_APP_SPACE_API;
@@ -58,6 +59,7 @@ export default function SpaceList({ type: propType }) {
   const handleItemClick = (spaceId) => {
     navigate(`/space/${type}/${spaceId}`);
   };
+
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
