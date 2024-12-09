@@ -14,7 +14,7 @@ export default function SpaceList({ type: propType }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const URL = process.env.REACT_APP_SPACE_API;
 
   const getImageUrl = (space) => {
@@ -75,7 +75,7 @@ export default function SpaceList({ type: propType }) {
                 onClick={() => handleItemClick(space.space_id)}
               >
                 <div className="list-with-box">
-                  <div className="list-space-name">{space.name}</div>
+                  <div className="list-space-name">{space.space_name}</div>
                   <div className="list-space-imagebox">
                     <img 
                       src={getImageUrl(space)}
