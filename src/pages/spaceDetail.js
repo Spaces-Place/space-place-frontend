@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation, Pagination} from "swiper/modules";
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
+import { Cookies, useCookies } from "react-cookie";
+import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
 import "../styles/spaceDetail.css"
 
@@ -17,7 +19,11 @@ export default function SpaceDetail({type: propType}) {
     const [showContact, setShowContact] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [coordinates, setCoordinates] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const URL = process.env.REACT_APP_SPACE_API;
+    const [cookies] = useCookies(['access_token'])
+    const isAuthenticated = Boolean(cookies.access_token);
+    const token = cookies.access_token; 
 
     const convertAddressToCoords = (address) => {
         return new Promise((resolve, reject) => {
@@ -42,7 +48,48 @@ export default function SpaceDetail({type: propType}) {
         });
     };
 
+    const handleDelete = async() => {
+        try{
+            if(!isAuthenticated){
+                alert('로그인이 필요합니다')
+                navigate('/login');
+                return ;
+            }
+            const response = await axios.delete(`${URL}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
+            if(response.status === 200) 
+            {
+                alert('공간이 성공적으로 삭제되었습니다.')
+                navigate(`/space/${spaceData.space_type.toLowerCase()}`);
+            }
+        } catch (error) {
+            console.error("Error deleting space:", error);
+            if (error.response?.status === 401) {
+                alert('삭제 권한이 없습니다.');
+            } else {
+                alert(error.response?.data?.message || '공간 삭제에 실패했습니다.');
+            }
+        }
+    };
+
+    const getCurrentUserId = () => {
+        if(!token) return null;
+        try {
+            const decodedToken = jwtDecode(token);
+            return decodedToken.user_id;
+        }catch (error){
+            console.error('Token decode error', error);
+        }
+    };
+
+    const isSpaceOwner = () => {
+        const currentUserId = getCurrentUserId();
+        return currentUserId && spaceData && spaceData.user_id === currentUserId;
+    };
 
     const getImagesUrl = (image) => {
         try {
@@ -264,12 +311,35 @@ export default function SpaceDetail({type: propType}) {
                         )}
                         <p className="detail-address">{spaceData.location.address}</p>
                     </div>
+                    <div className="detail-buttons">
                     <button className="detail-contact-button" onClick={handleBooking}>
                         예약하기
                     </button>
+                    {isSpaceOwner() && (
+                        <button 
+                            className="detail-delete-button" 
+                            onClick={() => setShowDeleteConfirm(true)}
+                        >
+                            삭제하기
+                        </button>
+                    )}
+                    </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        {/* 삭제 확인 모달 */}
+        {showDeleteConfirm && (
+            <div className="detail-modal-overlay">
+                <div className="detail-modal-content">
+                    <h2>공간 삭제</h2>
+                    <p>정말로 이 공간을 삭제하시겠습니까?</p>
+                    <div className="detail-modal-buttons">
+                        <button onClick={handleDelete}>삭제</button>
+                        <button onClick={() => setShowDeleteConfirm(false)}>취소</button>
+                    </div>
+                </div>
+            </div>
+        )}
         </>
     );
 }
